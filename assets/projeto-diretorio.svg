@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#EADDC4"/><stop offset="1" stop-color="#8E7551"/></linearGradient>
+  <linearGradient id="book" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#173B2E"/><stop offset="1" stop-color="#0D2E23"/></linearGradient>
+  <radialGradient id="light"><stop stop-color="#FFF6D8" stop-opacity=".8"/><stop offset="1" stop-color="#FFF6D8" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="900" height="600" fill="url(#bg)"/>
+<circle cx="735" cy="105" r="210" fill="url(#light)"/>
+<rect y="435" width="900" height="165" fill="#5D472E" opacity=".58"/>
+<ellipse cx="450" cy="470" rx="300" ry="45" fill="#2D241B" opacity=".2"/>
+<path d="M190 205c110-36 206-27 280 28v245c-81-51-174-61-280-30Z" fill="url(#book)"/>
+<path d="M710 205c-110-36-206-27-280 28v245c81-51 174-61 280-30Z" fill="#1E4B39"/>
+<path d="M450 240v232" stroke="#D9C69E" stroke-width="7"/>
+<path d="M568 285h14v88h-14zM530 317h90v14h-90z" fill="#C8A15A"/>
+<path d="M220 240c76-18 141-8 196 29M220 279c76-18 141-8 196 29M220 318c76-18 141-8 196 29" fill="none" stroke="#E7DDC9" stroke-width="8" stroke-linecap="round" opacity=".82"/>
+</svg>
