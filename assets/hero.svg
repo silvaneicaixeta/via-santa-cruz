@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+<defs>
+  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#F7D79B"/><stop offset=".55" stop-color="#E5C991"/><stop offset="1" stop-color="#927D62"/></linearGradient>
+  <linearGradient id="sun" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#FFE9AE" stop-opacity=".95"/><stop offset="1" stop-color="#C8A15A" stop-opacity=".1"/></linearGradient>
+  <linearGradient id="hill1" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#50624B"/><stop offset="1" stop-color="#263D31"/></linearGradient>
+  <linearGradient id="hill2" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8B8065"/><stop offset="1" stop-color="#455443"/></linearGradient>
+  <linearGradient id="road" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#E8DDC8"/><stop offset="1" stop-color="#F8E7BB"/></linearGradient>
+  <radialGradient id="glow"><stop stop-color="#FFF8DB" stop-opacity=".95"/><stop offset=".35" stop-color="#F4CA73" stop-opacity=".45"/><stop offset="1" stop-color="#F4CA73" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="1600" height="900" fill="url(#sky)"/>
+<circle cx="1260" cy="205" r="240" fill="url(#glow)"/>
+<path d="M0 440c210-90 390-115 595-38 123 47 246 47 382-6 197-77 396-59 623 34v470H0Z" fill="#88795F" opacity=".55"/>
+<path d="M0 520c244-98 469-76 665 32 171 95 313 82 448-12 141-98 295-110 487-43v403H0Z" fill="url(#hill2)"/>
+<path d="M0 650c214-108 410-86 588 17 147 85 276 82 390 8 200-130 393-106 622-17v242H0Z" fill="url(#hill1)"/>
+<path d="M950 900c33-93 70-168 111-224 57-79 124-131 207-173 33-17 48-45 43-78-3-22-1-42 8-62 11 28 11 53 1 76-13 30-39 54-78 73-83 41-145 94-195 164-38 53-70 126-97 224Z" fill="url(#road)" opacity=".95"/>
+<path d="M1055 900c26-90 55-159 88-207 46-67 102-113 171-151 17-9 28-22 35-40-2 24-15 44-40 60-63 42-112 88-150 145-30 46-55 110-75 193Z" fill="#9F772F" opacity=".24"/>
+<g transform="translate(1250 258)">
+  <rect x="-10" y="-125" width="20" height="230" rx="4" fill="#FFF4D8"/>
+  <rect x="-78" y="-62" width="156" height="18" rx="4" fill="#FFF4D8"/>
+  <rect x="-8" y="-123" width="16" height="226" fill="#C8A15A" opacity=".6"/>
+  <rect x="-76" y="-60" width="152" height="14" fill="#C8A15A" opacity=".55"/>
+</g>
+<g opacity=".35" fill="#E5D8B7">
+  <circle cx="1120" cy="635" r="5"/><circle cx="1165" cy="618" r="4"/><circle cx="1210" cy="602" r="3"/>
+  <circle cx="1380" cy="660" r="5"/><circle cx="1440" cy="628" r="4"/><circle cx="1490" cy="645" r="3"/>
+</g>
+</svg>
