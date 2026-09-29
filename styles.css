@@ -173,6 +173,14 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .button-primary { background: var(--green); color: #fff; box-shadow: 0 12px 28px rgba(18,60,46,.18); }
 .button-primary:hover { background: var(--green-2); }
 .button-secondary { background: rgba(247,243,234,.88); border-color: rgba(159,119,47,.45); color: var(--ink); }
+.button-disabled {
+  background: rgba(18,60,46,.07);
+  color: var(--green);
+  border-color: rgba(18,60,46,.16);
+  cursor: default;
+  box-shadow: none;
+}
+.button-disabled:hover { transform: none; }
 
 .intro { background: linear-gradient(180deg, #fbf8f1, var(--ivory)); }
 .intro-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 4.5rem; align-items: start; }
