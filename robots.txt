@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://viasantacruz.com.br/sitemap.xml
