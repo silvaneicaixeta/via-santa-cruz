@@ -134,12 +134,13 @@
   </main>
 
   <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2.117.2";
 
-    const supabase = createClient(
-      "https://vgpivbxykeobgjzqlqcl.supabase.co",
-      "sb_publishable_CplQkGKykMUsHso_vRki-g_gIsZJDgh"
-    );
+    const SUPABASE_URL = "https://vgpivbxykeobgjzqlqcl.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_CplQkGKykMUsHso_vRki-g_gIsZJDgh";
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
+    });
 
     const loginView = document.getElementById("login-view");
     const dashboardView = document.getElementById("dashboard-view");
@@ -156,86 +157,75 @@
       "/idealizador.html": "Idealizador"
     };
 
-    const isoAgo = days => new Date(Date.now() - days * 86400000).toISOString();
-    const todayIso = () => {
-      const d = new Date();
-      d.setHours(0,0,0,0);
-      return d.toISOString();
-    };
-
-    async function countSince(since = null) {
-      let q = supabase.from("site_page_views").select("*", { count: "exact", head: true });
-      if (since) q = q.gte("occurred_at", since);
-      const { count, error } = await q;
-      if (error) throw error;
-      return count ?? 0;
-    }
-
     function renderBars(target, entries, emptyText) {
       target.innerHTML = "";
-      if (!entries.length) {
+      if (!entries?.length) {
         target.textContent = emptyText;
         return;
       }
-      const max = Math.max(...entries.map(([,v]) => v), 1);
-      entries.forEach(([label, value]) => {
+      const max = Math.max(...entries.map(x => x.views), 1);
+      entries.forEach(item => {
         const row = document.createElement("div");
         row.className = "bar-row";
+
         const lab = document.createElement("div");
         lab.className = "bar-label";
-        lab.textContent = label;
+        lab.textContent = pageNames[item.label] || item.label;
+
         const track = document.createElement("div");
         track.className = "bar-track";
         const fill = document.createElement("div");
         fill.className = "bar-fill";
-        fill.style.width = Math.max(2, Math.round(value / max * 100)) + "%";
+        fill.style.width = Math.max(2, Math.round(item.views / max * 100)) + "%";
         track.appendChild(fill);
+
         const val = document.createElement("div");
         val.className = "bar-value";
-        val.textContent = String(value);
+        val.textContent = String(item.views);
+
         row.append(lab, track, val);
         target.appendChild(row);
       });
     }
 
+    async function fetchStats() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) throw new Error("session");
+
+      const response = await fetch(
+        SUPABASE_URL + "/functions/v1/vsc-admin-stats?days=" + encodeURIComponent(period.value),
+        {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + session.access_token,
+            apikey: SUPABASE_KEY
+          },
+          cache: "no-store"
+        }
+      );
+
+      if (response.status === 401 || response.status === 403) throw new Error("forbidden");
+      if (!response.ok) throw new Error("stats");
+      return response.json();
+    }
+
     async function loadDashboard() {
-      dashMessage.textContent = "";
+      dashMessage.textContent = "Atualizando dados…";
       try {
-        const days = Number(period.value || 30);
-        const [today, last7, last30, total] = await Promise.all([
-          countSince(todayIso()),
-          countSince(isoAgo(7)),
-          countSince(isoAgo(30)),
-          countSince()
-        ]);
+        const data = await fetchStats();
 
-        document.getElementById("m-today").textContent = today;
-        document.getElementById("m-7").textContent = last7;
-        document.getElementById("m-30").textContent = last30;
-        document.getElementById("m-total").textContent = total;
+        document.getElementById("m-today").textContent = data.today;
+        document.getElementById("m-7").textContent = data.last_7_days;
+        document.getElementById("m-30").textContent = data.last_30_days;
+        document.getElementById("m-total").textContent = data.total_90d;
+        document.querySelector("#m-total + span").textContent = "Últimos 90 dias";
 
-        const { data, error } = await supabase
-          .from("site_page_views")
-          .select("occurred_at,path,referrer_host")
-          .gte("occurred_at", isoAgo(days))
-          .order("occurred_at", { ascending: false })
-          .limit(5000);
-        if (error) throw error;
-
-        const pageCounts = new Map();
-        const refs = new Map();
-        (data || []).forEach(row => {
-          const p = pageNames[row.path] || row.path;
-          pageCounts.set(p, (pageCounts.get(p) || 0) + 1);
-          if (row.referrer_host) refs.set(row.referrer_host, (refs.get(row.referrer_host) || 0) + 1);
-        });
-
-        renderBars(document.getElementById("pages"), [...pageCounts.entries()].sort((a,b) => b[1]-a[1]), "Ainda não há visualizações neste período.");
-        renderBars(document.getElementById("referrers"), [...refs.entries()].sort((a,b) => b[1]-a[1]).slice(0,10), "Nenhuma referência externa registrada neste período.");
+        renderBars(document.getElementById("pages"), data.pages, "Ainda não há visualizações neste período.");
+        renderBars(document.getElementById("referrers"), data.referrers, "Nenhuma referência externa registrada neste período.");
 
         const recentBody = document.getElementById("recent-body");
         recentBody.innerHTML = "";
-        (data || []).slice(0,25).forEach(row => {
+        (data.recent || []).forEach(row => {
           const tr = document.createElement("tr");
           const when = new Date(row.occurred_at).toLocaleString("pt-BR");
           [when, pageNames[row.path] || row.path, row.referrer_host || "Acesso direto / interno"].forEach(value => {
@@ -246,35 +236,26 @@
           recentBody.appendChild(tr);
         });
 
-        if ((data || []).length >= 5000) {
-          dashMessage.textContent = "O período possui muitos registros; os detalhes foram limitados aos 5.000 mais recentes.";
-        }
+        dashMessage.textContent = "Dados atualizados em " + new Date(data.generated_at).toLocaleString("pt-BR") + ".";
       } catch (err) {
-        dashMessage.textContent = "Não foi possível carregar as métricas com esta conta.";
+        if (err.message === "forbidden") {
+          await supabase.auth.signOut();
+          loginMessage.textContent = "Esta conta não possui acesso à Administração da Via Santa Cruz.";
+          loginView.classList.remove("hidden");
+          dashboardView.classList.add("hidden");
+          return;
+        }
+        if (err.message === "session") {
+          loginView.classList.remove("hidden");
+          dashboardView.classList.add("hidden");
+          return;
+        }
+        dashMessage.textContent = "Não foi possível carregar as métricas agora.";
       }
-    }
-
-    async function verifyCoordinator() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return false;
-      const { data, error } = await supabase
-        .from("user_access")
-        .select("role,access_status")
-        .eq("user_id", user.id)
-        .maybeSingle();
-      return !error && data?.role === "coordinator" && data?.access_status === "active";
     }
 
     async function showForSession(session) {
       if (!session) {
-        loginView.classList.remove("hidden");
-        dashboardView.classList.add("hidden");
-        return;
-      }
-      const allowed = await verifyCoordinator();
-      if (!allowed) {
-        await supabase.auth.signOut();
-        loginMessage.textContent = "Esta conta não possui acesso à Administração da Via Santa Cruz.";
         loginView.classList.remove("hidden");
         dashboardView.classList.add("hidden");
         return;
@@ -286,7 +267,7 @@
 
     loginForm.addEventListener("submit", async event => {
       event.preventDefault();
-      loginMessage.textContent = "Entrando...";
+      loginMessage.textContent = "Entrando…";
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
@@ -302,6 +283,7 @@
     period.addEventListener("change", loadDashboard);
     document.getElementById("logout").addEventListener("click", async () => {
       await supabase.auth.signOut();
+      loginForm.reset();
       await showForSession(null);
     });
 
