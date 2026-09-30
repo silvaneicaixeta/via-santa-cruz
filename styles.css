@@ -432,3 +432,22 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 
 .project-logo{width:min(100%,290px)!important;height:auto!important;object-fit:contain!important;margin:0 0 1rem}.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}.project-grid-pages .project-copy{padding-top:2rem;padding-bottom:2rem}@media(max-width:680px){.project-logo{width:min(100%,250px)!important;margin-inline:auto}}
+
+/* Projetos: apresentação tipográfica provisória até a identidade visual definitiva */
+.project-grid-pages {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+}
+.project-grid-pages .project-card {
+  min-height: 100%;
+  grid-template-columns: 1fr;
+}
+.project-grid-pages .project-copy {
+  padding: 2.5rem 2.35rem;
+}
+.project-grid-pages .project-card h2 {
+  margin: .55rem 0 1rem;
+}
+@media (max-width: 860px) {
+  .project-grid-pages { grid-template-columns: 1fr; }
+}
