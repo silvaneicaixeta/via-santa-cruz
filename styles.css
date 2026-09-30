@@ -303,3 +303,24 @@ button, a { -webkit-tap-highlight-color: transparent; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .001ms !important; animation-duration: .001ms !important; }
 }
+
+.access-note {
+  display: block;
+  margin-top: .85rem;
+  font-size: .86rem;
+  color: var(--stone);
+  letter-spacing: .01em;
+}
+
+.idealizer-link {
+  display: inline-block;
+  margin-top: .2rem;
+  color: rgba(255,255,255,.68);
+  text-decoration: none;
+  font-size: .82rem;
+}
+
+.idealizer-link:hover,
+.idealizer-link:focus-visible {
+  color: var(--gold);
+}
