@@ -71,10 +71,46 @@
 
         <div class="agenda-tools">
           <label class="agenda-search">
-            <span class="sr-only">Buscar na agenda</span>
-            <input id="agenda-search" type="search" placeholder="Buscar por celebração, paróquia, cidade…" autocomplete="off">
+            <span class="agenda-field-label">Buscar</span>
+            <input id="agenda-search" type="search" placeholder="Celebração, cidade, palavra…" autocomplete="off">
           </label>
-          <div id="agenda-categories" class="agenda-categories" aria-label="Filtrar por categoria"></div>
+
+          <div class="agenda-filter-grid">
+            <label class="agenda-select-field">
+              <span class="agenda-field-label">Categoria</span>
+              <select id="agenda-category" aria-label="Filtrar por categoria">
+                <option value="all">Todas as categorias</option>
+              </select>
+            </label>
+
+            <label class="agenda-select-field">
+              <span class="agenda-field-label">Paróquia</span>
+              <select id="agenda-parish" aria-label="Filtrar por paróquia">
+                <option value="all">Todas as paróquias</option>
+              </select>
+            </label>
+
+            <div class="agenda-view-field">
+              <span class="agenda-field-label">Visualização</span>
+              <div class="agenda-view-toggle" role="group" aria-label="Visualização da agenda">
+                <button class="agenda-view-button active" data-view="list" type="button">Lista</button>
+                <button class="agenda-view-button" data-view="month" type="button">Mês</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="agenda-calendar" class="agenda-calendar" hidden>
+          <div class="agenda-calendar-head">
+            <button id="agenda-prev-month" class="agenda-month-nav" type="button" aria-label="Mês anterior">←</button>
+            <h2 id="agenda-calendar-title"></h2>
+            <button id="agenda-next-month" class="agenda-month-nav" type="button" aria-label="Próximo mês">→</button>
+          </div>
+          <div class="agenda-weekdays" aria-hidden="true">
+            <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+          </div>
+          <div id="agenda-calendar-grid" class="agenda-calendar-grid"></div>
+          <div id="agenda-day-events" class="agenda-day-events"></div>
         </div>
 
         <div class="agenda-result-line">
