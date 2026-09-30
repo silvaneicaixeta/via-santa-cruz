@@ -496,3 +496,25 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .project-visual { min-height: 0; height: 240px !important; order: -1; }
   .project-logo { width: min(100%, 240px) !important; }
 }
+
+
+/* Correção visual: removidas as reconstruções provisórias das marcas dos projetos.
+   Os cards ficam tipográficos até a aplicação das artes definitivas aprovadas. */
+.project-grid-pages {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+}
+.project-grid-pages .project-card {
+  grid-template-columns: 1fr;
+  min-height: 100%;
+}
+.project-grid-pages .project-copy {
+  padding: 2.6rem 2.4rem;
+}
+.project-grid-pages .project-card h2 {
+  font-size: clamp(2.7rem, 4vw, 4rem);
+  margin: .55rem 0 1rem;
+}
+@media (max-width: 860px) {
+  .project-grid-pages { grid-template-columns: 1fr; }
+}
