@@ -1,1 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="32 41 65 49" role="img" aria-label="Via Santa Cruz"><image href="/assets/vsc-icon.png" x="0" y="0" width="128" height="128" preserveAspectRatio="xMidYMid meet"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 130" role="img" aria-labelledby="t d">
+  <title id="t">Via Santa Cruz</title>
+  <desc id="d">Caminhos em verde e dourado que conduzem a uma cruz.</desc>
+  <path d="M18 94C48 64 86 49 132 49C101 58 76 72 52 94C82 80 113 75 151 79C113 82 82 91 50 108C86 99 121 99 164 107C109 105 66 111 25 120Z" fill="#123C2E"/>
+  <path d="M86 115C117 106 151 106 190 116C158 114 132 117 106 124C136 120 164 121 205 126C161 128 126 126 86 122Z" fill="#B8892D"/>
+  <path d="M135 13V89" stroke="#B8892D" stroke-width="9" stroke-linecap="round"/>
+  <path d="M108 38H164" stroke="#B8892D" stroke-width="9" stroke-linecap="round"/>
+  <path d="M137 17C156 20 169 30 178 43" fill="none" stroke="#B8892D" stroke-width="5" stroke-linecap="round" opacity=".78"/>
+</svg>
