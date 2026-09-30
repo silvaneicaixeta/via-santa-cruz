@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123C2E">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Administração — Via Santa Cruz</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .admin-shell{max-width:980px;margin:0 auto;padding:72px 20px}
+    .admin-card{background:#fff;border:1px solid rgba(159,119,47,.25);border-radius:22px;padding:28px;box-shadow:0 18px 50px rgba(18,60,46,.08)}
+    .admin-login{max-width:520px;margin:0 auto}
+    .admin-form{display:grid;gap:14px}
+    .admin-form label{font-weight:900;color:#173027}
+    .admin-form input{width:100%;min-height:48px;padding:12px 14px;border:1px solid #cfc9bd;border-radius:10px;font:inherit;font-size:16px}
+    .admin-error{color:#9a3327;min-height:1.5em;margin:.4rem 0 0}
+    .admin-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:28px}
+    .admin-head h1{font-family:"Playfair Display",Georgia,serif;color:#173027;margin:0;font-size:clamp(2.4rem,5vw,4rem);line-height:1}
+    .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:24px 0}
+    .metric{border:1px solid rgba(159,119,47,.22);border-radius:16px;padding:18px;background:#fbf8f1}
+    .metric small{display:block;color:#74766f;font-weight:700}
+    .metric strong{display:block;color:#123C2E;font-size:2rem;margin-top:.25rem}
+    .page-table{width:100%;border-collapse:collapse}
+    .page-table th,.page-table td{padding:12px 8px;border-bottom:1px solid #e5dfd3;text-align:left}
+    .page-table td:last-child,.page-table th:last-child{text-align:right}
+    .admin-note{color:#74766f;font-size:.92rem}
+    .hidden{display:none!important}
+    @media(max-width:720px){.metrics{grid-template-columns:1fr 1fr}.admin-head{display:block}.admin-head .button{margin-top:14px}.admin-card{padding:20px}}
+  </style>
+</head>
+<body>
+  <main class="admin-shell">
+    <section id="loginPanel" class="admin-card admin-login">
+      <p class="section-kicker">Via Santa Cruz</p>
+      <h1 style="font-family:'Playfair Display',Georgia,serif;color:#173027;margin-top:0">Área administrativa</h1>
+      <p>Entre com a conta autorizada para visualizar a contabilidade de acessos do site.</p>
+      <form id="loginForm" class="admin-form">
+        <div><label for="email">E-mail</label><input id="email" name="email" type="email" autocomplete="username" required></div>
+        <div><label for="password">Senha</label><input id="password" name="password" type="password" autocomplete="current-password" required></div>
+        <button class="button button-primary" type="submit">Entrar</button>
+        <p id="loginError" class="admin-error" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section id="dashboardPanel" class="admin-card hidden">
+      <div class="admin-head">
+        <div>
+          <p class="section-kicker">Via Santa Cruz</p>
+          <h1>Contabilidade de acessos</h1>
+          <p class="admin-note">Contagens de visualizações de página. Não são armazenados nome, e-mail ou IP dos visitantes.</p>
+        </div>
+        <button id="logoutBtn" class="button button-secondary" type="button">Sair</button>
+      </div>
+
+      <div class="metrics">
+        <div class="metric"><small>Total registrado</small><strong id="mTotal">—</strong></div>
+        <div class="metric"><small>Hoje</small><strong id="mToday">—</strong></div>
+        <div class="metric"><small>Últimos 7 dias</small><strong id="m7">—</strong></div>
+        <div class="metric"><small>Últimos 30 dias</small><strong id="m30">—</strong></div>
+      </div>
+
+      <h2>Visualizações por página — últimos 30 dias</h2>
+      <div style="overflow-x:auto">
+        <table class="page-table">
+          <thead><tr><th>Página</th><th>Visualizações</th></tr></thead>
+          <tbody id="pageRows"></tbody>
+        </table>
+      </div>
+      <p id="dashError" class="admin-error" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const SUPABASE_URL = 'https://vgpivbxykeobgjzqlqcl.supabase.co';
+      const SUPABASE_KEY = 'sb_publishable_CplQkGKykMUsHso_vRki-g_gIsZJDgh';
+      const loginPanel = document.getElementById('loginPanel');
+      const dashboardPanel = document.getElementById('dashboardPanel');
+      const loginForm = document.getElementById('loginForm');
+      const loginError = document.getElementById('loginError');
+      const dashError = document.getElementById('dashError');
+      const pageNames = {'/':'Início','/index.html':'Início','/projetos.html':'Projetos','/sobre.html':'Sobre','/idealizador.html':'Idealizador'};
+
+      const showLogin = () => { loginPanel.classList.remove('hidden'); dashboardPanel.classList.add('hidden'); };
+      const showDashboard = () => { loginPanel.classList.add('hidden'); dashboardPanel.classList.remove('hidden'); };
+
+      async function loadSummary(token) {
+        dashError.textContent = '';
+        const res = await fetch(SUPABASE_URL + '/rest/v1/rpc/vsc_analytics_summary', {
+          method:'POST',
+          headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+          body:JSON.stringify({p_days:30})
+        });
+        if(!res.ok) throw new Error('Não foi possível carregar os dados administrativos.');
+        const data = await res.json();
+        document.getElementById('mTotal').textContent = data.total ?? 0;
+        document.getElementById('mToday').textContent = data.today ?? 0;
+        document.getElementById('m7').textContent = data.last7 ?? 0;
+        document.getElementById('m30').textContent = data.last30 ?? 0;
+        const tbody=document.getElementById('pageRows');
+        tbody.innerHTML='';
+        (data.by_page || []).forEach(row=>{
+          const tr=document.createElement('tr');
+          const td1=document.createElement('td');
+          const td2=document.createElement('td');
+          td1.textContent=pageNames[row.path] || row.path;
+          td2.textContent=row.views;
+          tr.append(td1,td2);
+          tbody.appendChild(tr);
+        });
+        if(!(data.by_page || []).length){
+          const tr=document.createElement('tr');
+          const td=document.createElement('td');
+          td.colSpan=2; td.textContent='Ainda não há acessos registrados neste período.';
+          tr.appendChild(td); tbody.appendChild(tr);
+        }
+      }
+
+      loginForm.addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        loginError.textContent='';
+        const email=document.getElementById('email').value.trim();
+        const password=document.getElementById('password').value;
+        try{
+          const res=await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password',{
+            method:'POST',
+            headers:{'apikey':SUPABASE_KEY,'Content-Type':'application/json'},
+            body:JSON.stringify({email,password})
+          });
+          const data=await res.json();
+          if(!res.ok || !data.access_token) throw new Error('E-mail ou senha não autorizados.');
+          sessionStorage.setItem('vsc_admin_token',data.access_token);
+          showDashboard();
+          await loadSummary(data.access_token);
+        }catch(err){ loginError.textContent=err.message || 'Não foi possível entrar.'; }
+      });
+
+      document.getElementById('logoutBtn').addEventListener('click',()=>{
+        sessionStorage.removeItem('vsc_admin_token');
+        showLogin();
+      });
+
+      const token=sessionStorage.getItem('vsc_admin_token');
+      if(token){
+        showDashboard();
+        loadSummary(token).catch(()=>{ sessionStorage.removeItem('vsc_admin_token'); showLogin(); });
+      } else {
+        showLogin();
+      }
+    })();
+  </script>
+</body>
+</html>
