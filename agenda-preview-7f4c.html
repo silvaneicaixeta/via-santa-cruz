@@ -4,6 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#123C2E">
+  <meta name="description" content="Agenda Via Santa Cruz — acontecimentos, celebrações e datas que marcam o caminho.">
+  <meta property="og:title" content="Agenda — Via Santa Cruz">
+  <meta property="og:description" content="Acontecimentos, celebrações e datas da vida eclesial, reunidos em um só lugar.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://viasantacruz.com.br/agenda.html">
+  <link rel="canonical" href="https://viasantacruz.com.br/agenda.html">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <title>Prévia da Agenda — Via Santa Cruz</title>
   <link rel="icon" type="image/svg+xml" href="/assets/vsc-favicon-crop.svg">
@@ -11,59 +17,1106 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css">
   <style>
-    .preview-ribbon{background:#123C2E;color:#fff;text-align:center;padding:.62rem 1rem;font-size:.86rem;font-weight:900;letter-spacing:.04em}
-    .preview-ribbon span{color:#C8A15A}
-    .agenda-hero{background:radial-gradient(circle at 80% 18%,rgba(200,161,90,.16),transparent 28%),linear-gradient(180deg,#fbf8f1,#f4eee2)}
-    .agenda-section{background:#fffdf8}
-    .agenda-intro{display:grid;grid-template-columns:1fr 1.1fr;gap:3rem;align-items:end;margin-bottom:2.4rem}
-    .agenda-intro-label{display:block;color:#9F772F;text-transform:uppercase;letter-spacing:.18em;font-size:.73rem;font-weight:900;margin-bottom:.55rem}
-    .agenda-intro h2{font-size:clamp(2rem,4vw,3.3rem)}
-    .agenda-intro>p{margin:0;max-width:620px;color:#5e6a64}
-    .agenda-toolbar{display:flex;gap:.65rem;flex-wrap:wrap;margin-bottom:1rem}
-    .agenda-tab,.agenda-category{transition:background .18s ease,color .18s ease,border-color .18s ease,transform .18s ease}
-    .agenda-tab{min-height:44px;border:1px solid rgba(18,60,46,.18);background:transparent;color:#123C2E;border-radius:999px;padding:.72rem 1rem;font:inherit;font-weight:900;cursor:pointer}
-    .agenda-tab.active{background:#123C2E;color:#fff;border-color:#123C2E}
-    .agenda-tools{display:grid;gap:.8rem;margin-bottom:1.15rem}
-    .agenda-search{display:block}
-    .agenda-search input{width:100%;min-height:52px;border:1px solid rgba(18,60,46,.16);border-radius:14px;background:#fff;color:#173027;font:inherit;padding:.85rem 1rem;box-shadow:0 8px 24px rgba(18,60,46,.04)}
-    .agenda-categories{display:flex;flex-wrap:wrap;gap:.5rem}
-    .agenda-category{min-height:36px;border:1px solid rgba(159,119,47,.22);border-radius:999px;background:rgba(255,255,255,.72);color:#65706a;font:inherit;font-size:.82rem;font-weight:900;padding:.45rem .78rem;cursor:pointer}
-    .agenda-category.active{background:rgba(200,161,90,.14);color:#9F772F;border-color:rgba(159,119,47,.42)}
-    .agenda-result-line{min-height:30px;display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.1rem;padding-bottom:.8rem;border-bottom:1px solid rgba(159,119,47,.13)}
-    .agenda-status{color:#6a746e;margin:0}.agenda-updated{color:#8a928e;font-size:.8rem;white-space:nowrap}
-    .agenda-list{display:grid;gap:2.2rem}.agenda-month{display:grid;gap:.9rem}
-    .agenda-month-title{margin:0;padding-top:.25rem;font-family:"Playfair Display",Georgia,serif;color:#123C2E;font-size:clamp(1.7rem,3vw,2.35rem);text-transform:capitalize}
-    .agenda-month-events{display:grid;gap:.85rem}
-    .agenda-event{display:grid;grid-template-columns:112px 1fr;gap:1.4rem;padding:1.2rem 1.35rem;border:1px solid rgba(159,119,47,.28);border-radius:20px;background:#fff;box-shadow:0 8px 24px rgba(18,60,46,.045)}
-    .agenda-date{border-right:1px solid rgba(159,119,47,.18);padding-right:1.2rem;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
-    .agenda-day{font-family:"Playfair Display",Georgia,serif;font-size:2.3rem;color:#173027;line-height:1}
-    .agenda-month-short{margin-top:.1rem;color:#9F772F;font-size:.72rem;font-weight:900;letter-spacing:.12em}
-    .agenda-weekday{margin-top:.2rem;color:#6d7772;font-size:.78rem;text-transform:capitalize}
-    .agenda-event-copy h3{font-family:"Playfair Display",Georgia,serif;color:#173027;font-size:clamp(1.35rem,2.6vw,1.9rem);line-height:1.12;margin:.35rem 0 .4rem}
-    .agenda-badges{display:flex;gap:.45rem;flex-wrap:wrap}.agenda-badge{display:inline-flex;align-items:center;min-height:24px;padding:.2rem .6rem;border-radius:999px;background:rgba(200,161,90,.14);color:#9F772F;font-size:.73rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
-    .agenda-badge.cancelled{background:rgba(125,54,45,.10);color:#7d362d}
-    .agenda-meta{margin:0;color:#5d6963;font-weight:700}.agenda-description{margin:.75rem 0 0;color:#66716b}
-    .agenda-add{display:inline-flex;margin-top:.8rem;color:#123C2E;font-size:.84rem;font-weight:900;text-decoration:none;border-bottom:1px solid rgba(18,60,46,.2)}
-    .agenda-event.is-cancelled{background:#fbf7f4;border-color:rgba(125,54,45,.16);opacity:.78}.agenda-event.is-cancelled h3{text-decoration:line-through}
-    @media(max-width:800px){.agenda-intro{grid-template-columns:1fr;gap:1rem}.agenda-result-line{align-items:flex-start;flex-direction:column;gap:.25rem}.agenda-updated{white-space:normal}}
-    @media(max-width:680px){.agenda-section{padding-top:52px}.agenda-toolbar{flex-wrap:nowrap;overflow-x:auto;padding-bottom:.2rem;scrollbar-width:none}.agenda-tab{flex:0 0 auto}.agenda-categories{flex-wrap:nowrap;overflow-x:auto;padding-bottom:.15rem;scrollbar-width:none}.agenda-category{flex:0 0 auto}.agenda-event{grid-template-columns:76px 1fr;gap:.9rem;padding:1rem}.agenda-date{padding:0 .8rem 0 0;justify-content:flex-start}.agenda-day{font-size:2rem}.agenda-event-copy h3{font-size:1.35rem}.agenda-description{font-size:.93rem}}
-    @media(max-width:430px){.agenda-event{grid-template-columns:66px 1fr;gap:.75rem}.agenda-date{padding-right:.65rem}.agenda-day{font-size:1.82rem}.agenda-weekday{font-size:.72rem}}
-  </style>
+:root {
+  --green: #123C2E;
+  --green-2: #0D2E23;
+  --gold: #C8A15A;
+  --gold-dark: #9F772F;
+  --sand: #E8DDC8;
+  --ivory: #F7F3EA;
+  --stone: #8B8B84;
+  --ink: #173027;
+  --text: #38443F;
+  --white: #FFFFFF;
+  --line: rgba(159, 119, 47, .28);
+  --shadow: 0 22px 70px rgba(18, 60, 46, .10);
+  --radius: 22px;
+  --container: 1180px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  color: var(--text);
+  background: var(--ivory);
+  font-family: "Lato", Arial, sans-serif;
+  line-height: 1.6;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: -80px;
+  z-index: 1000;
+  background: var(--green);
+  color: #fff;
+  padding: .65rem 1rem;
+  border-radius: 8px;
+  transition: top .2s ease;
+}
+.skip-link:focus { top: 1rem; }
+
+.container { width: min(calc(100% - 40px), var(--container)); margin-inline: auto; }
+.section { padding: 92px 0; }
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(247, 243, 234, .92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(18, 60, 46, .08);
+}
+.header-inner {
+  min-height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: .8rem;
+  text-decoration: none;
+  min-width: 0;
+}
+.brand img { width: 78px; height: 54px; object-fit: contain; }
+.brand-copy { display: grid; line-height: 1.1; }
+.brand-copy strong {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.62rem;
+  color: var(--green);
+  letter-spacing: .01em;
+  font-weight: 600;
+}
+.brand-copy small {
+  color: var(--gold-dark);
+  font-size: .66rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  margin-top: .25rem;
+}
+.main-nav { display: flex; align-items: center; gap: 1.6rem; }
+.main-nav a { text-decoration: none; font-weight: 700; font-size: .96rem; }
+.main-nav a:not(.nav-cta):hover,
+.main-nav a.active { color: var(--gold-dark); }
+.main-nav a.active { position: relative; }
+.main-nav a.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -.45rem;
+  height: 2px;
+  background: var(--gold);
+  border-radius: 999px;
+}
+.nav-cta {
+  background: var(--gold-dark);
+  color: #fff;
+  padding: .8rem 1.1rem;
+  border-radius: 10px;
+  box-shadow: 0 10px 24px rgba(159, 119, 47, .18);
+}
+.menu-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  border-radius: 10px;
+}
+.menu-toggle span { display: block; height: 2px; width: 24px; background: var(--green); margin: 5px auto; }
+
+.hero {
+  position: relative;
+  min-height: 630px;
+  display: grid;
+  align-items: center;
+  overflow: hidden;
+  background: #e9dec8;
+}
+.hero-media {
+  position: absolute;
+  inset: 0;
+  background-image: url("assets/hero.svg");
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.01);
+}
+.hero-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(247,243,234,.98) 0%, rgba(247,243,234,.94) 30%, rgba(247,243,234,.65) 48%, rgba(247,243,234,.15) 70%, rgba(18,60,46,.10) 100%),
+    linear-gradient(180deg, rgba(255,255,255,.18), rgba(18,60,46,.06));
+}
+.hero-content { position: relative; z-index: 1; padding-block: 90px; }
+.eyebrow, .section-kicker {
+  margin: 0 0 1rem;
+  color: var(--gold-dark);
+  text-transform: uppercase;
+  letter-spacing: .22em;
+  font-weight: 900;
+  font-size: .78rem;
+}
+.eyebrow span { margin-inline: .35rem; color: var(--gold); }
+.hero h1, h2, h3 {
+  font-family: "Playfair Display", Georgia, serif;
+  color: var(--ink);
+  font-weight: 600;
+  line-height: 1.04;
+}
+.hero h1 {
+  max-width: 700px;
+  font-size: clamp(3.2rem, 7vw, 6.6rem);
+  margin: 0;
+  letter-spacing: -.035em;
+}
+.hero h1 em { color: var(--gold-dark); font-weight: 500; }
+.hero-lead {
+  max-width: 650px;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1.18rem, 2vw, 1.55rem);
+  color: #45524d;
+  margin: 1.35rem 0 0;
+}
+.hero-actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .75rem;
+  min-height: 48px;
+  padding: .85rem 1.2rem;
+  border-radius: 11px;
+  font-weight: 900;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.button:hover { transform: translateY(-2px); }
+.button-primary { background: var(--green); color: #fff; box-shadow: 0 12px 28px rgba(18,60,46,.18); }
+.button-primary:hover { background: var(--green-2); }
+.button-secondary { background: rgba(247,243,234,.88); border-color: rgba(159,119,47,.45); color: var(--ink); }
+.button-disabled {
+  background: rgba(18,60,46,.07);
+  color: var(--green);
+  border-color: rgba(18,60,46,.16);
+  cursor: default;
+  box-shadow: none;
+}
+.button-disabled:hover { transform: none; }
+
+.intro { background: linear-gradient(180deg, #fbf8f1, var(--ivory)); }
+.intro-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 4.5rem; align-items: start; }
+.section h2 { margin: 0; font-size: clamp(2.4rem, 4vw, 4rem); letter-spacing: -.025em; }
+.section-lead { margin-top: 1.35rem; font-size: 1.12rem; max-width: 560px; }
+.pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.pillar-card {
+  padding: 2rem 1.3rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.45);
+  text-align: center;
+}
+.pillar-icon {
+  width: 56px; height: 56px; margin: 0 auto 1rem;
+  border-radius: 50%; display: grid; place-items: center;
+  color: var(--gold-dark); background: rgba(200,161,90,.12);
+  font-size: 1.9rem;
+}
+.pillar-card h3 { margin: 0 0 .6rem; font-size: 1.65rem; }
+.pillar-card p { margin: 0; font-size: .98rem; }
+
+.projects {
+  background:
+    radial-gradient(circle at 10% 0%, rgba(232,221,200,.9), transparent 28%),
+    radial-gradient(circle at 100% 100%, rgba(200,161,90,.12), transparent 30%),
+    #f8f3e9;
+}
+.section-heading-row { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: end; margin-bottom: 2.2rem; }
+.section-heading-row > p { margin: 0; max-width: 520px; }
+.project-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.project-card {
+  position: relative;
+  min-height: 390px;
+  border-radius: 26px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-columns: 1.08fr .92fr;
+}
+.project-card img { width: 100%; height: 100%; object-fit: cover; }
+.project-copy { padding: 2.4rem 2rem; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; }
+.project-label { font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-dark); font-weight: 900; }
+.project-card h3 { font-size: 2.6rem; margin: .55rem 0 .7rem; }
+.project-card p { margin: 0 0 1.4rem; }
+
+.manifesto { background: #fffdf8; }
+.manifesto-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 5rem; align-items: center; }
+.manifesto p:last-child { font-family: "Playfair Display", Georgia, serif; font-size: 1.38rem; color: #4f5d56; }
+
+.site-footer { background: var(--green-2); color: rgba(255,255,255,.88); padding: 28px 0; }
+.footer-inner { display: grid; grid-template-columns: auto auto 1fr auto; gap: 1.5rem 2rem; align-items: center; }
+.footer-brand { display: inline-flex; align-items: center; gap: .55rem; text-decoration: none; font-family: "Playfair Display", Georgia, serif; }
+.footer-brand img { width: 56px; height: 34px; object-fit: contain; filter: brightness(1.15); }
+.footer-inner p { margin: 0; font-size: .9rem; }
+.footer-inner nav { display: flex; justify-content: center; gap: 1.2rem; }
+.footer-inner nav a, .domain { text-decoration: none; font-size: .9rem; }
+.domain { color: var(--gold); font-weight: 900; }
+
+:focus-visible { outline: 3px solid rgba(200,161,90,.65); outline-offset: 4px; }
+
+@media (max-width: 960px) {
+  .header-inner { min-height: 74px; }
+  .brand-copy small { display: none; }
+  .menu-toggle { display: block; }
+  .main-nav {
+    position: absolute;
+    left: 20px; right: 20px; top: 68px;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    background: var(--ivory);
+    padding: 1rem;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+  }
+  .main-nav.open { display: flex; }
+  .main-nav a { padding: .75rem .85rem; }
+  .nav-cta { text-align: center; }
+  .hero { min-height: 610px; }
+  .hero-shade { background: linear-gradient(90deg, rgba(247,243,234,.98), rgba(247,243,234,.92) 55%, rgba(247,243,234,.38)); }
+  .intro-grid, .section-heading-row, .manifesto-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .pillars { grid-template-columns: 1fr 1fr 1fr; }
+  .project-grid { grid-template-columns: 1fr; }
+  .footer-inner { grid-template-columns: 1fr 1fr; }
+  .footer-inner nav { justify-content: flex-start; }
+  .domain { text-align: right; }
+}
+
+@media (max-width: 680px) {
+  .container { width: min(calc(100% - 28px), var(--container)); }
+  .section { padding: 68px 0; }
+  .brand img { width: 58px; height: 44px; }
+  .brand { gap: .65rem; }
+  .brand-copy strong { font-size: 1.28rem; }
+  .hero { min-height: 0; align-items: center; }
+  .hero-media { background-position: 76% center; }
+  .hero-shade {
+    background:
+      linear-gradient(90deg, rgba(247,243,234,.97) 0%, rgba(247,243,234,.91) 56%, rgba(247,243,234,.56) 82%, rgba(247,243,234,.22) 100%),
+      linear-gradient(180deg, rgba(247,243,234,.08), rgba(247,243,234,.30));
+  }
+  .hero-content { padding: 64px 0 58px; }
+  .eyebrow { font-size: .7rem; letter-spacing: .17em; }
+  .hero h1 { font-size: clamp(2.85rem, 13vw, 4.05rem); line-height: 1.01; }
+  .hero-lead { font-size: 1.08rem; line-height: 1.5; }
+  .hero-actions { display: grid; }
+  .button { width: 100%; }
+  .pillars { grid-template-columns: 1fr; }
+  .project-card { grid-template-columns: 1fr; min-height: 0; }
+  .project-card img { height: 220px; order: -1; }
+  .project-copy { padding: 1.8rem 1.5rem 2rem; }
+  .project-card h3 { font-size: 2.25rem; }
+  .manifesto p:last-child { font-size: 1.18rem; }
+  .footer-inner { grid-template-columns: 1fr; text-align: center; }
+  .footer-brand { justify-content: center; }
+  .footer-inner nav { justify-content: center; }
+  .domain { text-align: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: .001ms !important; animation-duration: .001ms !important; }
+}
+
+.access-note {
+  display: block;
+  margin-top: .85rem;
+  font-size: .86rem;
+  color: var(--stone);
+  letter-spacing: .01em;
+}
+
+.idealizer-link {
+  display: inline-block;
+  margin-top: .2rem;
+  color: rgba(255,255,255,.68);
+  text-decoration: none;
+  font-size: .82rem;
+}
+
+.idealizer-link:hover,
+.idealizer-link:focus-visible {
+  color: var(--gold);
+}
+
+
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  color: var(--green);
+  font-weight: 900;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(18,60,46,.22);
+  padding-bottom: .08rem;
+}
+.text-link:hover { color: var(--gold-dark); border-color: var(--gold); }
+
+.home-projects {
+  background: #fffdf8;
+  border-top: 1px solid rgba(159,119,47,.12);
+}
+.home-projects-inner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3rem;
+  align-items: center;
+}
+.home-projects-inner h2 { max-width: 720px; }
+.home-projects-inner p:not(.section-kicker) { max-width: 720px; margin-bottom: 0; }
+
+.page-hero {
+  padding: 110px 0 88px;
+  background:
+    radial-gradient(circle at 78% 20%, rgba(200,161,90,.16), transparent 26%),
+    linear-gradient(180deg, #fbf8f1, #f5efe3);
+  border-bottom: 1px solid rgba(159,119,47,.14);
+}
+.page-hero-inner { max-width: 900px; }
+.page-hero h1 {
+  margin: 0;
+  font-family: "Playfair Display", Georgia, serif;
+  color: var(--ink);
+  font-size: clamp(3rem, 6vw, 5.8rem);
+  line-height: 1.02;
+  letter-spacing: -.035em;
+  font-weight: 600;
+}
+.page-hero p:last-child {
+  max-width: 720px;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  color: #53615b;
+  margin: 1.4rem 0 0;
+}
+.page-hero-about {
+  background:
+    radial-gradient(circle at 82% 18%, rgba(18,60,46,.10), transparent 28%),
+    linear-gradient(180deg, #fbf8f1, #f3eddf);
+}
+.page-hero-idealizer {
+  background:
+    radial-gradient(circle at 82% 18%, rgba(200,161,90,.18), transparent 28%),
+    linear-gradient(180deg, #fbf8f1, #f6f0e5);
+}
+
+.project-grid-pages { grid-template-columns: 1fr; gap: 2rem; }
+.project-grid-pages .project-card { min-height: 430px; grid-template-columns: 1.05fr .95fr; }
+.project-grid-pages .project-card h2 {
+  font-size: clamp(2.6rem, 4vw, 4rem);
+  margin: .55rem 0 .8rem;
+}
+.project-detail { color: #61706a; font-size: .98rem; }
+
+.about-body { background: #fffdf8; }
+.about-grid {
+  display: grid;
+  grid-template-columns: .85fr 1.15fr;
+  gap: 5rem;
+  align-items: start;
+}
+.about-copy { font-size: 1.08rem; }
+.about-copy p:first-child { margin-top: 0; }
+.about-pillars { background: var(--ivory); }
+.idealizer-teaser { background: #fffdf8; border-top: 1px solid rgba(159,119,47,.12); }
+
+@media (max-width: 960px) {
+  .main-nav a.active::after { display: none; }
+  .home-projects-inner,
+  .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .project-grid-pages .project-card { grid-template-columns: 1fr; }
+  .project-grid-pages .project-card img { height: 300px; order: -1; }
+}
+
+@media (max-width: 680px) {
+  .page-hero { padding: 78px 0 58px; }
+  .home-projects-inner .button { width: 100%; }
+}
+
+.project-logo{width:min(100%,290px)!important;height:auto!important;object-fit:contain!important;margin:0 0 1rem}.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}.project-grid-pages .project-copy{padding-top:2rem;padding-bottom:2rem}@media(max-width:680px){.project-logo{width:min(100%,250px)!important;margin-inline:auto}}
+
+/* Projetos: apresentação tipográfica provisória até a identidade visual definitiva */
+.project-grid-pages {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+}
+.project-grid-pages .project-card {
+  min-height: 100%;
+  grid-template-columns: 1fr;
+}
+.project-grid-pages .project-copy {
+  padding: 2.5rem 2.35rem;
+}
+.project-grid-pages .project-card h2 {
+  margin: .55rem 0 1rem;
+}
+@media (max-width: 860px) {
+  .project-grid-pages { grid-template-columns: 1fr; }
+}
+
+.project-logo {
+  width: min(100%, 265px) !important;
+  height: auto !important;
+  object-fit: contain !important;
+  margin: 0 0 1rem;
+}
+.project-visual {
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  object-fit: cover;
+}
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0,0,0,0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+.project-grid-pages {
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+.project-grid-pages .project-card {
+  grid-template-columns: 1.15fr .85fr;
+  min-height: 410px;
+}
+.project-grid-pages .project-copy {
+  padding: 2.25rem;
+}
+@media (max-width: 860px) {
+  .project-grid-pages .project-card { grid-template-columns: 1fr; }
+  .project-visual { min-height: 0; height: 240px !important; order: -1; }
+  .project-logo { width: min(100%, 240px) !important; }
+}
+
+
+/* Correção visual: removidas as reconstruções provisórias das marcas dos projetos.
+   Os cards ficam tipográficos até a aplicação das artes definitivas aprovadas. */
+.project-grid-pages {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+}
+.project-grid-pages .project-card {
+  grid-template-columns: 1fr;
+  min-height: 100%;
+}
+.project-grid-pages .project-copy {
+  padding: 2.6rem 2.4rem;
+}
+.project-grid-pages .project-card h2 {
+  font-size: clamp(2.7rem, 4vw, 4rem);
+  margin: .55rem 0 1rem;
+}
+@media (max-width: 860px) {
+  .project-grid-pages { grid-template-columns: 1fr; }
+}
+
+
+/* Agenda Via Santa Cruz */
+.agenda-hero {
+  background:
+    radial-gradient(circle at 80% 18%, rgba(200,161,90,.16), transparent 28%),
+    linear-gradient(180deg, #fbf8f1, #f4eee2);
+}
+.agenda-section { background: #fffdf8; }
+.agenda-toolbar {
+  display: flex;
+  gap: .65rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+.agenda-tab {
+  min-height: 44px;
+  border: 1px solid rgba(18,60,46,.18);
+  background: transparent;
+  color: var(--green);
+  border-radius: 999px;
+  padding: .72rem 1rem;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+.agenda-tab.active {
+  background: var(--green);
+  color: #fff;
+  border-color: var(--green);
+}
+.agenda-status {
+  color: #6a746e;
+  margin: 0 0 1.2rem;
+}
+.agenda-list {
+  display: grid;
+  gap: 1rem;
+}
+.agenda-event {
+  display: grid;
+  grid-template-columns: 128px 1fr;
+  gap: 1.4rem;
+  padding: 1.35rem 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 10px 32px rgba(18,60,46,.06);
+}
+.agenda-date {
+  border-right: 1px solid rgba(159,119,47,.18);
+  padding-right: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.agenda-date strong {
+  font-family: "Playfair Display", Georgia, serif;
+  color: var(--ink);
+  font-size: 1.65rem;
+  line-height: 1;
+}
+.agenda-date span {
+  margin-top: .35rem;
+  color: #6d7772;
+  font-size: .88rem;
+  text-transform: capitalize;
+}
+.agenda-event-copy h2 {
+  font-size: clamp(1.55rem, 3vw, 2.15rem);
+  margin: .35rem 0 .45rem;
+}
+.agenda-badges {
+  display: flex;
+  gap: .45rem;
+  flex-wrap: wrap;
+}
+.agenda-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: .2rem .6rem;
+  border-radius: 999px;
+  background: rgba(200,161,90,.14);
+  color: var(--gold-dark);
+  font-size: .73rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.agenda-badge.cancelled {
+  background: rgba(125,54,45,.10);
+  color: #7d362d;
+}
+.agenda-meta {
+  margin: 0;
+  color: #5d6963;
+  font-weight: 700;
+}
+.agenda-description {
+  margin: .75rem 0 0;
+  color: #66716b;
+}
+.agenda-event.is-cancelled { opacity: .72; }
+.agenda-event.is-cancelled h2 { text-decoration: line-through; }
+
+@media (max-width: 680px) {
+  .agenda-event {
+    grid-template-columns: 1fr;
+    padding: 1.15rem;
+  }
+  .agenda-date {
+    border-right: 0;
+    border-bottom: 1px solid rgba(159,119,47,.18);
+    padding: 0 0 .8rem;
+    flex-direction: row;
+    align-items: baseline;
+    gap: .7rem;
+  }
+  .agenda-date strong { font-size: 1.4rem; }
+  .agenda-date span { margin: 0; }
+}
+
+
+/* Agenda — refinamento de experiência */
+.agenda-intro {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 3rem;
+  align-items: end;
+  margin-bottom: 2.4rem;
+}
+.agenda-intro-label {
+  display: block;
+  color: var(--gold-dark);
+  text-transform: uppercase;
+  letter-spacing: .18em;
+  font-size: .73rem;
+  font-weight: 900;
+  margin-bottom: .55rem;
+}
+.agenda-intro h2 {
+  font-size: clamp(2rem, 4vw, 3.3rem);
+}
+.agenda-intro > p {
+  margin: 0;
+  max-width: 620px;
+  color: #5e6a64;
+}
+.agenda-toolbar {
+  margin-bottom: 1rem;
+}
+.agenda-tab,
+.agenda-category {
+  transition: background .18s ease, color .18s ease, border-color .18s ease, transform .18s ease;
+}
+.agenda-tab:hover,
+.agenda-category:hover {
+  transform: translateY(-1px);
+}
+.agenda-tools {
+  display: grid;
+  gap: .8rem;
+  margin-bottom: 1.15rem;
+}
+.agenda-search {
+  display: block;
+  position: relative;
+}
+.agenda-search input {
+  width: 100%;
+  min-height: 52px;
+  border: 1px solid rgba(18,60,46,.16);
+  border-radius: 14px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  padding: .85rem 1rem;
+  box-shadow: 0 8px 24px rgba(18,60,46,.04);
+}
+.agenda-search input::placeholder {
+  color: #89918d;
+}
+.agenda-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+.agenda-category {
+  min-height: 36px;
+  border: 1px solid rgba(159,119,47,.22);
+  border-radius: 999px;
+  background: rgba(255,255,255,.72);
+  color: #65706a;
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 900;
+  padding: .45rem .78rem;
+  cursor: pointer;
+}
+.agenda-category.active {
+  background: rgba(200,161,90,.14);
+  color: var(--gold-dark);
+  border-color: rgba(159,119,47,.42);
+}
+.agenda-result-line {
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.1rem;
+  padding-bottom: .8rem;
+  border-bottom: 1px solid rgba(159,119,47,.13);
+}
+.agenda-status {
+  margin: 0;
+}
+.agenda-updated {
+  color: #8a928e;
+  font-size: .8rem;
+  white-space: nowrap;
+}
+.agenda-list {
+  gap: 2.2rem;
+}
+.agenda-month {
+  display: grid;
+  gap: .9rem;
+}
+.agenda-month-title {
+  margin: 0;
+  padding-top: .25rem;
+  font-family: "Playfair Display", Georgia, serif;
+  color: var(--green);
+  font-size: clamp(1.7rem, 3vw, 2.35rem);
+  text-transform: capitalize;
+}
+.agenda-month-events {
+  display: grid;
+  gap: .85rem;
+}
+.agenda-event {
+  grid-template-columns: 112px 1fr;
+  padding: 1.2rem 1.35rem;
+  box-shadow: 0 8px 24px rgba(18,60,46,.045);
+}
+.agenda-date {
+  align-items: center;
+  text-align: center;
+}
+.agenda-day {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 2.3rem !important;
+  color: var(--ink);
+}
+.agenda-month-short {
+  margin-top: .1rem !important;
+  color: var(--gold-dark) !important;
+  font-size: .72rem !important;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+.agenda-weekday {
+  margin-top: .2rem !important;
+  font-size: .78rem !important;
+}
+.agenda-event-copy h3 {
+  font-family: "Playfair Display", Georgia, serif;
+  color: var(--ink);
+  font-size: clamp(1.35rem, 2.6vw, 1.9rem);
+  line-height: 1.12;
+  margin: .35rem 0 .4rem;
+}
+.agenda-add {
+  display: inline-flex;
+  margin-top: .8rem;
+  color: var(--green);
+  font-size: .84rem;
+  font-weight: 900;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(18,60,46,.2);
+}
+.agenda-add:hover {
+  color: var(--gold-dark);
+  border-color: var(--gold);
+}
+.agenda-event.is-cancelled {
+  background: #fbf7f4;
+  border-color: rgba(125,54,45,.16);
+}
+.agenda-event.is-cancelled h3 {
+  text-decoration: line-through;
+}
+
+@media (max-width: 800px) {
+  .agenda-intro {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .agenda-result-line {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: .25rem;
+  }
+  .agenda-updated { white-space: normal; }
+}
+
+@media (max-width: 680px) {
+  .agenda-section { padding-top: 52px; }
+  .agenda-toolbar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: .2rem;
+    scrollbar-width: none;
+  }
+  .agenda-toolbar::-webkit-scrollbar,
+  .agenda-categories::-webkit-scrollbar {
+    display: none;
+  }
+  .agenda-tab { flex: 0 0 auto; }
+  .agenda-categories {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: .15rem;
+  }
+  .agenda-category { flex: 0 0 auto; }
+  .agenda-event {
+    grid-template-columns: 76px 1fr;
+    gap: .9rem;
+    padding: 1rem;
+  }
+  .agenda-date {
+    border-right: 1px solid rgba(159,119,47,.18);
+    border-bottom: 0;
+    padding: 0 .8rem 0 0;
+    flex-direction: column;
+    gap: 0;
+    justify-content: flex-start;
+  }
+  .agenda-day { font-size: 2rem !important; }
+  .agenda-event-copy h3 { font-size: 1.35rem; }
+  .agenda-description { font-size: .93rem; }
+}
+
+@media (max-width: 430px) {
+  .agenda-event {
+    grid-template-columns: 66px 1fr;
+    gap: .75rem;
+  }
+  .agenda-date { padding-right: .65rem; }
+  .agenda-day { font-size: 1.82rem !important; }
+  .agenda-weekday { font-size: .72rem !important; }
+}
+
+
+/* Agenda — filtros compactos e visualização mensal */
+.agenda-field-label {
+  display: block;
+  margin: 0 0 .35rem;
+  color: #6d7772;
+  font-size: .75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.agenda-filter-grid {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr) auto;
+  gap: .7rem;
+  align-items: end;
+}
+.agenda-select-field select {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid rgba(18,60,46,.16);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 700;
+  padding: .65rem 2.2rem .65rem .8rem;
+}
+.agenda-view-toggle {
+  display: inline-flex;
+  border: 1px solid rgba(18,60,46,.16);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+.agenda-view-button {
+  min-height: 44px;
+  border: 0;
+  border-right: 1px solid rgba(18,60,46,.12);
+  background: transparent;
+  color: var(--green);
+  font: inherit;
+  font-weight: 900;
+  padding: .65rem .85rem;
+  cursor: pointer;
+}
+.agenda-view-button:last-child { border-right: 0; }
+.agenda-view-button.active { background: var(--green); color: #fff; }
+
+.agenda-day { font-size: 1.72rem !important; }
+.agenda-month-short { font-size: .67rem !important; }
+.agenda-weekday { font-size: .72rem !important; }
+
+.agenda-calendar {
+  margin-top: 1rem;
+}
+.agenda-calendar-head {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  gap: .5rem;
+  margin-bottom: .8rem;
+}
+.agenda-calendar-head h2 {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(1.7rem,4vw,2.4rem);
+  text-transform: capitalize;
+}
+.agenda-month-nav {
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(18,60,46,.16);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--green);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.agenda-weekdays,
+.agenda-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0,1fr));
+}
+.agenda-weekdays {
+  margin-bottom: .35rem;
+  color: #7b8580;
+  font-size: .72rem;
+  font-weight: 900;
+  text-align: center;
+  text-transform: uppercase;
+}
+.agenda-calendar-grid {
+  border-top: 1px solid rgba(159,119,47,.18);
+  border-left: 1px solid rgba(159,119,47,.18);
+}
+.agenda-calendar-cell {
+  min-height: 108px;
+  position: relative;
+  border: 0;
+  border-right: 1px solid rgba(159,119,47,.18);
+  border-bottom: 1px solid rgba(159,119,47,.18);
+  background: rgba(255,255,255,.74);
+  padding: .55rem;
+  text-align: left;
+  color: var(--ink);
+  cursor: default;
+}
+.agenda-calendar-cell.has-events {
+  cursor: pointer;
+  background: #fff;
+}
+.agenda-calendar-cell.has-events:hover {
+  background: #fbf7ed;
+}
+.agenda-calendar-cell.is-empty {
+  background: rgba(247,243,234,.42);
+}
+.agenda-calendar-number {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  font-weight: 900;
+}
+.agenda-calendar-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  margin-left: .2rem;
+  padding: 0 .35rem;
+  border-radius: 999px;
+  background: rgba(200,161,90,.16);
+  color: var(--gold-dark);
+  font-size: .72rem;
+  font-weight: 900;
+}
+.agenda-calendar-preview {
+  display: grid;
+  gap: .25rem;
+  margin-top: .35rem;
+}
+.agenda-calendar-preview span {
+  display: block;
+  overflow: hidden;
+  color: #65706a;
+  font-size: .7rem;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.agenda-day-events {
+  display: grid;
+  gap: .75rem;
+  margin-top: 1.3rem;
+}
+.agenda-day-events > h3 {
+  margin: 0;
+  font-size: 1.6rem;
+  text-transform: capitalize;
+}
+
+@media (max-width: 680px) {
+  .agenda-filter-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .agenda-view-field {
+    grid-column: 1 / -1;
+  }
+  .agenda-view-toggle { width: 100%; }
+  .agenda-view-button { flex: 1; }
+  .agenda-event {
+    grid-template-columns: 58px 1fr;
+  }
+  .agenda-date {
+    padding-right: .55rem;
+  }
+  .agenda-day { font-size: 1.45rem !important; }
+  .agenda-month-short { font-size: .62rem !important; }
+  .agenda-weekday { display: none; }
+  .agenda-calendar-cell {
+    min-height: 58px;
+    padding: .28rem;
+  }
+  .agenda-calendar-number {
+    width: 22px;
+    height: 22px;
+    font-size: .8rem;
+  }
+  .agenda-calendar-count {
+    min-width: 18px;
+    height: 18px;
+    font-size: .65rem;
+    padding: 0 .25rem;
+  }
+  .agenda-calendar-preview { display: none; }
+}
+
+.preview-ribbon{background:#123C2E;color:#fff;text-align:center;padding:.62rem 1rem;font-size:.86rem;font-weight:900;letter-spacing:.04em}
+.preview-ribbon span{color:#C8A15A}
+</style>
 </head>
-<body>
-  <div class="preview-ribbon">PRÉVIA PRIVADA POR LINK · <span>ainda não integrada ao menu público</span></div>
+<body><div class="preview-ribbon">PRÉVIA PRIVADA POR LINK · <span>ainda não integrada ao menu público</span></div>
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="/" aria-label="Via Santa Cruz — início">
         <img src="/assets/vsc-mark.svg" alt="Via Santa Cruz" width="78" height="54">
-        <span class="brand-copy"><strong>Via Santa Cruz</strong><small>Projetos que nascem para servir.</small></span>
+        <span class="brand-copy">
+          <strong>Via Santa Cruz</strong>
+          <small>Projetos que nascem para servir.</small>
+        </span>
       </a>
-      <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+
+      <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+
       <nav class="main-nav" id="main-nav" aria-label="Navegação principal">
-        <a href="/">Início</a><a href="/projetos.html">Projetos</a><a href="/sobre.html">Sobre</a>
+        <a href="/">Início</a>
+        <a class="active" href="/projetos.html">Projetos</a>
+        <a href="/sobre.html">Sobre</a>
       </nav>
     </div>
   </header>
@@ -80,57 +1133,439 @@
     <section class="agenda-section section">
       <div class="container">
         <div class="agenda-intro">
-          <div><span class="agenda-intro-label">Via Santa Cruz</span><h2>A Igreja também se encontra no tempo.</h2></div>
+          <div>
+            <span class="agenda-intro-label">Via Santa Cruz</span>
+            <h2>A Igreja também se encontra no tempo.</h2>
+          </div>
           <p>Esta agenda reúne apenas calendários públicos previamente autorizados. As informações são atualizadas automaticamente a partir do Google Calendar.</p>
         </div>
+
         <div class="agenda-toolbar" aria-label="Seções da agenda">
           <button class="agenda-tab active" data-scope="main" type="button">Próximos</button>
           <button class="agenda-tab" data-scope="liturgico" type="button">Liturgia</button>
           <button class="agenda-tab" data-scope="padroeiros" type="button">Padroeiros</button>
         </div>
+
         <div class="agenda-tools">
-          <label class="agenda-search"><span class="sr-only">Buscar na agenda</span><input id="agenda-search" type="search" placeholder="Buscar por celebração, paróquia, cidade…" autocomplete="off"></label>
-          <div id="agenda-categories" class="agenda-categories" aria-label="Filtrar por categoria"></div>
+          <label class="agenda-search">
+            <span class="agenda-field-label">Buscar</span>
+            <input id="agenda-search" type="search" placeholder="Celebração, cidade, palavra…" autocomplete="off">
+          </label>
+
+          <div class="agenda-filter-grid">
+            <label class="agenda-select-field">
+              <span class="agenda-field-label">Categoria</span>
+              <select id="agenda-category" aria-label="Filtrar por categoria">
+                <option value="all">Todas as categorias</option>
+              </select>
+            </label>
+
+            <label class="agenda-select-field">
+              <span class="agenda-field-label">Paróquia</span>
+              <select id="agenda-parish" aria-label="Filtrar por paróquia">
+                <option value="all">Todas as paróquias</option>
+              </select>
+            </label>
+
+            <div class="agenda-view-field">
+              <span class="agenda-field-label">Visualização</span>
+              <div class="agenda-view-toggle" role="group" aria-label="Visualização da agenda">
+                <button class="agenda-view-button active" data-view="list" type="button">Lista</button>
+                <button class="agenda-view-button" data-view="month" type="button">Mês</button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="agenda-result-line"><div id="agenda-status" class="agenda-status" role="status">Carregando agenda…</div><div id="agenda-updated" class="agenda-updated"></div></div>
+
+        <div id="agenda-calendar" class="agenda-calendar" hidden>
+          <div class="agenda-calendar-head">
+            <button id="agenda-prev-month" class="agenda-month-nav" type="button" aria-label="Mês anterior">←</button>
+            <h2 id="agenda-calendar-title"></h2>
+            <button id="agenda-next-month" class="agenda-month-nav" type="button" aria-label="Próximo mês">→</button>
+          </div>
+          <div class="agenda-weekdays" aria-hidden="true">
+            <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+          </div>
+          <div id="agenda-calendar-grid" class="agenda-calendar-grid"></div>
+          <div id="agenda-day-events" class="agenda-day-events"></div>
+        </div>
+
+        <div class="agenda-result-line">
+          <div id="agenda-status" class="agenda-status" role="status">Carregando agenda…</div>
+          <div id="agenda-updated" class="agenda-updated" aria-live="polite"></div>
+        </div>
+
         <div id="agenda-list" class="agenda-list" aria-live="polite"></div>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer"><div class="container footer-inner"><a class="footer-brand" href="/"><span>Via Santa Cruz</span></a><p>© <span id="year"></span> Via Santa Cruz<br><a class="idealizer-link" href="/idealizador.html">Idealização: Pe. Silvanei Caixeta</a></p><nav aria-label="Navegação do rodapé"><a href="/">Início</a><a href="/projetos.html">Projetos</a><a href="/sobre.html">Sobre</a></nav><a class="domain" href="https://viasantacruz.com.br">viasantacruz.com.br</a></div></footer>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <a class="footer-brand" href="/"><span>Via Santa Cruz</span></a>
+      <p>© <span id="year"></span> Via Santa Cruz<br><a class="idealizer-link" href="/idealizador.html">Idealização: Pe. Silvanei Caixeta</a></p>
+      <nav aria-label="Navegação do rodapé">
+        <a href="/">Início</a>
+        <a href="/projetos.html">Projetos</a>
+        <a href="/sobre.html">Sobre</a>
+      </nav>
+      <a class="domain" href="https://viasantacruz.com.br">viasantacruz.com.br</a>
+    </div>
+  </footer>
 
   <script src="/script.js"></script>
   <script>
-  (() => {
-    const API = "https://vgpivbxykeobgjzqlqcl.supabase.co/functions/v1/vsc-agenda";
-    const list = document.getElementById("agenda-list");
-    const status = document.getElementById("agenda-status");
-    const updated = document.getElementById("agenda-updated");
-    const search = document.getElementById("agenda-search");
-    const categoryHost = document.getElementById("agenda-categories");
-    const tabs = Array.from(document.querySelectorAll(".agenda-tab"));
-    const TZ = "America/Sao_Paulo";
-    const fmtDay = new Intl.DateTimeFormat("pt-BR",{day:"2-digit",timeZone:TZ});
-    const fmtMonthShort = new Intl.DateTimeFormat("pt-BR",{month:"short",timeZone:TZ});
-    const fmtWeek = new Intl.DateTimeFormat("pt-BR",{weekday:"long",timeZone:TZ});
-    const fmtTime = new Intl.DateTimeFormat("pt-BR",{hour:"2-digit",minute:"2-digit",timeZone:TZ});
-    const fmtMonthYear = new Intl.DateTimeFormat("pt-BR",{month:"long",year:"numeric",timeZone:TZ});
-    const fmtLongDate = new Intl.DateTimeFormat("pt-BR",{day:"numeric",month:"long",timeZone:TZ});
-    const fmtUpdated = new Intl.DateTimeFormat("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit",timeZone:TZ});
-    let currentScope="main", currentCategory="all", currentEvents=[];
-    const esc=v=>String(v||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-    const norm=v=>String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
-    function monthKey(date){const parts=new Intl.DateTimeFormat("en-CA",{year:"numeric",month:"2-digit",timeZone:TZ}).formatToParts(date);return parts.find(p=>p.type==="year").value+"-"+parts.find(p=>p.type==="month").value}
-    function formatRange(ev){const s=new Date(ev.start),e=new Date(ev.end);if(!ev.all_day)return fmtTime.format(s);const ee=new Date(e.getTime()-1);return fmtLongDate.format(s)===fmtLongDate.format(ee)?"Dia inteiro":fmtLongDate.format(s)+" a "+fmtLongDate.format(ee)}
-    function calUrl(ev){const s=new Date(ev.start),e=new Date(ev.end);const utc=d=>d.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z$/,"Z");let dates;if(ev.all_day){const only=v=>new Intl.DateTimeFormat("en-CA",{year:"numeric",month:"2-digit",day:"2-digit",timeZone:TZ}).format(new Date(v)).replace(/-/g,"");dates=only(s)+"/"+only(e)}else dates=utc(s)+"/"+utc(e);const p=new URLSearchParams({action:"TEMPLATE",text:ev.title,dates});if(ev.location)p.set("location",ev.location);if(ev.description)p.set("details",ev.description);return"https://calendar.google.com/calendar/render?"+p.toString()}
-    function renderCategories(events){categoryHost.innerHTML="";if(currentScope!=="main")return;const cats=Array.from(new Set(events.map(e=>e.category).filter(Boolean))).sort((a,b)=>a.localeCompare(b,"pt-BR"));if(cats.length<2)return;["all",...cats].forEach(cat=>{const b=document.createElement("button");b.type="button";b.className="agenda-category"+(cat===currentCategory?" active":"");b.textContent=cat==="all"?"Todos":cat;b.onclick=()=>{currentCategory=cat;renderCategories(currentEvents);apply()};categoryHost.appendChild(b)})}
-    function filtered(){const term=norm(search.value.trim());return currentEvents.filter(ev=>{if(currentCategory!=="all"&&ev.category!==currentCategory)return false;if(!term)return true;return norm([ev.title,ev.location,ev.description,ev.category,ev.source_label].filter(Boolean).join(" ")).includes(term)})}
-    function render(events){list.innerHTML="";if(!events.length){status.textContent="Nenhum acontecimento encontrado com estes filtros.";return}status.textContent=(events.length===1?"1 acontecimento":events.length+" acontecimentos")+" encontrado"+(events.length===1?"":"s")+".";const groups=new Map();events.forEach(ev=>{const k=monthKey(new Date(ev.start));if(!groups.has(k))groups.set(k,[]);groups.get(k).push(ev)});const frag=document.createDocumentFragment();groups.forEach(monthEvents=>{const sec=document.createElement("section");sec.className="agenda-month";const h=document.createElement("h2");h.className="agenda-month-title";h.textContent=fmtMonthYear.format(new Date(monthEvents[0].start));sec.appendChild(h);const cards=document.createElement("div");cards.className="agenda-month-events";monthEvents.forEach(ev=>{const d=new Date(ev.start),card=document.createElement("article");card.className="agenda-event"+(ev.cancelled?" is-cancelled":"");const badges=['<span class="agenda-badge">'+esc(ev.category||ev.source_label)+"</span>"];if(ev.cancelled)badges.unshift('<span class="agenda-badge cancelled">Cancelado</span>');const desc=ev.description&&currentScope!=="liturgico"?'<p class="agenda-description">'+esc(ev.description).replace(/\n/g,"<br>")+"</p>":"";const action=ev.cancelled?"":'<a class="agenda-add" target="_blank" rel="noopener" href="'+esc(calUrl(ev))+'">Adicionar à minha agenda</a>';card.innerHTML='<div class="agenda-date"><strong class="agenda-day">'+esc(fmtDay.format(d))+'</strong><span class="agenda-month-short">'+esc(fmtMonthShort.format(d).replace(".","").toUpperCase())+'</span><span class="agenda-weekday">'+esc(fmtWeek.format(d))+'</span></div><div class="agenda-event-copy"><div class="agenda-badges">'+badges.join("")+"</div><h3>"+esc(ev.title)+'</h3><p class="agenda-meta">'+esc(formatRange(ev))+(ev.location?" · "+esc(ev.location):"")+"</p>"+desc+action+"</div>";cards.appendChild(card)});sec.appendChild(cards);frag.appendChild(sec)});list.appendChild(frag)}
-    function apply(){render(filtered())}
-    async function load(scope){currentScope=scope;currentCategory="all";currentEvents=[];list.innerHTML="";status.textContent="Carregando agenda…";updated.textContent="";categoryHost.innerHTML="";search.value="";tabs.forEach(t=>t.classList.toggle("active",t.dataset.scope===scope));try{const res=await fetch(API+"?scope="+encodeURIComponent(scope)+"&days=365",{cache:"no-store"});if(!res.ok)throw new Error();const data=await res.json();currentEvents=data.events||[];renderCategories(currentEvents);apply();const ds=(data.sources||[]).map(s=>s.last_synced_at).filter(Boolean).map(v=>new Date(v)).filter(d=>!Number.isNaN(d.getTime()));const ref=ds.length?new Date(Math.max(...ds.map(d=>d.getTime()))):(data.generated_at?new Date(data.generated_at):null);if(ref&&!Number.isNaN(ref.getTime()))updated.textContent="Atualizado em "+fmtUpdated.format(ref)}catch(e){status.textContent="Não foi possível carregar a agenda agora. Tente novamente em alguns instantes."}}
-    search.addEventListener("input",apply);tabs.forEach(t=>t.addEventListener("click",()=>load(t.dataset.scope||"main")));load("main");
-  })();
-  </script>
+(() => {
+  const API = "https://vgpivbxykeobgjzqlqcl.supabase.co/functions/v1/vsc-agenda";
+  const list = document.getElementById("agenda-list");
+  const status = document.getElementById("agenda-status");
+  const updated = document.getElementById("agenda-updated");
+  const search = document.getElementById("agenda-search");
+  const categorySelect = document.getElementById("agenda-category");
+  const parishSelect = document.getElementById("agenda-parish");
+  const tabs = Array.from(document.querySelectorAll(".agenda-tab"));
+  const viewButtons = Array.from(document.querySelectorAll(".agenda-view-button"));
+  const calendar = document.getElementById("agenda-calendar");
+  const calendarTitle = document.getElementById("agenda-calendar-title");
+  const calendarGrid = document.getElementById("agenda-calendar-grid");
+  const dayEvents = document.getElementById("agenda-day-events");
+  const prevMonth = document.getElementById("agenda-prev-month");
+  const nextMonth = document.getElementById("agenda-next-month");
+
+  const TZ = "America/Sao_Paulo";
+  const fmtDay = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", timeZone: TZ });
+  const fmtMonthShort = new Intl.DateTimeFormat("pt-BR", { month: "short", timeZone: TZ });
+  const fmtWeek = new Intl.DateTimeFormat("pt-BR", { weekday: "long", timeZone: TZ });
+  const fmtTime = new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit", timeZone: TZ });
+  const fmtMonthYear = new Intl.DateTimeFormat("pt-BR", { month: "long", year: "numeric", timeZone: TZ });
+  const fmtLongDate = new Intl.DateTimeFormat("pt-BR", { day: "numeric", month: "long", timeZone: TZ });
+  const fmtUpdated = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit", timeZone: TZ });
+
+  let currentScope = "main";
+  let currentCategory = "all";
+  let currentParish = "all";
+  let currentView = "list";
+  let currentEvents = [];
+  let calendarCursor = startOfMonth(new Date());
+
+  function esc(value) {
+    return String(value || "").replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+    })[c]);
+  }
+
+  function normalize(value) {
+    return String(value || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function startOfMonth(date) {
+    return new Date(date.getFullYear(), date.getMonth(), 1, 12, 0, 0);
+  }
+
+  function dateKey(date) {
+    return new Intl.DateTimeFormat("en-CA", {
+      year: "numeric", month: "2-digit", day: "2-digit", timeZone: TZ
+    }).format(date);
+  }
+
+  function monthKey(date) {
+    return dateKey(date).slice(0, 7);
+  }
+
+  function extractParish(title) {
+    const value = String(title || "");
+    const matches = [...value.matchAll(/(?:Par\.|Paróquia)\s+([^\n]+)/gi)];
+    if (!matches.length) return "";
+    let label = matches[matches.length - 1][1]
+      .replace(/^Paróquia\s+/i, "")
+      .replace(/\s*\([^)]*\)\s*$/g, "")
+      .replace(/\s+\(Ver Horário\)\s*$/i, "")
+      .trim();
+
+    // Mantém a cidade quando ela faz parte do título e remove complementos muito específicos.
+    label = label.replace(/\s+-\s+.*$/g, "").trim();
+    return label;
+  }
+
+  function parishKey(title) {
+    return normalize(extractParish(title))
+      .replace(/^sta\.?\s+/,"santa ")
+      .replace(/^sto\.?\s+/,"santo ")
+      .replace(/^n\.?\s*sra\.?\s+/,"nossa senhora ")
+      .replace(/^qpar\.?\s+/,"");
+  }
+
+  function formatRange(ev) {
+    const start = new Date(ev.start);
+    const end = new Date(ev.end);
+    if (!ev.all_day) return fmtTime.format(start);
+
+    const effectiveEnd = new Date(end.getTime() - 1);
+    const sameDay = fmtLongDate.format(start) === fmtLongDate.format(effectiveEnd);
+    return sameDay ? "Dia inteiro" : fmtLongDate.format(start) + " a " + fmtLongDate.format(effectiveEnd);
+  }
+
+  function buildGoogleCalendarUrl(ev) {
+    const start = new Date(ev.start);
+    const end = new Date(ev.end);
+    const formatUtc = (date) => date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
+
+    let dates;
+    if (ev.all_day) {
+      const dateOnly = (value) => dateKey(new Date(value)).replace(/-/g, "");
+      dates = dateOnly(start) + "/" + dateOnly(end);
+    } else {
+      dates = formatUtc(start) + "/" + formatUtc(end);
+    }
+
+    const params = new URLSearchParams({ action: "TEMPLATE", text: ev.title, dates });
+    if (ev.location) params.set("location", ev.location);
+    if (ev.description) params.set("details", ev.description);
+    return "https://calendar.google.com/calendar/render?" + params.toString();
+  }
+
+  function populateFilters(events) {
+    const categories = Array.from(new Set(events.map((ev) => ev.category).filter(Boolean)))
+      .sort((a, b) => a.localeCompare(b, "pt-BR"));
+
+    categorySelect.innerHTML = '<option value="all">Todas as categorias</option>';
+    categories.forEach((category) => {
+      const option = document.createElement("option");
+      option.value = category;
+      option.textContent = category;
+      categorySelect.appendChild(option);
+    });
+    categorySelect.value = currentCategory;
+
+    const parishMap = new Map();
+    events.forEach((ev) => {
+      const label = extractParish(ev.title);
+      const key = parishKey(ev.title);
+      if (label && key && !parishMap.has(key)) parishMap.set(key, label);
+    });
+
+    const parishes = Array.from(parishMap.entries()).sort((a, b) => a[1].localeCompare(b[1], "pt-BR"));
+    parishSelect.innerHTML = '<option value="all">Todas as paróquias</option>';
+    parishes.forEach(([key, label]) => {
+      const option = document.createElement("option");
+      option.value = key;
+      option.textContent = label;
+      parishSelect.appendChild(option);
+    });
+    parishSelect.value = currentParish;
+    parishSelect.closest(".agenda-select-field").hidden = currentScope !== "main";
+  }
+
+  function filteredEvents() {
+    const term = normalize(search.value.trim());
+
+    return currentEvents.filter((ev) => {
+      if (currentCategory !== "all" && ev.category !== currentCategory) return false;
+      if (currentParish !== "all" && parishKey(ev.title) !== currentParish) return false;
+
+      if (!term) return true;
+      const haystack = normalize([ev.title, ev.location, ev.description, ev.category, ev.source_label].filter(Boolean).join(" "));
+      return haystack.includes(term);
+    });
+  }
+
+  function renderEventCard(ev) {
+    const date = new Date(ev.start);
+    const card = document.createElement("article");
+    card.className = "agenda-event" + (ev.cancelled ? " is-cancelled" : "");
+
+    const badges = ['<span class="agenda-badge">' + esc(ev.category || ev.source_label) + "</span>"];
+    if (ev.cancelled) badges.unshift('<span class="agenda-badge cancelled">Cancelado</span>');
+
+    const desc = ev.description && currentScope !== "liturgico"
+      ? '<p class="agenda-description">' + esc(ev.description).replace(/\n/g, "<br>") + "</p>"
+      : "";
+
+    const calendarAction = ev.cancelled ? "" :
+      '<a class="agenda-add" target="_blank" rel="noopener" href="' + esc(buildGoogleCalendarUrl(ev)) + '">Adicionar à minha agenda</a>';
+
+    card.innerHTML =
+      '<div class="agenda-date">' +
+        '<strong class="agenda-day">' + esc(fmtDay.format(date)) + "</strong>" +
+        '<span class="agenda-month-short">' + esc(fmtMonthShort.format(date).replace(".", "").toUpperCase()) + "</span>" +
+        '<span class="agenda-weekday">' + esc(fmtWeek.format(date)) + "</span>" +
+      "</div>" +
+      '<div class="agenda-event-copy">' +
+        '<div class="agenda-badges">' + badges.join("") + "</div>" +
+        "<h3>" + esc(ev.title) + "</h3>" +
+        '<p class="agenda-meta">' + esc(formatRange(ev)) + (ev.location ? " · " + esc(ev.location) : "") + "</p>" +
+        desc + calendarAction +
+      "</div>";
+
+    return card;
+  }
+
+  function renderList(events) {
+    list.innerHTML = "";
+    if (!events.length) {
+      status.textContent = "Nenhum acontecimento encontrado com estes filtros.";
+      return;
+    }
+
+    status.textContent = (events.length === 1 ? "1 acontecimento" : events.length + " acontecimentos") + " encontrado" + (events.length === 1 ? "" : "s") + ".";
+
+    const groups = new Map();
+    events.forEach((ev) => {
+      const key = monthKey(new Date(ev.start));
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(ev);
+    });
+
+    const frag = document.createDocumentFragment();
+    groups.forEach((monthEvents) => {
+      const section = document.createElement("section");
+      section.className = "agenda-month";
+      const heading = document.createElement("h2");
+      heading.className = "agenda-month-title";
+      heading.textContent = fmtMonthYear.format(new Date(monthEvents[0].start));
+      section.appendChild(heading);
+
+      const cards = document.createElement("div");
+      cards.className = "agenda-month-events";
+      monthEvents.forEach((ev) => cards.appendChild(renderEventCard(ev)));
+      section.appendChild(cards);
+      frag.appendChild(section);
+    });
+    list.appendChild(frag);
+  }
+
+  function renderDayEvents(dayKey, events) {
+    const selected = events.filter((ev) => dateKey(new Date(ev.start)) === dayKey);
+    dayEvents.innerHTML = "";
+    if (!selected.length) return;
+
+    const heading = document.createElement("h3");
+    heading.textContent = fmtLongDate.format(new Date(selected[0].start));
+    dayEvents.appendChild(heading);
+    selected.forEach((ev) => dayEvents.appendChild(renderEventCard(ev)));
+  }
+
+  function renderCalendar(events) {
+    const cursor = calendarCursor;
+    calendarTitle.textContent = fmtMonthYear.format(cursor);
+    calendarGrid.innerHTML = "";
+    dayEvents.innerHTML = "";
+
+    const year = cursor.getFullYear();
+    const month = cursor.getMonth();
+    const first = new Date(year, month, 1, 12);
+    const last = new Date(year, month + 1, 0, 12);
+    const leading = first.getDay();
+
+    for (let i = 0; i < leading; i++) {
+      const blank = document.createElement("div");
+      blank.className = "agenda-calendar-cell is-empty";
+      calendarGrid.appendChild(blank);
+    }
+
+    for (let day = 1; day <= last.getDate(); day++) {
+      const date = new Date(year, month, day, 12);
+      const key = dateKey(date);
+      const dayMatches = events.filter((ev) => dateKey(new Date(ev.start)) === key);
+
+      const cell = document.createElement("button");
+      cell.type = "button";
+      cell.className = "agenda-calendar-cell" + (dayMatches.length ? " has-events" : "");
+      cell.innerHTML = '<span class="agenda-calendar-number">' + day + '</span>' +
+        (dayMatches.length ? '<span class="agenda-calendar-count">' + dayMatches.length + '</span>' : "");
+
+      const preview = document.createElement("span");
+      preview.className = "agenda-calendar-preview";
+      dayMatches.slice(0, 2).forEach((ev) => {
+        const item = document.createElement("span");
+        item.textContent = ev.title;
+        preview.appendChild(item);
+      });
+      cell.appendChild(preview);
+
+      if (dayMatches.length) cell.addEventListener("click", () => renderDayEvents(key, events));
+      calendarGrid.appendChild(cell);
+    }
+
+    const monthMatches = events.filter((ev) => {
+      const d = new Date(ev.start);
+      return d.getFullYear() === year && d.getMonth() === month;
+    });
+    status.textContent = monthMatches.length === 1 ? "1 acontecimento neste mês." : monthMatches.length + " acontecimentos neste mês.";
+  }
+
+  function applyFilters() {
+    const events = filteredEvents();
+    if (currentView === "month") renderCalendar(events);
+    else renderList(events);
+  }
+
+  function setView(view) {
+    currentView = view;
+    viewButtons.forEach((button) => button.classList.toggle("active", button.dataset.view === view));
+    const isMonth = view === "month";
+    calendar.hidden = !isMonth;
+    list.hidden = isMonth;
+    applyFilters();
+  }
+
+  async function load(scope) {
+    currentScope = scope;
+    currentCategory = "all";
+    currentParish = "all";
+    currentEvents = [];
+    list.innerHTML = "";
+    calendarGrid.innerHTML = "";
+    dayEvents.innerHTML = "";
+    status.textContent = "Carregando agenda…";
+    updated.textContent = "";
+    search.value = "";
+    tabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.scope === scope));
+
+    try {
+      const response = await fetch(API + "?scope=" + encodeURIComponent(scope) + "&days=365", { cache: "no-store" });
+      if (!response.ok) throw new Error("http");
+      const data = await response.json();
+
+      currentEvents = data.events || [];
+      populateFilters(currentEvents);
+
+      const firstEvent = currentEvents.find((ev) => new Date(ev.start) >= new Date());
+      calendarCursor = firstEvent ? startOfMonth(new Date(firstEvent.start)) : startOfMonth(new Date());
+      applyFilters();
+
+      const syncDates = (data.sources || [])
+        .map((source) => source.last_synced_at)
+        .filter(Boolean)
+        .map((value) => new Date(value))
+        .filter((date) => !Number.isNaN(date.getTime()));
+
+      const reference = syncDates.length
+        ? new Date(Math.max(...syncDates.map((date) => date.getTime())))
+        : (data.generated_at ? new Date(data.generated_at) : null);
+
+      if (reference && !Number.isNaN(reference.getTime())) updated.textContent = "Atualizado em " + fmtUpdated.format(reference);
+    } catch {
+      status.textContent = "Não foi possível carregar a agenda agora. Tente novamente em alguns instantes.";
+    }
+  }
+
+  search.addEventListener("input", applyFilters);
+  categorySelect.addEventListener("change", () => { currentCategory = categorySelect.value; applyFilters(); });
+  parishSelect.addEventListener("change", () => { currentParish = parishSelect.value; applyFilters(); });
+  viewButtons.forEach((button) => button.addEventListener("click", () => setView(button.dataset.view || "list")));
+  prevMonth.addEventListener("click", () => { calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() - 1, 1, 12); applyFilters(); });
+  nextMonth.addEventListener("click", () => { calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() + 1, 1, 12); applyFilters(); });
+  tabs.forEach((tab) => tab.addEventListener("click", () => load(tab.dataset.scope || "main")));
+
+  load("main");
+})();
+</script>
+  <script src="/analytics.js"></script>
 </body>
 </html>
