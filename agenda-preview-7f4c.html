@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123C2E">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Prévia da Agenda — Via Santa Cruz</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/vsc-favicon-crop.svg">
+  <link rel="apple-touch-icon" href="/assets/vsc-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .preview-ribbon{background:#123C2E;color:#fff;text-align:center;padding:.62rem 1rem;font-size:.86rem;font-weight:900;letter-spacing:.04em}
+    .preview-ribbon span{color:#C8A15A}
+    .agenda-hero{background:radial-gradient(circle at 80% 18%,rgba(200,161,90,.16),transparent 28%),linear-gradient(180deg,#fbf8f1,#f4eee2)}
+    .agenda-section{background:#fffdf8}
+    .agenda-intro{display:grid;grid-template-columns:1fr 1.1fr;gap:3rem;align-items:end;margin-bottom:2.4rem}
+    .agenda-intro-label{display:block;color:#9F772F;text-transform:uppercase;letter-spacing:.18em;font-size:.73rem;font-weight:900;margin-bottom:.55rem}
+    .agenda-intro h2{font-size:clamp(2rem,4vw,3.3rem)}
+    .agenda-intro>p{margin:0;max-width:620px;color:#5e6a64}
+    .agenda-toolbar{display:flex;gap:.65rem;flex-wrap:wrap;margin-bottom:1rem}
+    .agenda-tab,.agenda-category{transition:background .18s ease,color .18s ease,border-color .18s ease,transform .18s ease}
+    .agenda-tab{min-height:44px;border:1px solid rgba(18,60,46,.18);background:transparent;color:#123C2E;border-radius:999px;padding:.72rem 1rem;font:inherit;font-weight:900;cursor:pointer}
+    .agenda-tab.active{background:#123C2E;color:#fff;border-color:#123C2E}
+    .agenda-tools{display:grid;gap:.8rem;margin-bottom:1.15rem}
+    .agenda-search{display:block}
+    .agenda-search input{width:100%;min-height:52px;border:1px solid rgba(18,60,46,.16);border-radius:14px;background:#fff;color:#173027;font:inherit;padding:.85rem 1rem;box-shadow:0 8px 24px rgba(18,60,46,.04)}
+    .agenda-categories{display:flex;flex-wrap:wrap;gap:.5rem}
+    .agenda-category{min-height:36px;border:1px solid rgba(159,119,47,.22);border-radius:999px;background:rgba(255,255,255,.72);color:#65706a;font:inherit;font-size:.82rem;font-weight:900;padding:.45rem .78rem;cursor:pointer}
+    .agenda-category.active{background:rgba(200,161,90,.14);color:#9F772F;border-color:rgba(159,119,47,.42)}
+    .agenda-result-line{min-height:30px;display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.1rem;padding-bottom:.8rem;border-bottom:1px solid rgba(159,119,47,.13)}
+    .agenda-status{color:#6a746e;margin:0}.agenda-updated{color:#8a928e;font-size:.8rem;white-space:nowrap}
+    .agenda-list{display:grid;gap:2.2rem}.agenda-month{display:grid;gap:.9rem}
+    .agenda-month-title{margin:0;padding-top:.25rem;font-family:"Playfair Display",Georgia,serif;color:#123C2E;font-size:clamp(1.7rem,3vw,2.35rem);text-transform:capitalize}
+    .agenda-month-events{display:grid;gap:.85rem}
+    .agenda-event{display:grid;grid-template-columns:112px 1fr;gap:1.4rem;padding:1.2rem 1.35rem;border:1px solid rgba(159,119,47,.28);border-radius:20px;background:#fff;box-shadow:0 8px 24px rgba(18,60,46,.045)}
+    .agenda-date{border-right:1px solid rgba(159,119,47,.18);padding-right:1.2rem;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+    .agenda-day{font-family:"Playfair Display",Georgia,serif;font-size:2.3rem;color:#173027;line-height:1}
+    .agenda-month-short{margin-top:.1rem;color:#9F772F;font-size:.72rem;font-weight:900;letter-spacing:.12em}
+    .agenda-weekday{margin-top:.2rem;color:#6d7772;font-size:.78rem;text-transform:capitalize}
+    .agenda-event-copy h3{font-family:"Playfair Display",Georgia,serif;color:#173027;font-size:clamp(1.35rem,2.6vw,1.9rem);line-height:1.12;margin:.35rem 0 .4rem}
+    .agenda-badges{display:flex;gap:.45rem;flex-wrap:wrap}.agenda-badge{display:inline-flex;align-items:center;min-height:24px;padding:.2rem .6rem;border-radius:999px;background:rgba(200,161,90,.14);color:#9F772F;font-size:.73rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+    .agenda-badge.cancelled{background:rgba(125,54,45,.10);color:#7d362d}
+    .agenda-meta{margin:0;color:#5d6963;font-weight:700}.agenda-description{margin:.75rem 0 0;color:#66716b}
+    .agenda-add{display:inline-flex;margin-top:.8rem;color:#123C2E;font-size:.84rem;font-weight:900;text-decoration:none;border-bottom:1px solid rgba(18,60,46,.2)}
+    .agenda-event.is-cancelled{background:#fbf7f4;border-color:rgba(125,54,45,.16);opacity:.78}.agenda-event.is-cancelled h3{text-decoration:line-through}
+    @media(max-width:800px){.agenda-intro{grid-template-columns:1fr;gap:1rem}.agenda-result-line{align-items:flex-start;flex-direction:column;gap:.25rem}.agenda-updated{white-space:normal}}
+    @media(max-width:680px){.agenda-section{padding-top:52px}.agenda-toolbar{flex-wrap:nowrap;overflow-x:auto;padding-bottom:.2rem;scrollbar-width:none}.agenda-tab{flex:0 0 auto}.agenda-categories{flex-wrap:nowrap;overflow-x:auto;padding-bottom:.15rem;scrollbar-width:none}.agenda-category{flex:0 0 auto}.agenda-event{grid-template-columns:76px 1fr;gap:.9rem;padding:1rem}.agenda-date{padding:0 .8rem 0 0;justify-content:flex-start}.agenda-day{font-size:2rem}.agenda-event-copy h3{font-size:1.35rem}.agenda-description{font-size:.93rem}}
+    @media(max-width:430px){.agenda-event{grid-template-columns:66px 1fr;gap:.75rem}.agenda-date{padding-right:.65rem}.agenda-day{font-size:1.82rem}.agenda-weekday{font-size:.72rem}}
+  </style>
+</head>
+<body>
+  <div class="preview-ribbon">PRÉVIA PRIVADA POR LINK · <span>ainda não integrada ao menu público</span></div>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="/" aria-label="Via Santa Cruz — início">
+        <img src="/assets/vsc-mark.svg" alt="Via Santa Cruz" width="78" height="54">
+        <span class="brand-copy"><strong>Via Santa Cruz</strong><small>Projetos que nascem para servir.</small></span>
+      </a>
+      <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+      <nav class="main-nav" id="main-nav" aria-label="Navegação principal">
+        <a href="/">Início</a><a href="/projetos.html">Projetos</a><a href="/sobre.html">Sobre</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <section class="page-hero agenda-hero">
+      <div class="container page-hero-inner">
+        <p class="section-kicker">Agenda</p>
+        <h1>Os acontecimentos que marcam o caminho.</h1>
+        <p>Uma leitura simples e organizada dos próximos compromissos, celebrações e datas da vida eclesial.</p>
+      </div>
+    </section>
+
+    <section class="agenda-section section">
+      <div class="container">
+        <div class="agenda-intro">
+          <div><span class="agenda-intro-label">Via Santa Cruz</span><h2>A Igreja também se encontra no tempo.</h2></div>
+          <p>Esta agenda reúne apenas calendários públicos previamente autorizados. As informações são atualizadas automaticamente a partir do Google Calendar.</p>
+        </div>
+        <div class="agenda-toolbar" aria-label="Seções da agenda">
+          <button class="agenda-tab active" data-scope="main" type="button">Próximos</button>
+          <button class="agenda-tab" data-scope="liturgico" type="button">Liturgia</button>
+          <button class="agenda-tab" data-scope="padroeiros" type="button">Padroeiros</button>
+        </div>
+        <div class="agenda-tools">
+          <label class="agenda-search"><span class="sr-only">Buscar na agenda</span><input id="agenda-search" type="search" placeholder="Buscar por celebração, paróquia, cidade…" autocomplete="off"></label>
+          <div id="agenda-categories" class="agenda-categories" aria-label="Filtrar por categoria"></div>
+        </div>
+        <div class="agenda-result-line"><div id="agenda-status" class="agenda-status" role="status">Carregando agenda…</div><div id="agenda-updated" class="agenda-updated"></div></div>
+        <div id="agenda-list" class="agenda-list" aria-live="polite"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="container footer-inner"><a class="footer-brand" href="/"><span>Via Santa Cruz</span></a><p>© <span id="year"></span> Via Santa Cruz<br><a class="idealizer-link" href="/idealizador.html">Idealização: Pe. Silvanei Caixeta</a></p><nav aria-label="Navegação do rodapé"><a href="/">Início</a><a href="/projetos.html">Projetos</a><a href="/sobre.html">Sobre</a></nav><a class="domain" href="https://viasantacruz.com.br">viasantacruz.com.br</a></div></footer>
+
+  <script src="/script.js"></script>
+  <script>
+  (() => {
+    const API = "https://vgpivbxykeobgjzqlqcl.supabase.co/functions/v1/vsc-agenda";
+    const list = document.getElementById("agenda-list");
+    const status = document.getElementById("agenda-status");
+    const updated = document.getElementById("agenda-updated");
+    const search = document.getElementById("agenda-search");
+    const categoryHost = document.getElementById("agenda-categories");
+    const tabs = Array.from(document.querySelectorAll(".agenda-tab"));
+    const TZ = "America/Sao_Paulo";
+    const fmtDay = new Intl.DateTimeFormat("pt-BR",{day:"2-digit",timeZone:TZ});
+    const fmtMonthShort = new Intl.DateTimeFormat("pt-BR",{month:"short",timeZone:TZ});
+    const fmtWeek = new Intl.DateTimeFormat("pt-BR",{weekday:"long",timeZone:TZ});
+    const fmtTime = new Intl.DateTimeFormat("pt-BR",{hour:"2-digit",minute:"2-digit",timeZone:TZ});
+    const fmtMonthYear = new Intl.DateTimeFormat("pt-BR",{month:"long",year:"numeric",timeZone:TZ});
+    const fmtLongDate = new Intl.DateTimeFormat("pt-BR",{day:"numeric",month:"long",timeZone:TZ});
+    const fmtUpdated = new Intl.DateTimeFormat("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit",timeZone:TZ});
+    let currentScope="main", currentCategory="all", currentEvents=[];
+    const esc=v=>String(v||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+    const norm=v=>String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+    function monthKey(date){const parts=new Intl.DateTimeFormat("en-CA",{year:"numeric",month:"2-digit",timeZone:TZ}).formatToParts(date);return parts.find(p=>p.type==="year").value+"-"+parts.find(p=>p.type==="month").value}
+    function formatRange(ev){const s=new Date(ev.start),e=new Date(ev.end);if(!ev.all_day)return fmtTime.format(s);const ee=new Date(e.getTime()-1);return fmtLongDate.format(s)===fmtLongDate.format(ee)?"Dia inteiro":fmtLongDate.format(s)+" a "+fmtLongDate.format(ee)}
+    function calUrl(ev){const s=new Date(ev.start),e=new Date(ev.end);const utc=d=>d.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z$/,"Z");let dates;if(ev.all_day){const only=v=>new Intl.DateTimeFormat("en-CA",{year:"numeric",month:"2-digit",day:"2-digit",timeZone:TZ}).format(new Date(v)).replace(/-/g,"");dates=only(s)+"/"+only(e)}else dates=utc(s)+"/"+utc(e);const p=new URLSearchParams({action:"TEMPLATE",text:ev.title,dates});if(ev.location)p.set("location",ev.location);if(ev.description)p.set("details",ev.description);return"https://calendar.google.com/calendar/render?"+p.toString()}
+    function renderCategories(events){categoryHost.innerHTML="";if(currentScope!=="main")return;const cats=Array.from(new Set(events.map(e=>e.category).filter(Boolean))).sort((a,b)=>a.localeCompare(b,"pt-BR"));if(cats.length<2)return;["all",...cats].forEach(cat=>{const b=document.createElement("button");b.type="button";b.className="agenda-category"+(cat===currentCategory?" active":"");b.textContent=cat==="all"?"Todos":cat;b.onclick=()=>{currentCategory=cat;renderCategories(currentEvents);apply()};categoryHost.appendChild(b)})}
+    function filtered(){const term=norm(search.value.trim());return currentEvents.filter(ev=>{if(currentCategory!=="all"&&ev.category!==currentCategory)return false;if(!term)return true;return norm([ev.title,ev.location,ev.description,ev.category,ev.source_label].filter(Boolean).join(" ")).includes(term)})}
+    function render(events){list.innerHTML="";if(!events.length){status.textContent="Nenhum acontecimento encontrado com estes filtros.";return}status.textContent=(events.length===1?"1 acontecimento":events.length+" acontecimentos")+" encontrado"+(events.length===1?"":"s")+".";const groups=new Map();events.forEach(ev=>{const k=monthKey(new Date(ev.start));if(!groups.has(k))groups.set(k,[]);groups.get(k).push(ev)});const frag=document.createDocumentFragment();groups.forEach(monthEvents=>{const sec=document.createElement("section");sec.className="agenda-month";const h=document.createElement("h2");h.className="agenda-month-title";h.textContent=fmtMonthYear.format(new Date(monthEvents[0].start));sec.appendChild(h);const cards=document.createElement("div");cards.className="agenda-month-events";monthEvents.forEach(ev=>{const d=new Date(ev.start),card=document.createElement("article");card.className="agenda-event"+(ev.cancelled?" is-cancelled":"");const badges=['<span class="agenda-badge">'+esc(ev.category||ev.source_label)+"</span>"];if(ev.cancelled)badges.unshift('<span class="agenda-badge cancelled">Cancelado</span>');const desc=ev.description&&currentScope!=="liturgico"?'<p class="agenda-description">'+esc(ev.description).replace(/\n/g,"<br>")+"</p>":"";const action=ev.cancelled?"":'<a class="agenda-add" target="_blank" rel="noopener" href="'+esc(calUrl(ev))+'">Adicionar à minha agenda</a>';card.innerHTML='<div class="agenda-date"><strong class="agenda-day">'+esc(fmtDay.format(d))+'</strong><span class="agenda-month-short">'+esc(fmtMonthShort.format(d).replace(".","").toUpperCase())+'</span><span class="agenda-weekday">'+esc(fmtWeek.format(d))+'</span></div><div class="agenda-event-copy"><div class="agenda-badges">'+badges.join("")+"</div><h3>"+esc(ev.title)+'</h3><p class="agenda-meta">'+esc(formatRange(ev))+(ev.location?" · "+esc(ev.location):"")+"</p>"+desc+action+"</div>";cards.appendChild(card)});sec.appendChild(cards);frag.appendChild(sec)});list.appendChild(frag)}
+    function apply(){render(filtered())}
+    async function load(scope){currentScope=scope;currentCategory="all";currentEvents=[];list.innerHTML="";status.textContent="Carregando agenda…";updated.textContent="";categoryHost.innerHTML="";search.value="";tabs.forEach(t=>t.classList.toggle("active",t.dataset.scope===scope));try{const res=await fetch(API+"?scope="+encodeURIComponent(scope)+"&days=365",{cache:"no-store"});if(!res.ok)throw new Error();const data=await res.json();currentEvents=data.events||[];renderCategories(currentEvents);apply();const ds=(data.sources||[]).map(s=>s.last_synced_at).filter(Boolean).map(v=>new Date(v)).filter(d=>!Number.isNaN(d.getTime()));const ref=ds.length?new Date(Math.max(...ds.map(d=>d.getTime()))):(data.generated_at?new Date(data.generated_at):null);if(ref&&!Number.isNaN(ref.getTime()))updated.textContent="Atualizado em "+fmtUpdated.format(ref)}catch(e){status.textContent="Não foi possível carregar a agenda agora. Tente novamente em alguns instantes."}}
+    search.addEventListener("input",apply);tabs.forEach(t=>t.addEventListener("click",()=>load(t.dataset.scope||"main")));load("main");
+  })();
+  </script>
+</body>
+</html>
