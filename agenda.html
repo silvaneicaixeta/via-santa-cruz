@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#123C2E">
   <meta name="description" content="Agenda Via Santa Cruz — acontecimentos, celebrações e datas que marcam o caminho.">
+  <meta property="og:title" content="Agenda — Via Santa Cruz">
+  <meta property="og:description" content="Acontecimentos, celebrações e datas da vida eclesial, reunidos em um só lugar.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://viasantacruz.com.br/agenda.html">
+  <link rel="canonical" href="https://viasantacruz.com.br/agenda.html">
+  <meta name="robots" content="index,follow">
   <title>Agenda — Via Santa Cruz</title>
   <link rel="icon" type="image/svg+xml" href="/assets/vsc-favicon-crop.svg">
   <link rel="apple-touch-icon" href="/assets/vsc-icon.png">
@@ -15,16 +21,24 @@
 </head>
 <body>
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="/" aria-label="Via Santa Cruz — início">
         <img src="/assets/vsc-mark.svg" alt="Via Santa Cruz" width="78" height="54">
-        <span class="brand-copy"><strong>Via Santa Cruz</strong><small>Projetos que nascem para servir.</small></span>
+        <span class="brand-copy">
+          <strong>Via Santa Cruz</strong>
+          <small>Projetos que nascem para servir.</small>
+        </span>
       </a>
-      <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+
+      <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+
       <nav class="main-nav" id="main-nav" aria-label="Navegação principal">
         <a href="/">Início</a>
-        <a href="/projetos.html">Projetos</a>
+        <a class="active" href="/projetos.html">Projetos</a>
         <a href="/sobre.html">Sobre</a>
       </nav>
     </div>
@@ -41,12 +55,33 @@
 
     <section class="agenda-section section">
       <div class="container">
-        <div class="agenda-toolbar" aria-label="Filtros da agenda">
+        <div class="agenda-intro">
+          <div>
+            <span class="agenda-intro-label">Via Santa Cruz</span>
+            <h2>A Igreja também se encontra no tempo.</h2>
+          </div>
+          <p>Esta agenda reúne apenas calendários públicos previamente autorizados. As informações são atualizadas automaticamente a partir do Google Calendar.</p>
+        </div>
+
+        <div class="agenda-toolbar" aria-label="Seções da agenda">
           <button class="agenda-tab active" data-scope="main" type="button">Próximos</button>
           <button class="agenda-tab" data-scope="liturgico" type="button">Liturgia</button>
           <button class="agenda-tab" data-scope="padroeiros" type="button">Padroeiros</button>
         </div>
-        <div id="agenda-status" class="agenda-status" role="status">Carregando agenda…</div>
+
+        <div class="agenda-tools">
+          <label class="agenda-search">
+            <span class="sr-only">Buscar na agenda</span>
+            <input id="agenda-search" type="search" placeholder="Buscar por celebração, paróquia, cidade…" autocomplete="off">
+          </label>
+          <div id="agenda-categories" class="agenda-categories" aria-label="Filtrar por categoria"></div>
+        </div>
+
+        <div class="agenda-result-line">
+          <div id="agenda-status" class="agenda-status" role="status">Carregando agenda…</div>
+          <div id="agenda-updated" class="agenda-updated" aria-live="polite"></div>
+        </div>
+
         <div id="agenda-list" class="agenda-list" aria-live="polite"></div>
       </div>
     </section>
