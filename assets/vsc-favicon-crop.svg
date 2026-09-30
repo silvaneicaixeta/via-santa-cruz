@@ -1,1 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="27 27 74 74" role="img" aria-label="Via Santa Cruz"><image href="/assets/vsc-icon.png" x="0" y="0" width="128" height="128" preserveAspectRatio="xMidYMid meet"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Via Santa Cruz">
+  <rect width="128" height="128" rx="24" fill="#F7F3EA"/>
+  <path d="M14 83C35 64 59 55 87 55C68 61 51 71 36 84C57 75 77 73 101 78C78 79 58 86 37 97C61 91 83 92 108 99C76 98 48 103 20 110Z" fill="#123C2E"/>
+  <path d="M50 105C71 99 92 100 114 108C92 106 74 109 57 114Z" fill="#B8892D"/>
+  <path d="M88 17V68M70 34H106" stroke="#B8892D" stroke-width="7" stroke-linecap="round"/>
+</svg>
