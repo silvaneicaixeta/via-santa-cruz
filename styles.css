@@ -518,3 +518,125 @@ button, a { -webkit-tap-highlight-color: transparent; }
 @media (max-width: 860px) {
   .project-grid-pages { grid-template-columns: 1fr; }
 }
+
+
+/* Agenda Via Santa Cruz */
+.agenda-hero {
+  background:
+    radial-gradient(circle at 80% 18%, rgba(200,161,90,.16), transparent 28%),
+    linear-gradient(180deg, #fbf8f1, #f4eee2);
+}
+.agenda-section { background: #fffdf8; }
+.agenda-toolbar {
+  display: flex;
+  gap: .65rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+.agenda-tab {
+  min-height: 44px;
+  border: 1px solid rgba(18,60,46,.18);
+  background: transparent;
+  color: var(--green);
+  border-radius: 999px;
+  padding: .72rem 1rem;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+.agenda-tab.active {
+  background: var(--green);
+  color: #fff;
+  border-color: var(--green);
+}
+.agenda-status {
+  color: #6a746e;
+  margin: 0 0 1.2rem;
+}
+.agenda-list {
+  display: grid;
+  gap: 1rem;
+}
+.agenda-event {
+  display: grid;
+  grid-template-columns: 128px 1fr;
+  gap: 1.4rem;
+  padding: 1.35rem 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 10px 32px rgba(18,60,46,.06);
+}
+.agenda-date {
+  border-right: 1px solid rgba(159,119,47,.18);
+  padding-right: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.agenda-date strong {
+  font-family: "Playfair Display", Georgia, serif;
+  color: var(--ink);
+  font-size: 1.65rem;
+  line-height: 1;
+}
+.agenda-date span {
+  margin-top: .35rem;
+  color: #6d7772;
+  font-size: .88rem;
+  text-transform: capitalize;
+}
+.agenda-event-copy h2 {
+  font-size: clamp(1.55rem, 3vw, 2.15rem);
+  margin: .35rem 0 .45rem;
+}
+.agenda-badges {
+  display: flex;
+  gap: .45rem;
+  flex-wrap: wrap;
+}
+.agenda-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: .2rem .6rem;
+  border-radius: 999px;
+  background: rgba(200,161,90,.14);
+  color: var(--gold-dark);
+  font-size: .73rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.agenda-badge.cancelled {
+  background: rgba(125,54,45,.10);
+  color: #7d362d;
+}
+.agenda-meta {
+  margin: 0;
+  color: #5d6963;
+  font-weight: 700;
+}
+.agenda-description {
+  margin: .75rem 0 0;
+  color: #66716b;
+}
+.agenda-event.is-cancelled { opacity: .72; }
+.agenda-event.is-cancelled h2 { text-decoration: line-through; }
+
+@media (max-width: 680px) {
+  .agenda-event {
+    grid-template-columns: 1fr;
+    padding: 1.15rem;
+  }
+  .agenda-date {
+    border-right: 0;
+    border-bottom: 1px solid rgba(159,119,47,.18);
+    padding: 0 0 .8rem;
+    flex-direction: row;
+    align-items: baseline;
+    gap: .7rem;
+  }
+  .agenda-date strong { font-size: 1.4rem; }
+  .agenda-date span { margin: 0; }
+}

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123C2E">
+  <meta name="description" content="Agenda Via Santa Cruz — acontecimentos, celebrações e datas que marcam o caminho.">
+  <title>Agenda — Via Santa Cruz</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/vsc-favicon-crop.svg">
+  <link rel="apple-touch-icon" href="/assets/vsc-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="/" aria-label="Via Santa Cruz — início">
+        <img src="/assets/vsc-mark.svg" alt="Via Santa Cruz" width="78" height="54">
+        <span class="brand-copy"><strong>Via Santa Cruz</strong><small>Projetos que nascem para servir.</small></span>
+      </a>
+      <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+      <nav class="main-nav" id="main-nav" aria-label="Navegação principal">
+        <a href="/">Início</a>
+        <a href="/projetos.html">Projetos</a>
+        <a href="/sobre.html">Sobre</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <section class="page-hero agenda-hero">
+      <div class="container page-hero-inner">
+        <p class="section-kicker">Agenda</p>
+        <h1>Os acontecimentos que marcam o caminho.</h1>
+        <p>Uma leitura simples e organizada dos próximos compromissos, celebrações e datas da vida eclesial.</p>
+      </div>
+    </section>
+
+    <section class="agenda-section section">
+      <div class="container">
+        <div class="agenda-toolbar" aria-label="Filtros da agenda">
+          <button class="agenda-tab active" data-scope="main" type="button">Próximos</button>
+          <button class="agenda-tab" data-scope="liturgico" type="button">Liturgia</button>
+          <button class="agenda-tab" data-scope="padroeiros" type="button">Padroeiros</button>
+        </div>
+        <div id="agenda-status" class="agenda-status" role="status">Carregando agenda…</div>
+        <div id="agenda-list" class="agenda-list" aria-live="polite"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <a class="footer-brand" href="/"><span>Via Santa Cruz</span></a>
+      <p>© <span id="year"></span> Via Santa Cruz<br><a class="idealizer-link" href="/idealizador.html">Idealização: Pe. Silvanei Caixeta</a></p>
+      <nav aria-label="Navegação do rodapé">
+        <a href="/">Início</a>
+        <a href="/projetos.html">Projetos</a>
+        <a href="/sobre.html">Sobre</a>
+      </nav>
+      <a class="domain" href="https://viasantacruz.com.br">viasantacruz.com.br</a>
+    </div>
+  </footer>
+
+  <script src="/script.js"></script>
+  <script src="/agenda.js"></script>
+  <script src="/analytics.js"></script>
+</body>
+</html>
