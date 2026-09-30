@@ -1,21 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 260" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 220" role="img" aria-labelledby="title desc">
 <title id="title">Símbolo Via Santa Cruz</title>
-<desc id="desc">Um caminho verde em movimento encontra uma cruz dourada.</desc>
+<desc id="desc">Um traço em forma de caminho conduz a uma cruz dourada.</desc>
 <defs>
-  <linearGradient id="gGreen" x1="0" y1="1" x2="1" y2="0">
+  <linearGradient id="green" x1="0" y1="1" x2="1" y2="0">
     <stop offset="0" stop-color="#0D2E23"/>
-    <stop offset="1" stop-color="#2A5A45"/>
+    <stop offset="1" stop-color="#315D49"/>
   </linearGradient>
-  <linearGradient id="gGold" x1="0" y1="0" x2="1" y2="1">
+  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
     <stop offset="0" stop-color="#E1BF78"/>
-    <stop offset=".5" stop-color="#C8A15A"/>
-    <stop offset="1" stop-color="#9F772F"/>
+    <stop offset="1" stop-color="#A77D31"/>
   </linearGradient>
 </defs>
-<path d="M42 181C109 116 181 95 272 112c-78 2-136 24-189 69 77-18 151-13 235 18-104-9-193-1-276 24 26-17 49-31 71-42" fill="url(#gGreen)"/>
-<path d="M77 190c91-16 182-7 287 39-90-22-171-24-262-5-19 4-34-8-25-34Z" fill="#173B2E" opacity=".9"/>
-<path d="M305 46h22v128h-22z" fill="url(#gGold)"/>
-<path d="M270 82h92v19h-92z" rx="9" fill="url(#gGold)"/>
-<path d="M236 72c48-30 108-30 160 2-26-5-52-3-73 5 36 7 65 26 82 54-48-37-105-50-169-31 19-11 34-21 45-30Z" fill="url(#gGold)"/>
-<path d="M334 191c31 7 60 19 89 37-28-3-53 2-75 13 23 2 44 10 61 22-39-10-74-8-105 6 13-25 23-51 30-78Z" fill="url(#gGold)"/>
+<path d="M44 164C118 168 154 131 208 118C255 107 296 119 334 96C348 87 359 75 367 60"
+      fill="none" stroke="url(#green)" stroke-width="18" stroke-linecap="round"/>
+<path d="M73 183C151 177 212 150 274 146C310 143 339 148 372 136"
+      fill="none" stroke="#C8A15A" stroke-width="5" stroke-linecap="round" opacity=".78"/>
+<path d="M378 36V156" fill="none" stroke="url(#gold)" stroke-width="15" stroke-linecap="round"/>
+<path d="M337 76H419" fill="none" stroke="url(#gold)" stroke-width="15" stroke-linecap="round"/>
+<circle cx="378" cy="156" r="6" fill="#C8A15A"/>
 </svg>
