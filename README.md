@@ -15,7 +15,7 @@ Site institucional da **Via Santa Cruz** — *Projetos que nascem para servir.*
 
 ## Projetos
 - Diretório: https://diretorio.viasantacruz.com.br
-- Diante de Deus: em preparação
+- Diante de Deus: https://diantededeus.viasantacruz.com.br
 
 ## Publicação
 A página é publicada pelo GitHub Pages a partir da branch `main`, na raiz do repositório.
