@@ -4,6 +4,9 @@ Site institucional da **Via Santa Cruz** — *Projetos que nascem para servir.*
 
 ## Estrutura
 - `index.html` — página inicial
+- `projetos.html` — apresentação dos projetos
+- `sobre.html` — proposta e princípios da Via Santa Cruz
+- `idealizador.html` — apresentação discreta do idealizador
 - `styles.css` — identidade visual e responsividade
 - `script.js` — navegação móvel
 - `assets/` — símbolo e ilustrações vetoriais
@@ -12,17 +15,9 @@ Site institucional da **Via Santa Cruz** — *Projetos que nascem para servir.*
 
 ## Projetos
 - Diretório: https://diretorio.viasantacruz.com.br
-- Diante de Deus: https://diantedeus.viasantacruz.com.br
+- Diante de Deus: em preparação
 
 ## Publicação
-A página foi preparada para GitHub Pages a partir da branch `main`, na raiz do repositório.
+A página é publicada pelo GitHub Pages a partir da branch `main`, na raiz do repositório.
 
 © 2026 Via Santa Cruz.
-
-
-## Preparação para produção
-- domínio canônico definido como `https://viasantacruz.com.br/`
-- metadados SEO e dados estruturados WebSite
-- página 404 personalizada
-- favicon e manifesto web
-- sitemap e robots.txt
