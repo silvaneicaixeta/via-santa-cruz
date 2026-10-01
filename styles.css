@@ -1071,3 +1071,32 @@ button, a { -webkit-tap-highlight-color: transparent; }
   }
   .agenda-calendar-preview { display: none; }
 }
+
+
+/* Agenda — simplificação conceitual */
+.agenda-toolbar {
+  align-items: center;
+}
+.agenda-filter-grid {
+  grid-template-columns: repeat(3, minmax(0,1fr)) auto;
+}
+@media (max-width: 900px) {
+  .agenda-filter-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .agenda-view-field {
+    grid-column: auto;
+  }
+}
+@media (max-width: 680px) {
+  .agenda-toolbar {
+    overflow: visible;
+    flex-wrap: wrap;
+  }
+  .agenda-filter-grid {
+    grid-template-columns: 1fr;
+  }
+  .agenda-view-field {
+    grid-column: 1;
+  }
+}
