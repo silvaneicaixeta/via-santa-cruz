@@ -99,7 +99,7 @@
             <div id="agenda-print-summary"></div>
           </div>
           <div id="agenda-print-list"></div>
-          <p class="agenda-print-foot">Programação sujeita a alterações. Documento gerado a partir da Agenda Via Santa Cruz.</p>
+          <p id="agenda-print-foot" class="agenda-print-foot">Programação sujeita a alterações.</p>
         </section>
       </div>
     </section>
@@ -116,6 +116,7 @@
         <details open>
           <summary>Período</summary>
           <div class="agenda-filter-section">
+            <label class="agenda-radio"><input type="radio" name="filter-period" value="next30"> Próximos 30 dias</label>
             <label class="agenda-radio"><input type="radio" name="filter-period" value="upcoming" checked> Próximos 90 dias</label>
             <label class="agenda-radio"><input type="radio" name="filter-period" value="month"> Mês atual — completo, incluindo datas passadas</label>
             <label class="agenda-radio"><input type="radio" name="filter-period" value="past30"> Últimos 30 dias</label>
