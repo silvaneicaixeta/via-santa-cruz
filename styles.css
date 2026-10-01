@@ -1100,3 +1100,78 @@ button, a { -webkit-tap-highlight-color: transparent; }
     grid-column: 1;
   }
 }
+
+
+/* Agenda — filtros avançados, impressão e cards compactos */
+.agenda-actions{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;gap:.65rem;align-items:end;margin:0 0 .8rem}
+.agenda-search input{min-height:44px;padding:.65rem .85rem}
+.agenda-action-button{min-height:44px;border:1px solid rgba(18,60,46,.16);border-radius:12px;background:#fff;color:var(--green);font:inherit;font-weight:900;padding:.65rem .85rem;cursor:pointer;white-space:nowrap}
+.agenda-action-count{display:inline-grid;place-items:center;min-width:20px;height:20px;margin-left:.3rem;border-radius:999px;background:var(--gold);color:var(--green-2);font-size:.7rem}
+.agenda-active-filters{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem}
+.agenda-active-filters span{padding:.28rem .58rem;border-radius:999px;background:rgba(200,161,90,.12);color:var(--gold-dark);font-size:.72rem;font-weight:900;text-transform:capitalize}
+.agenda-event{grid-template-columns:52px 1fr;gap:.75rem;padding:.78rem .9rem;border-radius:14px}
+.agenda-date{padding-right:.55rem;justify-content:flex-start}
+.agenda-day{font-size:1.35rem!important}
+.agenda-month-short{font-size:.58rem!important}
+.agenda-event-copy h3{font-family:"Lato",Arial,sans-serif;font-size:1.05rem;line-height:1.28;font-weight:900;margin:.24rem 0 .32rem;letter-spacing:-.01em}
+.agenda-badge{min-height:20px;padding:.12rem .48rem;font-size:.64rem}
+.agenda-event-bottom{display:flex;align-items:center;justify-content:space-between;gap:.8rem}
+.agenda-meta{font-size:.86rem}
+.agenda-add{margin:0;font-size:.78rem;white-space:nowrap}
+.agenda-month{gap:.55rem}.agenda-month-events{gap:.55rem}.agenda-list{gap:1.4rem}
+.agenda-month-title{font-size:clamp(1.45rem,2.5vw,1.9rem)}
+.agenda-filter-modal{position:fixed;inset:0;z-index:120}
+.agenda-filter-backdrop{position:absolute;inset:0;background:rgba(13,46,35,.48)}
+.agenda-filter-panel{position:absolute;right:0;top:0;bottom:0;width:min(520px,94vw);background:#fffdf8;display:grid;grid-template-rows:auto 1fr auto;box-shadow:-24px 0 70px rgba(13,46,35,.18)}
+.agenda-filter-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem 1.2rem;background:var(--green-2);color:#fff}
+.agenda-filter-head span{color:var(--gold);font-size:.7rem;font-weight:900;text-transform:uppercase;letter-spacing:.12em}
+.agenda-filter-head h2{margin:.15rem 0 0;color:#fff;font-family:"Lato",Arial,sans-serif;font-size:1.35rem;font-weight:900}
+.agenda-filter-close{border:0;background:transparent;color:#fff;font-size:2.2rem;line-height:1;cursor:pointer}
+.agenda-filter-body{overflow:auto}
+.agenda-filter-body details{border-bottom:1px solid rgba(18,60,46,.11)}
+.agenda-filter-body summary{list-style:none;cursor:pointer;padding:1rem 1.15rem;font-weight:900;color:var(--ink);display:flex;justify-content:space-between}
+.agenda-filter-body summary::-webkit-details-marker{display:none}
+.agenda-filter-body summary::after{content:"⌄";color:var(--gold-dark)}
+.agenda-filter-body details[open] summary::after{content:"⌃"}
+.agenda-filter-section,.agenda-check-grid{padding:0 1.15rem 1rem}
+.agenda-check-grid{display:grid;grid-template-columns:1fr 1fr;gap:.55rem .8rem}
+.agenda-check-grid label,.agenda-radio{display:flex;align-items:center;gap:.5rem;font-size:.92rem}
+.agenda-check-grid input,.agenda-radio input{width:18px;height:18px;accent-color:var(--green)}
+.agenda-check-grid-scroll{max-height:230px;overflow:auto}
+.agenda-filter-search-wrap{padding:0 1.15rem .7rem}
+.agenda-filter-search-wrap input,.agenda-filter-select,.agenda-date-range input{width:100%;min-height:40px;border:1px solid rgba(18,60,46,.16);border-radius:10px;background:#fff;font:inherit;padding:.55rem .65rem}
+.agenda-date-range{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.55rem 0}
+.agenda-filter-footer{display:grid;grid-template-columns:1fr 1.35fr;gap:.7rem;padding:1rem 1.15rem;background:#fff;border-top:1px solid rgba(18,60,46,.12)}
+.agenda-filter-secondary,.agenda-filter-primary{min-height:46px;border-radius:10px;font:inherit;font-weight:900;cursor:pointer}
+.agenda-filter-secondary{background:#fff;border:1px solid rgba(18,60,46,.2);color:var(--green)}
+.agenda-filter-primary{background:var(--green);border:1px solid var(--green);color:#fff}
+.filter-open{overflow:hidden}
+.agenda-print-sheet{display:none}
+@media(max-width:760px){
+  .agenda-actions{grid-template-columns:1fr 1fr}
+  .agenda-search{grid-column:1/-1}
+  .agenda-view-toggle{width:100%}
+  .agenda-view-button{flex:1}
+  .agenda-print-button{width:100%}
+  .agenda-event{grid-template-columns:46px 1fr;padding:.7rem .75rem}
+  .agenda-day{font-size:1.2rem!important}
+  .agenda-event-copy h3{font-size:.98rem}
+  .agenda-meta{font-size:.8rem}
+  .agenda-event-bottom{align-items:flex-end}
+  .agenda-filter-panel{width:100%;top:5vh;border-radius:22px 22px 0 0}
+  .agenda-check-grid{grid-template-columns:1fr}
+}
+@media print{
+  @page{size:A4;margin:16mm 14mm}
+  .site-header,.page-hero,.agenda-intro,.agenda-toolbar,.agenda-actions,.agenda-active-filters,.agenda-calendar,.agenda-result-line,.agenda-list,.site-footer,.agenda-filter-modal{display:none!important}
+  body{background:#fff;color:#111}
+  .agenda-section{padding:0;background:#fff}
+  .agenda-print-sheet{display:block!important}
+  .agenda-print-head{padding-bottom:8mm;border-bottom:1px solid #bbb;margin-bottom:5mm}
+  .agenda-print-head p{margin:0 0 2mm;font:700 9pt "Lato",Arial,sans-serif;letter-spacing:.08em}
+  .agenda-print-head h1{margin:0 0 2mm;font:600 19pt "Playfair Display",Georgia,serif}
+  .agenda-print-head div{font:400 9pt "Lato",Arial,sans-serif;color:#555}
+  .agenda-print-row{display:grid;grid-template-columns:34mm 22mm 1fr;gap:4mm;padding:2.3mm 0;border-bottom:1px solid #ddd;font:400 9.5pt "Lato",Arial,sans-serif;break-inside:avoid}
+  .agenda-print-row strong{font-weight:900}.agenda-print-row span{color:#555}
+  .agenda-print-foot{margin-top:8mm;font:400 8pt "Lato",Arial,sans-serif;color:#666}
+}
