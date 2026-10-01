@@ -1121,30 +1121,95 @@ button, a { -webkit-tap-highlight-color: transparent; }
   }
 }
 
+
+/* Agenda — filtros avançados, impressão e cards compactos */
+.agenda-actions{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;gap:.65rem;align-items:end;margin:0 0 .8rem}
+.agenda-search input{min-height:44px;padding:.65rem .85rem}
+.agenda-action-button{min-height:44px;border:1px solid rgba(18,60,46,.16);border-radius:12px;background:#fff;color:var(--green);font:inherit;font-weight:900;padding:.65rem .85rem;cursor:pointer;white-space:nowrap}
+.agenda-action-count{display:inline-grid;place-items:center;min-width:20px;height:20px;margin-left:.3rem;border-radius:999px;background:var(--gold);color:var(--green-2);font-size:.7rem}
+.agenda-active-filters{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem}
+.agenda-active-filters span{padding:.28rem .58rem;border-radius:999px;background:rgba(200,161,90,.12);color:var(--gold-dark);font-size:.72rem;font-weight:900;text-transform:capitalize}
+.agenda-event{grid-template-columns:52px 1fr;gap:.75rem;padding:.78rem .9rem;border-radius:14px}
+.agenda-date{padding-right:.55rem;justify-content:flex-start}
+.agenda-day{font-size:1.35rem!important}
+.agenda-month-short{font-size:.58rem!important}
+.agenda-event-copy h3{font-family:"Lato",Arial,sans-serif;font-size:1.05rem;line-height:1.28;font-weight:900;margin:.24rem 0 .32rem;letter-spacing:-.01em}
+.agenda-badge{min-height:20px;padding:.12rem .48rem;font-size:.64rem}
+.agenda-event-bottom{display:flex;align-items:center;justify-content:space-between;gap:.8rem}
+.agenda-meta{font-size:.86rem}
+.agenda-add{margin:0;font-size:.78rem;white-space:nowrap}
+.agenda-month{gap:.55rem}.agenda-month-events{gap:.55rem}.agenda-list{gap:1.4rem}
+.agenda-month-title{font-size:clamp(1.45rem,2.5vw,1.9rem)}
+.agenda-filter-modal{position:fixed;inset:0;z-index:120}
+.agenda-filter-backdrop{position:absolute;inset:0;background:rgba(13,46,35,.48)}
+.agenda-filter-panel{position:absolute;right:0;top:0;bottom:0;width:min(520px,94vw);background:#fffdf8;display:grid;grid-template-rows:auto 1fr auto;box-shadow:-24px 0 70px rgba(13,46,35,.18)}
+.agenda-filter-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem 1.2rem;background:var(--green-2);color:#fff}
+.agenda-filter-head span{color:var(--gold);font-size:.7rem;font-weight:900;text-transform:uppercase;letter-spacing:.12em}
+.agenda-filter-head h2{margin:.15rem 0 0;color:#fff;font-family:"Lato",Arial,sans-serif;font-size:1.35rem;font-weight:900}
+.agenda-filter-close{border:0;background:transparent;color:#fff;font-size:2.2rem;line-height:1;cursor:pointer}
+.agenda-filter-body{overflow:auto}
+.agenda-filter-body details{border-bottom:1px solid rgba(18,60,46,.11)}
+.agenda-filter-body summary{list-style:none;cursor:pointer;padding:1rem 1.15rem;font-weight:900;color:var(--ink);display:flex;justify-content:space-between}
+.agenda-filter-body summary::-webkit-details-marker{display:none}
+.agenda-filter-body summary::after{content:"⌄";color:var(--gold-dark)}
+.agenda-filter-body details[open] summary::after{content:"⌃"}
+.agenda-filter-section,.agenda-check-grid{padding:0 1.15rem 1rem}
+.agenda-check-grid{display:grid;grid-template-columns:1fr 1fr;gap:.55rem .8rem}
+.agenda-check-grid label,.agenda-radio{display:flex;align-items:center;gap:.5rem;font-size:.92rem}
+.agenda-check-grid input,.agenda-radio input{width:18px;height:18px;accent-color:var(--green)}
+.agenda-check-grid-scroll{max-height:230px;overflow:auto}
+.agenda-filter-search-wrap{padding:0 1.15rem .7rem}
+.agenda-filter-search-wrap input,.agenda-filter-select,.agenda-date-range input{width:100%;min-height:40px;border:1px solid rgba(18,60,46,.16);border-radius:10px;background:#fff;font:inherit;padding:.55rem .65rem}
+.agenda-date-range{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.55rem 0}
+.agenda-filter-footer{display:grid;grid-template-columns:1fr 1.35fr;gap:.7rem;padding:1rem 1.15rem;background:#fff;border-top:1px solid rgba(18,60,46,.12)}
+.agenda-filter-secondary,.agenda-filter-primary{min-height:46px;border-radius:10px;font:inherit;font-weight:900;cursor:pointer}
+.agenda-filter-secondary{background:#fff;border:1px solid rgba(18,60,46,.2);color:var(--green)}
+.agenda-filter-primary{background:var(--green);border:1px solid var(--green);color:#fff}
+.filter-open{overflow:hidden}
+.agenda-print-sheet{display:none}
+@media(max-width:760px){
+  .agenda-actions{grid-template-columns:1fr 1fr}
+  .agenda-search{grid-column:1/-1}
+  .agenda-view-toggle{width:100%}
+  .agenda-view-button{flex:1}
+  .agenda-print-button{width:100%}
+  .agenda-event{grid-template-columns:46px 1fr;padding:.7rem .75rem}
+  .agenda-day{font-size:1.2rem!important}
+  .agenda-event-copy h3{font-size:.98rem}
+  .agenda-meta{font-size:.8rem}
+  .agenda-event-bottom{align-items:flex-end}
+  .agenda-filter-panel{width:100%;top:5vh;border-radius:22px 22px 0 0}
+  .agenda-check-grid{grid-template-columns:1fr}
+}
+@media print{
+  @page{size:A4;margin:16mm 14mm}
+  .site-header,.page-hero,.agenda-intro,.agenda-toolbar,.agenda-actions,.agenda-active-filters,.agenda-calendar,.agenda-result-line,.agenda-list,.site-footer,.agenda-filter-modal{display:none!important}
+  body{background:#fff;color:#111}
+  .agenda-section{padding:0;background:#fff}
+  .agenda-print-sheet{display:block!important}
+  .agenda-print-head{padding-bottom:8mm;border-bottom:1px solid #bbb;margin-bottom:5mm}
+  .agenda-print-head p{margin:0 0 2mm;font:700 9pt "Lato",Arial,sans-serif;letter-spacing:.08em}
+  .agenda-print-head h1{margin:0 0 2mm;font:600 19pt "Playfair Display",Georgia,serif}
+  .agenda-print-head div{font:400 9pt "Lato",Arial,sans-serif;color:#555}
+  .agenda-print-row{display:grid;grid-template-columns:34mm 22mm 1fr;gap:4mm;padding:2.3mm 0;border-bottom:1px solid #ddd;font:400 9.5pt "Lato",Arial,sans-serif;break-inside:avoid}
+  .agenda-print-row strong{font-weight:900}.agenda-print-row span{color:#555}
+  .agenda-print-foot{margin-top:8mm;font:400 8pt "Lato",Arial,sans-serif;color:#666}
+}
+
 .preview-ribbon{background:#123C2E;color:#fff;text-align:center;padding:.62rem 1rem;font-size:.86rem;font-weight:900;letter-spacing:.04em}.preview-ribbon span{color:#C8A15A}
 </style>
 </head>
 <body><div class="preview-ribbon">PRÉVIA PRIVADA POR LINK · <span>ainda não integrada ao menu público</span></div>
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
-
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="/" aria-label="Via Santa Cruz — início">
         <img src="/assets/vsc-mark.svg" alt="Via Santa Cruz" width="78" height="54">
-        <span class="brand-copy">
-          <strong>Via Santa Cruz</strong>
-          <small>Projetos que nascem para servir.</small>
-        </span>
+        <span class="brand-copy"><strong>Via Santa Cruz</strong><small>Projetos que nascem para servir.</small></span>
       </a>
-
-      <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu">
-        <span></span><span></span><span></span>
-      </button>
-
+      <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu"><span></span><span></span><span></span></button>
       <nav class="main-nav" id="main-nav" aria-label="Navegação principal">
-        <a href="/">Início</a>
-        <a class="active" href="/projetos.html">Projetos</a>
-        <a href="/sobre.html">Sobre</a>
+        <a href="/">Início</a><a class="active" href="/projetos.html">Projetos</a><a href="/sobre.html">Sobre</a>
       </nav>
     </div>
   </header>
@@ -1173,46 +1238,20 @@ button, a { -webkit-tap-highlight-color: transparent; }
           <button class="agenda-tab" data-scope="liturgico" type="button">Liturgia</button>
         </div>
 
-        <div class="agenda-tools">
+        <div class="agenda-actions">
           <label class="agenda-search">
-            <span class="agenda-field-label">Buscar</span>
-            <input id="agenda-search" type="search" placeholder="Celebração, cidade, palavra…" autocomplete="off">
+            <span class="sr-only">Buscar na agenda</span>
+            <input id="agenda-search" type="search" placeholder="Buscar acontecimento, paróquia, cidade…" autocomplete="off">
           </label>
-
-          <div class="agenda-filter-grid">
-            <label class="agenda-select-field">
-              <span class="agenda-field-label">Período</span>
-              <select id="agenda-period" aria-label="Filtrar por período">
-                <option value="upcoming">Próximos</option>
-                <option value="month">Este mês</option>
-                <option value="year">Este ano</option>
-                <option value="all">Todo o período disponível</option>
-              </select>
-            </label>
-
-            <label class="agenda-select-field">
-              <span class="agenda-field-label">Categoria</span>
-              <select id="agenda-category" aria-label="Filtrar por categoria">
-                <option value="all">Todas as categorias</option>
-              </select>
-            </label>
-
-            <label class="agenda-select-field">
-              <span class="agenda-field-label">Paróquia</span>
-              <select id="agenda-parish" aria-label="Filtrar por paróquia">
-                <option value="all">Todas as paróquias</option>
-              </select>
-            </label>
-
-            <div class="agenda-view-field">
-              <span class="agenda-field-label">Visualização</span>
-              <div class="agenda-view-toggle" role="group" aria-label="Visualização da agenda">
-                <button class="agenda-view-button active" data-view="list" type="button">Lista</button>
-                <button class="agenda-view-button" data-view="month" type="button">Mês</button>
-              </div>
-            </div>
+          <button id="agenda-filter-button" class="agenda-action-button" type="button">Filtros <span id="agenda-filter-count" class="agenda-action-count" hidden>0</span></button>
+          <div class="agenda-view-toggle" role="group" aria-label="Visualização da agenda">
+            <button class="agenda-view-button active" data-view="list" type="button">Lista</button>
+            <button class="agenda-view-button" data-view="month" type="button">Mês</button>
           </div>
+          <button id="agenda-print-button" class="agenda-action-button agenda-print-button" type="button">Imprimir / PDF</button>
         </div>
+
+        <div id="agenda-active-filters" class="agenda-active-filters" aria-live="polite"></div>
 
         <div id="agenda-calendar" class="agenda-calendar" hidden>
           <div class="agenda-calendar-head">
@@ -1231,21 +1270,83 @@ button, a { -webkit-tap-highlight-color: transparent; }
           <div id="agenda-status" class="agenda-status" role="status">Carregando agenda…</div>
           <div id="agenda-updated" class="agenda-updated" aria-live="polite"></div>
         </div>
-
         <div id="agenda-list" class="agenda-list" aria-live="polite"></div>
+
+        <section id="agenda-print-sheet" class="agenda-print-sheet" aria-hidden="true">
+          <div class="agenda-print-head">
+            <p>DIOCESE DE JANAÚBA</p>
+            <h1>Agenda Diocesana — seleção</h1>
+            <div id="agenda-print-summary"></div>
+          </div>
+          <div id="agenda-print-list"></div>
+          <p class="agenda-print-foot">Programação sujeita a alterações. Documento gerado a partir da Agenda Via Santa Cruz.</p>
+        </section>
       </div>
     </section>
   </main>
+
+  <div id="agenda-filter-modal" class="agenda-filter-modal" hidden>
+    <div class="agenda-filter-backdrop" data-close-filter></div>
+    <section class="agenda-filter-panel" role="dialog" aria-modal="true" aria-labelledby="agenda-filter-title">
+      <header class="agenda-filter-head">
+        <div><span>Agenda Diocesana</span><h2 id="agenda-filter-title">Filtros de pesquisa</h2></div>
+        <button type="button" class="agenda-filter-close" aria-label="Fechar filtros" data-close-filter>×</button>
+      </header>
+      <div class="agenda-filter-body">
+        <details open>
+          <summary>Período</summary>
+          <div class="agenda-filter-section">
+            <label class="agenda-radio"><input type="radio" name="filter-period" value="upcoming" checked> Próximos acontecimentos</label>
+            <label class="agenda-radio"><input type="radio" name="filter-period" value="month"> Mês atual</label>
+            <label class="agenda-radio"><input type="radio" name="filter-period" value="year"> Ano específico</label>
+            <select id="filter-year" class="agenda-filter-select" aria-label="Ano"></select>
+            <label class="agenda-radio"><input type="radio" name="filter-period" value="custom"> Intervalo personalizado</label>
+            <div class="agenda-date-range"><input id="filter-start" type="date" aria-label="Data inicial"><input id="filter-end" type="date" aria-label="Data final"></div>
+            <label class="agenda-radio"><input type="radio" name="filter-period" value="all"> Todo o período disponível</label>
+          </div>
+        </details>
+
+        <details open>
+          <summary>Tipo de acontecimento</summary>
+          <div id="filter-types" class="agenda-check-grid"></div>
+        </details>
+
+        <details>
+          <summary>Âmbito</summary>
+          <div id="filter-scopes" class="agenda-check-grid"></div>
+        </details>
+
+        <details>
+          <summary>Paróquia</summary>
+          <div class="agenda-filter-search-wrap"><input id="filter-parish-search" type="search" placeholder="Buscar paróquia…"></div>
+          <div id="filter-parishes" class="agenda-check-grid agenda-check-grid-scroll"></div>
+        </details>
+
+        <details>
+          <summary>Cidade</summary>
+          <div id="filter-cities" class="agenda-check-grid agenda-check-grid-scroll"></div>
+        </details>
+
+        <details>
+          <summary>Situação</summary>
+          <div class="agenda-check-grid">
+            <label><input id="filter-confirmed" type="checkbox" checked> Confirmados</label>
+            <label><input id="filter-cancelled" type="checkbox" checked> Cancelados</label>
+          </div>
+        </details>
+      </div>
+      <footer class="agenda-filter-footer">
+        <button id="agenda-clear-filters" type="button" class="agenda-filter-secondary">Limpar</button>
+        <button id="agenda-apply-filters" type="button" class="agenda-filter-primary">Aplicar filtros</button>
+      </footer>
+    </section>
+  </div>
 
   <footer class="site-footer">
     <div class="container footer-inner">
       <a class="footer-brand" href="/"><span>Via Santa Cruz</span></a>
       <p>© <span id="year"></span> Via Santa Cruz<br><a class="idealizer-link" href="/idealizador.html">Idealização: Pe. Silvanei Caixeta</a></p>
-      <nav aria-label="Navegação do rodapé">
-        <a href="/">Início</a>
-        <a href="/projetos.html">Projetos</a>
-        <a href="/sobre.html">Sobre</a>
-      </nav>
+      <nav aria-label="Navegação do rodapé"><a href="/">Início</a><a href="/projetos.html">Projetos</a><a href="/sobre.html">Sobre</a></nav>
       <a class="domain" href="https://viasantacruz.com.br">viasantacruz.com.br</a>
     </div>
   </footer>
@@ -1254,38 +1355,67 @@ button, a { -webkit-tap-highlight-color: transparent; }
   <script>
 (() => {
   const API = "https://vgpivbxykeobgjzqlqcl.supabase.co/functions/v1/vsc-agenda";
-  const list = document.getElementById("agenda-list");
-  const status = document.getElementById("agenda-status");
-  const updated = document.getElementById("agenda-updated");
-  const search = document.getElementById("agenda-search");
-  const periodSelect = document.getElementById("agenda-period");
-  const categorySelect = document.getElementById("agenda-category");
-  const parishSelect = document.getElementById("agenda-parish");
-  const tabs = Array.from(document.querySelectorAll(".agenda-tab"));
-  const viewButtons = Array.from(document.querySelectorAll(".agenda-view-button"));
-  const calendar = document.getElementById("agenda-calendar");
-  const calendarTitle = document.getElementById("agenda-calendar-title");
-  const calendarGrid = document.getElementById("agenda-calendar-grid");
-  const dayEvents = document.getElementById("agenda-day-events");
-  const prevMonth = document.getElementById("agenda-prev-month");
-  const nextMonth = document.getElementById("agenda-next-month");
-
   const TZ = "America/Sao_Paulo";
+
+  const els = {
+    list: document.getElementById("agenda-list"),
+    status: document.getElementById("agenda-status"),
+    updated: document.getElementById("agenda-updated"),
+    search: document.getElementById("agenda-search"),
+    tabs: Array.from(document.querySelectorAll(".agenda-tab")),
+    viewButtons: Array.from(document.querySelectorAll(".agenda-view-button")),
+    calendar: document.getElementById("agenda-calendar"),
+    calendarTitle: document.getElementById("agenda-calendar-title"),
+    calendarGrid: document.getElementById("agenda-calendar-grid"),
+    dayEvents: document.getElementById("agenda-day-events"),
+    prevMonth: document.getElementById("agenda-prev-month"),
+    nextMonth: document.getElementById("agenda-next-month"),
+    filterButton: document.getElementById("agenda-filter-button"),
+    filterCount: document.getElementById("agenda-filter-count"),
+    activeFilters: document.getElementById("agenda-active-filters"),
+    filterModal: document.getElementById("agenda-filter-modal"),
+    filterTypes: document.getElementById("filter-types"),
+    filterScopes: document.getElementById("filter-scopes"),
+    filterParishes: document.getElementById("filter-parishes"),
+    filterCities: document.getElementById("filter-cities"),
+    parishSearch: document.getElementById("filter-parish-search"),
+    year: document.getElementById("filter-year"),
+    start: document.getElementById("filter-start"),
+    end: document.getElementById("filter-end"),
+    confirmed: document.getElementById("filter-confirmed"),
+    cancelled: document.getElementById("filter-cancelled"),
+    applyFilters: document.getElementById("agenda-apply-filters"),
+    clearFilters: document.getElementById("agenda-clear-filters"),
+    printButton: document.getElementById("agenda-print-button"),
+    printList: document.getElementById("agenda-print-list"),
+    printSummary: document.getElementById("agenda-print-summary")
+  };
+
   const fmtDay = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", timeZone: TZ });
   const fmtMonthShort = new Intl.DateTimeFormat("pt-BR", { month: "short", timeZone: TZ });
   const fmtWeek = new Intl.DateTimeFormat("pt-BR", { weekday: "long", timeZone: TZ });
   const fmtTime = new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit", timeZone: TZ });
   const fmtMonthYear = new Intl.DateTimeFormat("pt-BR", { month: "long", year: "numeric", timeZone: TZ });
-  const fmtLongDate = new Intl.DateTimeFormat("pt-BR", { day: "numeric", month: "long", timeZone: TZ });
+  const fmtLongDate = new Intl.DateTimeFormat("pt-BR", { day: "numeric", month: "long", year: "numeric", timeZone: TZ });
   const fmtUpdated = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit", timeZone: TZ });
 
   let currentScope = "main";
-  let currentPeriod = "upcoming";
-  let currentCategory = "all";
-  let currentParish = "all";
   let currentView = "list";
   let currentEvents = [];
   let calendarCursor = startOfMonth(new Date());
+
+  const filters = {
+    period: "upcoming",
+    year: String(new Date().getFullYear()),
+    start: "",
+    end: "",
+    types: new Set(),
+    scopes: new Set(),
+    parishes: new Set(),
+    cities: new Set(),
+    confirmed: true,
+    cancelled: true
+  };
 
   function esc(value) {
     return String(value || "").replace(/[&<>"']/g, (c) => ({
@@ -1294,204 +1424,195 @@ button, a { -webkit-tap-highlight-color: transparent; }
   }
 
   function normalize(value) {
-    return String(value || "")
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase()
-      .replace(/\s+/g, " ")
-      .trim();
+    return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, " ").trim();
   }
 
-  function startOfMonth(date) {
-    return new Date(date.getFullYear(), date.getMonth(), 1, 12, 0, 0);
-  }
+  function startOfMonth(date) { return new Date(date.getFullYear(), date.getMonth(), 1, 12); }
 
   function dateKey(date) {
-    return new Intl.DateTimeFormat("en-CA", {
-      year: "numeric", month: "2-digit", day: "2-digit", timeZone: TZ
-    }).format(date);
+    return new Intl.DateTimeFormat("en-CA", { year: "numeric", month: "2-digit", day: "2-digit", timeZone: TZ }).format(date);
   }
 
-  function monthKey(date) {
-    return dateKey(date).slice(0, 7);
-  }
+  function monthKey(date) { return dateKey(date).slice(0, 7); }
 
-  function extractParish(title) {
-    const value = String(title || "").trim();
-
-    // Padrão dos padroeiros: "Padroeiro Par. Nome / Cidade".
-    const patron = value.match(/(?:Padroeir[oa]\s+)?(?:Quase\s+Par\.|QPar\.|Par\.|Paróquia)\s+(.+?)\s*\/\s*(.+)$/i);
-    if (patron) {
-      const parishName = patron[1].replace(/^Paróquia\s+/i, "").trim();
-      const city = patron[2].trim();
-      return parishName + " — " + city;
-    }
-
-    // Padrões mais comuns dos demais calendários: "... Par. Nome em Cidade".
-    const matches = [...value.matchAll(/(?:QPar\.|Quase\s+Par\.|Par\.|Paróquia)\s+([^\n]+)/gi)];
-    if (!matches.length) return "";
-
-    let label = matches[matches.length - 1][1]
-      .replace(/^Paróquia\s+/i, "")
-      .replace(/\s*\([^)]*\)\s*$/g, "")
-      .replace(/\s+\(Ver Horário\)\s*$/i, "")
-      .trim();
-
-    label = label.replace(/\s+-\s+.*$/g, "").trim();
-    return label;
-  }
-
-  function parishKey(title) {
-    return normalize(extractParish(title))
+  function normalizeParishName(value) {
+    return normalize(value)
       .replace(/\bsta\.?\b/g, "santa")
       .replace(/\bsto\.?\b/g, "santo")
       .replace(/\bn\.?\s*sra\.?\b/g, "nossa senhora")
-      .replace(/\bqpar\.?\b/g, "")
-      .replace(/\bpar\.?(?=\s)/g, "")
+      .replace(/\bs\.?\s*jose\b/g, "sao jose")
       .replace(/\s+/g, " ")
       .trim();
   }
 
-  function inSelectedPeriod(ev) {
-    if (currentScope !== "main" || currentPeriod === "all") return true;
+  function parseEvent(ev) {
+    const title = String(ev.title || "").trim();
+    const parts = title.split(/\s+-\s+/).map((p) => p.trim()).filter(Boolean);
 
-    const eventDate = new Date(ev.start);
-    const now = new Date();
+    let type = "";
+    let community = "";
+    let parish = "";
+    let city = "";
 
-    if (currentPeriod === "upcoming") return eventDate >= new Date(now.getTime() - 86400000);
+    if (parts.length) {
+      const first = parts[0];
+      const known = first.match(/^(Crisma|Novena|Novenário|Festa|Celebração|Missa|Tríduo|Retiro|Reunião|Encontro|Assembleia|Abertura(?: da| do)? Novena|Abertura)/i);
+      type = known ? known[1] : first.split(/\s+/).slice(0, 2).join(" ");
 
-    const eventParts = new Intl.DateTimeFormat("en-CA", {
-      year: "numeric", month: "2-digit", day: "2-digit", timeZone: TZ
-    }).formatToParts(eventDate);
-    const nowParts = new Intl.DateTimeFormat("en-CA", {
-      year: "numeric", month: "2-digit", day: "2-digit", timeZone: TZ
-    }).formatToParts(now);
+      for (let i = 1; i < parts.length; i++) {
+        const part = parts[i];
+        if (/^Com\./i.test(part)) community = part;
+        else if (/^(?:QPar\.|Quase\s+Par\.|Par\.|Paróquia)\s+/i.test(part)) {
+          parish = part.replace(/^(?:QPar\.|Quase\s+Par\.|Par\.|Paróquia)\s+/i, "").trim();
+          if (parts[i + 1] && !/^Com\.|^(?:QPar\.|Par\.|Paróquia)/i.test(parts[i + 1])) city = parts[i + 1];
+        }
+      }
+    }
 
-    const part = (parts, type) => parts.find((p) => p.type === type).value;
-    const eventYear = part(eventParts, "year");
-    const eventMonth = part(eventParts, "month");
-    const nowYear = part(nowParts, "year");
-    const nowMonth = part(nowParts, "month");
+    if (!parish) {
+      const patron = title.match(/(?:Padroeir[oa]\s+)?(?:Quase\s+Par\.|QPar\.|Par\.|Paróquia)\s+(.+?)\s*\/\s*(.+)$/i);
+      if (patron) { parish = patron[1].replace(/^Paróquia\s+/i, "").trim(); city = patron[2].trim(); }
+    }
 
-    if (currentPeriod === "month") return eventYear === nowYear && eventMonth === nowMonth;
-    if (currentPeriod === "year") return eventYear === nowYear;
-    return true;
+    if (!parish) {
+      const legacy = title.match(/(?:QPar\.|Par\.|Paróquia)\s+(.+?)\s+em\s+([^()]+?)(?:\s*\(|$)/i);
+      if (legacy) { parish = legacy[1].trim(); city = legacy[2].trim(); }
+    }
+
+    if (!city && ev.location && !/[0-9]/.test(ev.location)) city = String(ev.location).trim();
+
+    const sourceScope = {
+      "leste-ii": "Leste II",
+      "cnbb": "CNBB",
+      "comire": "COMIRE",
+      "dioc-informativo": "Diocese",
+      "crisma": "Paróquias",
+      "paroquiais": "Paróquias",
+      "padroeiros": "Paróquias"
+    };
+    const scope = sourceScope[ev.source] || ev.source_label || "Diocese";
+    if (ev.source === "padroeiros") type = "Padroeiro";
+
+    const parishLabel = parish ? parish + (city ? " — " + city : "") : "";
+    const parishKey = parish ? normalizeParishName(parish) + "|" + normalize(city) : "";
+
+    return { type, community, parish, city, parishLabel, parishKey, scope };
   }
 
   function formatRange(ev) {
-    const start = new Date(ev.start);
-    const end = new Date(ev.end);
+    const start = new Date(ev.start), end = new Date(ev.end);
     if (!ev.all_day) return fmtTime.format(start);
-
     const effectiveEnd = new Date(end.getTime() - 1);
-    const sameDay = fmtLongDate.format(start) === fmtLongDate.format(effectiveEnd);
-    return sameDay ? "Dia inteiro" : fmtLongDate.format(start) + " a " + fmtLongDate.format(effectiveEnd);
+    return dateKey(start) === dateKey(effectiveEnd) ? "Dia inteiro" : fmtLongDate.format(start) + " a " + fmtLongDate.format(effectiveEnd);
   }
 
   function buildGoogleCalendarUrl(ev) {
-    const start = new Date(ev.start);
-    const end = new Date(ev.end);
-    const formatUtc = (date) => date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
-
-    let dates;
-    if (ev.all_day) {
-      const dateOnly = (value) => dateKey(new Date(value)).replace(/-/g, "");
-      dates = dateOnly(start) + "/" + dateOnly(end);
-    } else {
-      dates = formatUtc(start) + "/" + formatUtc(end);
-    }
-
+    const start = new Date(ev.start), end = new Date(ev.end);
+    const utc = (d) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
+    const only = (d) => dateKey(new Date(d)).replace(/-/g, "");
+    const dates = ev.all_day ? only(start) + "/" + only(end) : utc(start) + "/" + utc(end);
     const params = new URLSearchParams({ action: "TEMPLATE", text: ev.title, dates });
     if (ev.location) params.set("location", ev.location);
     if (ev.description) params.set("details", ev.description);
     return "https://calendar.google.com/calendar/render?" + params.toString();
   }
 
-  function populateFilters(events) {
-    const categories = Array.from(new Set(events.map((ev) => ev.category).filter(Boolean)))
-      .sort((a, b) => a.localeCompare(b, "pt-BR"));
+  function optionList(container, values, selectedSet, kind) {
+    container.innerHTML = "";
+    values.forEach(({ key, label }) => {
+      const item = document.createElement("label");
+      item.dataset.search = normalize(label);
+      const input = document.createElement("input");
+      input.type = "checkbox";
+      input.value = key;
+      input.checked = selectedSet.has(key);
+      input.dataset.filterKind = kind;
+      item.append(input, document.createTextNode(" " + label));
+      container.appendChild(item);
+    });
+  }
 
-    categorySelect.innerHTML = '<option value="all">Todas as categorias</option>';
-    categories.forEach((category) => {
+  function populateFilterChoices(events) {
+    const meta = events.map((ev) => ({ ev, p: parseEvent(ev) }));
+    const unique = (items) => Array.from(new Map(items.filter((x) => x.key && x.label).map((x) => [x.key, x])).values())
+      .sort((a, b) => a.label.localeCompare(b.label, "pt-BR"));
+
+    optionList(els.filterTypes, unique(meta.map(({p}) => ({ key: normalize(p.type), label: p.type }))), filters.types, "types");
+    optionList(els.filterScopes, unique(meta.map(({p}) => ({ key: normalize(p.scope), label: p.scope }))), filters.scopes, "scopes");
+    optionList(els.filterParishes, unique(meta.map(({p}) => ({ key: p.parishKey, label: p.parishLabel }))), filters.parishes, "parishes");
+    optionList(els.filterCities, unique(meta.map(({p}) => ({ key: normalize(p.city), label: p.city }))), filters.cities, "cities");
+
+    const years = Array.from(new Set(events.map((ev) => new Date(ev.start).getFullYear()))).sort();
+    els.year.innerHTML = "";
+    years.forEach((year) => {
       const option = document.createElement("option");
-      option.value = category;
-      option.textContent = category;
-      categorySelect.appendChild(option);
+      option.value = String(year);
+      option.textContent = String(year);
+      els.year.appendChild(option);
     });
-    categorySelect.value = currentCategory;
+    if (!years.includes(Number(filters.year)) && years.length) filters.year = String(years[0]);
+    els.year.value = filters.year;
+  }
 
-    const parishMap = new Map();
-    events.forEach((ev) => {
-      const label = extractParish(ev.title);
-      const key = parishKey(ev.title);
-      if (label && key && !parishMap.has(key)) parishMap.set(key, label);
-    });
+  function selectedCheckboxes(kind) {
+    return new Set(Array.from(document.querySelectorAll('input[data-filter-kind="' + kind + '"]:checked')).map((input) => input.value));
+  }
 
-    const parishes = Array.from(parishMap.entries()).sort((a, b) => a[1].localeCompare(b[1], "pt-BR"));
-    parishSelect.innerHTML = '<option value="all">Todas as paróquias</option>';
-    parishes.forEach(([key, label]) => {
-      const option = document.createElement("option");
-      option.value = key;
-      option.textContent = label;
-      parishSelect.appendChild(option);
-    });
-    parishSelect.value = currentParish;
-    parishSelect.closest(".agenda-select-field").hidden = currentScope !== "main";
+  function inPeriod(ev) {
+    if (currentScope !== "main" || filters.period === "all") return true;
+    const date = new Date(ev.start), now = new Date();
+
+    if (filters.period === "upcoming") return date >= new Date(now.getTime() - 86400000);
+    if (filters.period === "month") return monthKey(date) === monthKey(now);
+    if (filters.period === "year") return String(date.getFullYear()) === filters.year;
+    if (filters.period === "custom") {
+      const key = dateKey(date);
+      if (filters.start && key < filters.start) return false;
+      if (filters.end && key > filters.end) return false;
+    }
+    return true;
   }
 
   function filteredEvents() {
-    const term = normalize(search.value.trim());
-
+    const term = normalize(els.search.value);
     return currentEvents.filter((ev) => {
-      if (!inSelectedPeriod(ev)) return false;
-      if (currentCategory !== "all" && ev.category !== currentCategory) return false;
-      if (currentParish !== "all" && parishKey(ev.title) !== currentParish) return false;
-
+      const p = parseEvent(ev);
+      if (!inPeriod(ev)) return false;
+      if (filters.types.size && !filters.types.has(normalize(p.type))) return false;
+      if (filters.scopes.size && !filters.scopes.has(normalize(p.scope))) return false;
+      if (filters.parishes.size && !filters.parishes.has(p.parishKey)) return false;
+      if (filters.cities.size && !filters.cities.has(normalize(p.city))) return false;
+      if (ev.cancelled && !filters.cancelled) return false;
+      if (!ev.cancelled && !filters.confirmed) return false;
       if (!term) return true;
-      const haystack = normalize([ev.title, ev.location, ev.description, ev.category, ev.source_label].filter(Boolean).join(" "));
-      return haystack.includes(term);
+      return normalize([ev.title, ev.location, ev.description, p.type, p.scope, p.parishLabel, p.city].filter(Boolean).join(" ")).includes(term);
     });
   }
 
   function renderEventCard(ev) {
-    const date = new Date(ev.start);
+    const date = new Date(ev.start), p = parseEvent(ev);
     const card = document.createElement("article");
     card.className = "agenda-event" + (ev.cancelled ? " is-cancelled" : "");
 
-    const badges = ['<span class="agenda-badge">' + esc(ev.category || ev.source_label) + "</span>"];
-    if (ev.cancelled) badges.unshift('<span class="agenda-badge cancelled">Cancelado</span>');
+    const badges = [];
+    if (ev.cancelled) badges.push('<span class="agenda-badge cancelled">Cancelado</span>');
+    badges.push('<span class="agenda-badge">' + esc(p.type || ev.category) + "</span>");
 
-    const desc = ev.description && currentScope !== "liturgico"
-      ? '<p class="agenda-description">' + esc(ev.description).replace(/\n/g, "<br>") + "</p>"
-      : "";
-
-    const calendarAction = ev.cancelled ? "" :
-      '<a class="agenda-add" target="_blank" rel="noopener" href="' + esc(buildGoogleCalendarUrl(ev)) + '">Adicionar à minha agenda</a>';
-
+    const meta = [formatRange(ev), p.city || ev.location].filter(Boolean).join(" · ");
     card.innerHTML =
-      '<div class="agenda-date">' +
-        '<strong class="agenda-day">' + esc(fmtDay.format(date)) + "</strong>" +
-        '<span class="agenda-month-short">' + esc(fmtMonthShort.format(date).replace(".", "").toUpperCase()) + "</span>" +
-        '<span class="agenda-weekday">' + esc(fmtWeek.format(date)) + "</span>" +
-      "</div>" +
-      '<div class="agenda-event-copy">' +
-        '<div class="agenda-badges">' + badges.join("") + "</div>" +
-        "<h3>" + esc(ev.title) + "</h3>" +
-        '<p class="agenda-meta">' + esc(formatRange(ev)) + (ev.location ? " · " + esc(ev.location) : "") + "</p>" +
-        desc + calendarAction +
-      "</div>";
-
+      '<div class="agenda-date"><strong class="agenda-day">' + esc(fmtDay.format(date)) + '</strong><span class="agenda-month-short">' +
+      esc(fmtMonthShort.format(date).replace(".", "").toUpperCase()) + '</span></div>' +
+      '<div class="agenda-event-copy"><div class="agenda-badges">' + badges.join("") + '</div><h3>' + esc(ev.title) + '</h3>' +
+      '<div class="agenda-event-bottom"><p class="agenda-meta">' + esc(meta) + '</p>' +
+      (ev.cancelled ? "" : '<a class="agenda-add" target="_blank" rel="noopener" href="' + esc(buildGoogleCalendarUrl(ev)) + '">+ Agenda</a>') +
+      "</div></div>";
     return card;
   }
 
   function renderList(events) {
-    list.innerHTML = "";
-    if (!events.length) {
-      status.textContent = "Nenhum acontecimento encontrado com estes filtros.";
-      return;
-    }
-
-    status.textContent = (events.length === 1 ? "1 acontecimento" : events.length + " acontecimentos") + " encontrado" + (events.length === 1 ? "" : "s") + ".";
+    els.list.innerHTML = "";
+    if (!events.length) { els.status.textContent = "Nenhum acontecimento encontrado com estes filtros."; return; }
+    els.status.textContent = (events.length === 1 ? "1 acontecimento encontrado." : events.length + " acontecimentos encontrados.");
 
     const groups = new Map();
     events.forEach((ev) => {
@@ -1508,143 +1629,191 @@ button, a { -webkit-tap-highlight-color: transparent; }
       heading.className = "agenda-month-title";
       heading.textContent = fmtMonthYear.format(new Date(monthEvents[0].start));
       section.appendChild(heading);
-
       const cards = document.createElement("div");
       cards.className = "agenda-month-events";
       monthEvents.forEach((ev) => cards.appendChild(renderEventCard(ev)));
       section.appendChild(cards);
       frag.appendChild(section);
     });
-    list.appendChild(frag);
+    els.list.appendChild(frag);
   }
 
-  function renderDayEvents(dayKey, events) {
-    const selected = events.filter((ev) => dateKey(new Date(ev.start)) === dayKey);
-    dayEvents.innerHTML = "";
+  function renderDayEvents(key, events) {
+    els.dayEvents.innerHTML = "";
+    const selected = events.filter((ev) => dateKey(new Date(ev.start)) === key);
     if (!selected.length) return;
-
-    const heading = document.createElement("h3");
-    heading.textContent = fmtLongDate.format(new Date(selected[0].start));
-    dayEvents.appendChild(heading);
-    selected.forEach((ev) => dayEvents.appendChild(renderEventCard(ev)));
+    const h = document.createElement("h3");
+    h.textContent = fmtLongDate.format(new Date(selected[0].start));
+    els.dayEvents.appendChild(h);
+    selected.forEach((ev) => els.dayEvents.appendChild(renderEventCard(ev)));
   }
 
   function renderCalendar(events) {
-    const cursor = calendarCursor;
-    calendarTitle.textContent = fmtMonthYear.format(cursor);
-    calendarGrid.innerHTML = "";
-    dayEvents.innerHTML = "";
+    els.calendarTitle.textContent = fmtMonthYear.format(calendarCursor);
+    els.calendarGrid.innerHTML = "";
+    els.dayEvents.innerHTML = "";
+    const year = calendarCursor.getFullYear(), month = calendarCursor.getMonth();
+    const first = new Date(year, month, 1, 12), last = new Date(year, month + 1, 0, 12);
 
-    const year = cursor.getFullYear();
-    const month = cursor.getMonth();
-    const first = new Date(year, month, 1, 12);
-    const last = new Date(year, month + 1, 0, 12);
-    const leading = first.getDay();
-
-    for (let i = 0; i < leading; i++) {
+    for (let i = 0; i < first.getDay(); i++) {
       const blank = document.createElement("div");
       blank.className = "agenda-calendar-cell is-empty";
-      calendarGrid.appendChild(blank);
+      els.calendarGrid.appendChild(blank);
     }
 
     for (let day = 1; day <= last.getDate(); day++) {
-      const date = new Date(year, month, day, 12);
-      const key = dateKey(date);
-      const dayMatches = events.filter((ev) => dateKey(new Date(ev.start)) === key);
-
+      const date = new Date(year, month, day, 12), key = dateKey(date);
+      const matches = events.filter((ev) => dateKey(new Date(ev.start)) === key);
       const cell = document.createElement("button");
       cell.type = "button";
-      cell.className = "agenda-calendar-cell" + (dayMatches.length ? " has-events" : "");
-      cell.innerHTML = '<span class="agenda-calendar-number">' + day + '</span>' +
-        (dayMatches.length ? '<span class="agenda-calendar-count">' + dayMatches.length + '</span>' : "");
-
-      const preview = document.createElement("span");
-      preview.className = "agenda-calendar-preview";
-      dayMatches.slice(0, 2).forEach((ev) => {
-        const item = document.createElement("span");
-        item.textContent = ev.title;
-        preview.appendChild(item);
-      });
-      cell.appendChild(preview);
-
-      if (dayMatches.length) cell.addEventListener("click", () => renderDayEvents(key, events));
-      calendarGrid.appendChild(cell);
+      cell.className = "agenda-calendar-cell" + (matches.length ? " has-events" : "");
+      cell.innerHTML = '<span class="agenda-calendar-number">' + day + "</span>" +
+        (matches.length ? '<span class="agenda-calendar-count">' + matches.length + "</span>" : "");
+      if (matches.length) cell.addEventListener("click", () => renderDayEvents(key, events));
+      els.calendarGrid.appendChild(cell);
     }
 
     const monthMatches = events.filter((ev) => {
       const d = new Date(ev.start);
       return d.getFullYear() === year && d.getMonth() === month;
     });
-    status.textContent = monthMatches.length === 1 ? "1 acontecimento neste mês." : monthMatches.length + " acontecimentos neste mês.";
+    els.status.textContent = monthMatches.length === 1 ? "1 acontecimento neste mês." : monthMatches.length + " acontecimentos neste mês.";
   }
 
-  function applyFilters() {
+  function filterSummaryLabels() {
+    const labels = [];
+    if (filters.period === "upcoming") labels.push("Próximos");
+    if (filters.period === "month") labels.push("Mês atual");
+    if (filters.period === "year") labels.push("Ano " + filters.year);
+    if (filters.period === "custom") labels.push((filters.start || "…") + " a " + (filters.end || "…"));
+    if (filters.types.size) labels.push(...Array.from(filters.types));
+    if (filters.scopes.size) labels.push(...Array.from(filters.scopes));
+    if (filters.parishes.size) labels.push(filters.parishes.size + " paróquia(s)");
+    if (filters.cities.size) labels.push(filters.cities.size + " cidade(s)");
+    if (!filters.cancelled) labels.push("somente confirmados");
+    if (!filters.confirmed) labels.push("somente cancelados");
+    return labels;
+  }
+
+  function renderActiveFilters() {
+    els.activeFilters.innerHTML = "";
+    const labels = filterSummaryLabels();
+    const count = Math.max(0, labels.length - (filters.period === "upcoming" ? 1 : 0));
+    els.filterCount.hidden = !count;
+    els.filterCount.textContent = String(count);
+    labels.forEach((label) => {
+      const span = document.createElement("span");
+      span.textContent = label;
+      els.activeFilters.appendChild(span);
+    });
+  }
+
+  function renderPrint(events) {
+    els.printSummary.textContent = filterSummaryLabels().join(" · ");
+    els.printList.innerHTML = "";
+    events.forEach((ev) => {
+      const row = document.createElement("div");
+      row.className = "agenda-print-row";
+      const d = new Date(ev.start);
+      row.innerHTML = '<strong>' + esc(fmtLongDate.format(d)) + '</strong><span>' + esc(formatRange(ev)) + '</span><div>' +
+        esc(ev.title) + (ev.cancelled ? " — CANCELADO" : "") + "</div>";
+      els.printList.appendChild(row);
+    });
+  }
+
+  function apply() {
     const events = filteredEvents();
+    renderActiveFilters();
+    renderPrint(events);
     if (currentView === "month") renderCalendar(events);
     else renderList(events);
   }
 
   function setView(view) {
     currentView = view;
-    viewButtons.forEach((button) => button.classList.toggle("active", button.dataset.view === view));
-    const isMonth = view === "month";
-    calendar.hidden = !isMonth;
-    list.hidden = isMonth;
-    applyFilters();
+    els.viewButtons.forEach((button) => button.classList.toggle("active", button.dataset.view === view));
+    els.calendar.hidden = view !== "month";
+    els.list.hidden = view === "month";
+    apply();
+  }
+
+  function openFilters() {
+    populateFilterChoices(currentEvents);
+    document.querySelector('input[name="filter-period"][value="' + filters.period + '"]').checked = true;
+    els.year.value = filters.year;
+    els.start.value = filters.start;
+    els.end.value = filters.end;
+    els.confirmed.checked = filters.confirmed;
+    els.cancelled.checked = filters.cancelled;
+    els.filterModal.hidden = false;
+    document.body.classList.add("filter-open");
+  }
+
+  function closeFilters() {
+    els.filterModal.hidden = true;
+    document.body.classList.remove("filter-open");
+  }
+
+  function clearFilters() {
+    filters.period = "upcoming"; filters.types.clear(); filters.scopes.clear(); filters.parishes.clear(); filters.cities.clear();
+    filters.confirmed = true; filters.cancelled = true; filters.start = ""; filters.end = "";
+    closeFilters(); apply();
   }
 
   async function load(scope) {
     currentScope = scope;
-    currentPeriod = "upcoming";
-    currentCategory = "all";
-    currentParish = "all";
-    currentEvents = [];
-    list.innerHTML = "";
-    calendarGrid.innerHTML = "";
-    dayEvents.innerHTML = "";
-    status.textContent = "Carregando agenda…";
-    updated.textContent = "";
-    search.value = "";
-    tabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.scope === scope));
+    els.status.textContent = "Carregando agenda…";
+    els.updated.textContent = "";
+    els.tabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.scope === scope));
+    els.filterButton.hidden = scope !== "main";
+    els.printButton.hidden = false;
 
     try {
-      const response = await fetch(API + "?scope=" + encodeURIComponent(scope) + "&days=365", { cache: "no-store" });
+      const response = await fetch(API + "?scope=" + encodeURIComponent(scope) + "&days=730", { cache: "no-store" });
       if (!response.ok) throw new Error("http");
       const data = await response.json();
-
       currentEvents = data.events || [];
-      periodSelect.closest(".agenda-select-field").hidden = currentScope !== "main";
-      periodSelect.value = currentPeriod;
-      populateFilters(currentEvents);
 
-      const firstEvent = currentEvents.find((ev) => new Date(ev.start) >= new Date());
-      calendarCursor = firstEvent ? startOfMonth(new Date(firstEvent.start)) : startOfMonth(new Date());
-      applyFilters();
+      const future = currentEvents.find((ev) => new Date(ev.start) >= new Date());
+      calendarCursor = future ? startOfMonth(new Date(future.start)) : startOfMonth(new Date());
+      populateFilterChoices(currentEvents);
+      apply();
 
-      const syncDates = (data.sources || [])
-        .map((source) => source.last_synced_at)
-        .filter(Boolean)
-        .map((value) => new Date(value))
-        .filter((date) => !Number.isNaN(date.getTime()));
-
-      const reference = syncDates.length
-        ? new Date(Math.max(...syncDates.map((date) => date.getTime())))
-        : (data.generated_at ? new Date(data.generated_at) : null);
-
-      if (reference && !Number.isNaN(reference.getTime())) updated.textContent = "Atualizado em " + fmtUpdated.format(reference);
+      const dates = (data.sources || []).map((s) => s.last_synced_at).filter(Boolean).map((v) => new Date(v)).filter((d) => !Number.isNaN(d.getTime()));
+      const ref = dates.length ? new Date(Math.max(...dates.map((d) => d.getTime()))) : new Date(data.generated_at);
+      if (!Number.isNaN(ref.getTime())) els.updated.textContent = "Atualizado em " + fmtUpdated.format(ref);
     } catch {
-      status.textContent = "Não foi possível carregar a agenda agora. Tente novamente em alguns instantes.";
+      els.status.textContent = "Não foi possível carregar a agenda agora. Tente novamente em alguns instantes.";
     }
   }
 
-  search.addEventListener("input", applyFilters);
-  periodSelect.addEventListener("change", () => { currentPeriod = periodSelect.value; applyFilters(); });
-  categorySelect.addEventListener("change", () => { currentCategory = categorySelect.value; applyFilters(); });
-  parishSelect.addEventListener("change", () => { currentParish = parishSelect.value; applyFilters(); });
-  viewButtons.forEach((button) => button.addEventListener("click", () => setView(button.dataset.view || "list")));
-  prevMonth.addEventListener("click", () => { calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() - 1, 1, 12); applyFilters(); });
-  nextMonth.addEventListener("click", () => { calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() + 1, 1, 12); applyFilters(); });
-  tabs.forEach((tab) => tab.addEventListener("click", () => load(tab.dataset.scope || "main")));
+  els.search.addEventListener("input", apply);
+  els.filterButton.addEventListener("click", openFilters);
+  document.querySelectorAll("[data-close-filter]").forEach((el) => el.addEventListener("click", closeFilters));
+  els.clearFilters.addEventListener("click", clearFilters);
+  els.applyFilters.addEventListener("click", () => {
+    filters.period = document.querySelector('input[name="filter-period"]:checked').value;
+    filters.year = els.year.value;
+    filters.start = els.start.value;
+    filters.end = els.end.value;
+    filters.types = selectedCheckboxes("types");
+    filters.scopes = selectedCheckboxes("scopes");
+    filters.parishes = selectedCheckboxes("parishes");
+    filters.cities = selectedCheckboxes("cities");
+    filters.confirmed = els.confirmed.checked;
+    filters.cancelled = els.cancelled.checked;
+    closeFilters(); apply();
+  });
+  els.parishSearch.addEventListener("input", () => {
+    const term = normalize(els.parishSearch.value);
+    Array.from(els.filterParishes.children).forEach((label) => { label.hidden = term && !label.dataset.search.includes(term); });
+  });
+  els.viewButtons.forEach((button) => button.addEventListener("click", () => setView(button.dataset.view || "list")));
+  els.prevMonth.addEventListener("click", () => { calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() - 1, 1, 12); apply(); });
+  els.nextMonth.addEventListener("click", () => { calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() + 1, 1, 12); apply(); });
+  els.tabs.forEach((tab) => tab.addEventListener("click", () => load(tab.dataset.scope || "main")));
+  els.printButton.addEventListener("click", () => { renderPrint(filteredEvents()); window.print(); });
+  document.addEventListener("keydown", (event) => { if (event.key === "Escape" && !els.filterModal.hidden) closeFilters(); });
 
   load("main");
 })();
