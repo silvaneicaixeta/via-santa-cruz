@@ -68,7 +68,7 @@
             <button class="agenda-view-button active" data-view="list" type="button">Lista</button>
             <button class="agenda-view-button" data-view="month" type="button">Mês</button>
           </div>
-          <button id="agenda-print-button" class="agenda-action-button agenda-print-button" type="button">Imprimir / PDF</button>
+          <button id="agenda-print-button" class="agenda-action-button agenda-print-button" type="button">Gerar PDF / Imprimir</button>
         </div>
 
         <div id="agenda-active-filters" class="agenda-active-filters" aria-live="polite"></div>
@@ -116,9 +116,10 @@
         <details open>
           <summary>Período</summary>
           <div class="agenda-filter-section">
-            <label class="agenda-radio"><input type="radio" name="filter-period" value="upcoming" checked> Próximos acontecimentos</label>
-            <label class="agenda-radio"><input type="radio" name="filter-period" value="month"> Mês atual</label>
-            <label class="agenda-radio"><input type="radio" name="filter-period" value="year"> Ano específico</label>
+            <label class="agenda-radio"><input type="radio" name="filter-period" value="upcoming" checked> Próximos 90 dias</label>
+            <label class="agenda-radio"><input type="radio" name="filter-period" value="month"> Mês atual — completo, incluindo datas passadas</label>
+            <label class="agenda-radio"><input type="radio" name="filter-period" value="past30"> Últimos 30 dias</label>
+            <label class="agenda-radio"><input type="radio" name="filter-period" value="year"> Ano específico — completo</label>
             <select id="filter-year" class="agenda-filter-select" aria-label="Ano"></select>
             <label class="agenda-radio"><input type="radio" name="filter-period" value="custom"> Intervalo personalizado</label>
             <div class="agenda-date-range"><input id="filter-start" type="date" aria-label="Data inicial"><input id="filter-end" type="date" aria-label="Data final"></div>
@@ -172,6 +173,7 @@
   </footer>
 
   <script src="/script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
   <script src="/agenda.js"></script>
   <script src="/analytics.js"></script>
 </body>
