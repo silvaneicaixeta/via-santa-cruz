@@ -1,37 +1,66 @@
 (() => {
   const API = "https://vgpivbxykeobgjzqlqcl.supabase.co/functions/v1/vsc-agenda";
-  const list = document.getElementById("agenda-list");
-  const status = document.getElementById("agenda-status");
-  const updated = document.getElementById("agenda-updated");
-  const search = document.getElementById("agenda-search");
-  const periodSelect = document.getElementById("agenda-period");
-  const categorySelect = document.getElementById("agenda-category");
-  const parishSelect = document.getElementById("agenda-parish");
-  const tabs = Array.from(document.querySelectorAll(".agenda-tab"));
-  const viewButtons = Array.from(document.querySelectorAll(".agenda-view-button"));
-  const calendar = document.getElementById("agenda-calendar");
-  const calendarTitle = document.getElementById("agenda-calendar-title");
-  const calendarGrid = document.getElementById("agenda-calendar-grid");
-  const dayEvents = document.getElementById("agenda-day-events");
-  const prevMonth = document.getElementById("agenda-prev-month");
-  const nextMonth = document.getElementById("agenda-next-month");
-
   const TZ = "America/Sao_Paulo";
+
+  const els = {
+    list: document.getElementById("agenda-list"),
+    status: document.getElementById("agenda-status"),
+    updated: document.getElementById("agenda-updated"),
+    search: document.getElementById("agenda-search"),
+    tabs: Array.from(document.querySelectorAll(".agenda-tab")),
+    viewButtons: Array.from(document.querySelectorAll(".agenda-view-button")),
+    calendar: document.getElementById("agenda-calendar"),
+    calendarTitle: document.getElementById("agenda-calendar-title"),
+    calendarGrid: document.getElementById("agenda-calendar-grid"),
+    dayEvents: document.getElementById("agenda-day-events"),
+    prevMonth: document.getElementById("agenda-prev-month"),
+    nextMonth: document.getElementById("agenda-next-month"),
+    filterButton: document.getElementById("agenda-filter-button"),
+    filterCount: document.getElementById("agenda-filter-count"),
+    activeFilters: document.getElementById("agenda-active-filters"),
+    filterModal: document.getElementById("agenda-filter-modal"),
+    filterTypes: document.getElementById("filter-types"),
+    filterScopes: document.getElementById("filter-scopes"),
+    filterParishes: document.getElementById("filter-parishes"),
+    filterCities: document.getElementById("filter-cities"),
+    parishSearch: document.getElementById("filter-parish-search"),
+    year: document.getElementById("filter-year"),
+    start: document.getElementById("filter-start"),
+    end: document.getElementById("filter-end"),
+    confirmed: document.getElementById("filter-confirmed"),
+    cancelled: document.getElementById("filter-cancelled"),
+    applyFilters: document.getElementById("agenda-apply-filters"),
+    clearFilters: document.getElementById("agenda-clear-filters"),
+    printButton: document.getElementById("agenda-print-button"),
+    printList: document.getElementById("agenda-print-list"),
+    printSummary: document.getElementById("agenda-print-summary")
+  };
+
   const fmtDay = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", timeZone: TZ });
   const fmtMonthShort = new Intl.DateTimeFormat("pt-BR", { month: "short", timeZone: TZ });
   const fmtWeek = new Intl.DateTimeFormat("pt-BR", { weekday: "long", timeZone: TZ });
   const fmtTime = new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit", timeZone: TZ });
   const fmtMonthYear = new Intl.DateTimeFormat("pt-BR", { month: "long", year: "numeric", timeZone: TZ });
-  const fmtLongDate = new Intl.DateTimeFormat("pt-BR", { day: "numeric", month: "long", timeZone: TZ });
+  const fmtLongDate = new Intl.DateTimeFormat("pt-BR", { day: "numeric", month: "long", year: "numeric", timeZone: TZ });
   const fmtUpdated = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit", timeZone: TZ });
 
   let currentScope = "main";
-  let currentPeriod = "upcoming";
-  let currentCategory = "all";
-  let currentParish = "all";
   let currentView = "list";
   let currentEvents = [];
   let calendarCursor = startOfMonth(new Date());
+
+  const filters = {
+    period: "upcoming",
+    year: String(new Date().getFullYear()),
+    start: "",
+    end: "",
+    types: new Set(),
+    scopes: new Set(),
+    parishes: new Set(),
+    cities: new Set(),
+    confirmed: true,
+    cancelled: true
+  };
 
   function esc(value) {
     return String(value || "").replace(/[&<>"']/g, (c) => ({
@@ -40,204 +69,195 @@
   }
 
   function normalize(value) {
-    return String(value || "")
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase()
-      .replace(/\s+/g, " ")
-      .trim();
+    return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, " ").trim();
   }
 
-  function startOfMonth(date) {
-    return new Date(date.getFullYear(), date.getMonth(), 1, 12, 0, 0);
-  }
+  function startOfMonth(date) { return new Date(date.getFullYear(), date.getMonth(), 1, 12); }
 
   function dateKey(date) {
-    return new Intl.DateTimeFormat("en-CA", {
-      year: "numeric", month: "2-digit", day: "2-digit", timeZone: TZ
-    }).format(date);
+    return new Intl.DateTimeFormat("en-CA", { year: "numeric", month: "2-digit", day: "2-digit", timeZone: TZ }).format(date);
   }
 
-  function monthKey(date) {
-    return dateKey(date).slice(0, 7);
-  }
+  function monthKey(date) { return dateKey(date).slice(0, 7); }
 
-  function extractParish(title) {
-    const value = String(title || "").trim();
-
-    // Padrão dos padroeiros: "Padroeiro Par. Nome / Cidade".
-    const patron = value.match(/(?:Padroeir[oa]\s+)?(?:Quase\s+Par\.|QPar\.|Par\.|Paróquia)\s+(.+?)\s*\/\s*(.+)$/i);
-    if (patron) {
-      const parishName = patron[1].replace(/^Paróquia\s+/i, "").trim();
-      const city = patron[2].trim();
-      return parishName + " — " + city;
-    }
-
-    // Padrões mais comuns dos demais calendários: "... Par. Nome em Cidade".
-    const matches = [...value.matchAll(/(?:QPar\.|Quase\s+Par\.|Par\.|Paróquia)\s+([^\n]+)/gi)];
-    if (!matches.length) return "";
-
-    let label = matches[matches.length - 1][1]
-      .replace(/^Paróquia\s+/i, "")
-      .replace(/\s*\([^)]*\)\s*$/g, "")
-      .replace(/\s+\(Ver Horário\)\s*$/i, "")
-      .trim();
-
-    label = label.replace(/\s+-\s+.*$/g, "").trim();
-    return label;
-  }
-
-  function parishKey(title) {
-    return normalize(extractParish(title))
+  function normalizeParishName(value) {
+    return normalize(value)
       .replace(/\bsta\.?\b/g, "santa")
       .replace(/\bsto\.?\b/g, "santo")
       .replace(/\bn\.?\s*sra\.?\b/g, "nossa senhora")
-      .replace(/\bqpar\.?\b/g, "")
-      .replace(/\bpar\.?(?=\s)/g, "")
+      .replace(/\bs\.?\s*jose\b/g, "sao jose")
       .replace(/\s+/g, " ")
       .trim();
   }
 
-  function inSelectedPeriod(ev) {
-    if (currentScope !== "main" || currentPeriod === "all") return true;
+  function parseEvent(ev) {
+    const title = String(ev.title || "").trim();
+    const parts = title.split(/\s+-\s+/).map((p) => p.trim()).filter(Boolean);
 
-    const eventDate = new Date(ev.start);
-    const now = new Date();
+    let type = "";
+    let community = "";
+    let parish = "";
+    let city = "";
 
-    if (currentPeriod === "upcoming") return eventDate >= new Date(now.getTime() - 86400000);
+    if (parts.length) {
+      const first = parts[0];
+      const known = first.match(/^(Crisma|Novena|Novenário|Festa|Celebração|Missa|Tríduo|Retiro|Reunião|Encontro|Assembleia|Abertura(?: da| do)? Novena|Abertura)/i);
+      type = known ? known[1] : first.split(/\s+/).slice(0, 2).join(" ");
 
-    const eventParts = new Intl.DateTimeFormat("en-CA", {
-      year: "numeric", month: "2-digit", day: "2-digit", timeZone: TZ
-    }).formatToParts(eventDate);
-    const nowParts = new Intl.DateTimeFormat("en-CA", {
-      year: "numeric", month: "2-digit", day: "2-digit", timeZone: TZ
-    }).formatToParts(now);
+      for (let i = 1; i < parts.length; i++) {
+        const part = parts[i];
+        if (/^Com\./i.test(part)) community = part;
+        else if (/^(?:QPar\.|Quase\s+Par\.|Par\.|Paróquia)\s+/i.test(part)) {
+          parish = part.replace(/^(?:QPar\.|Quase\s+Par\.|Par\.|Paróquia)\s+/i, "").trim();
+          if (parts[i + 1] && !/^Com\.|^(?:QPar\.|Par\.|Paróquia)/i.test(parts[i + 1])) city = parts[i + 1];
+        }
+      }
+    }
 
-    const part = (parts, type) => parts.find((p) => p.type === type).value;
-    const eventYear = part(eventParts, "year");
-    const eventMonth = part(eventParts, "month");
-    const nowYear = part(nowParts, "year");
-    const nowMonth = part(nowParts, "month");
+    if (!parish) {
+      const patron = title.match(/(?:Padroeir[oa]\s+)?(?:Quase\s+Par\.|QPar\.|Par\.|Paróquia)\s+(.+?)\s*\/\s*(.+)$/i);
+      if (patron) { parish = patron[1].replace(/^Paróquia\s+/i, "").trim(); city = patron[2].trim(); }
+    }
 
-    if (currentPeriod === "month") return eventYear === nowYear && eventMonth === nowMonth;
-    if (currentPeriod === "year") return eventYear === nowYear;
-    return true;
+    if (!parish) {
+      const legacy = title.match(/(?:QPar\.|Par\.|Paróquia)\s+(.+?)\s+em\s+([^()]+?)(?:\s*\(|$)/i);
+      if (legacy) { parish = legacy[1].trim(); city = legacy[2].trim(); }
+    }
+
+    if (!city && ev.location && !/[0-9]/.test(ev.location)) city = String(ev.location).trim();
+
+    const sourceScope = {
+      "leste-ii": "Leste II",
+      "cnbb": "CNBB",
+      "comire": "COMIRE",
+      "dioc-informativo": "Diocese",
+      "crisma": "Paróquias",
+      "paroquiais": "Paróquias",
+      "padroeiros": "Paróquias"
+    };
+    const scope = sourceScope[ev.source] || ev.source_label || "Diocese";
+    if (ev.source === "padroeiros") type = "Padroeiro";
+
+    const parishLabel = parish ? parish + (city ? " — " + city : "") : "";
+    const parishKey = parish ? normalizeParishName(parish) + "|" + normalize(city) : "";
+
+    return { type, community, parish, city, parishLabel, parishKey, scope };
   }
 
   function formatRange(ev) {
-    const start = new Date(ev.start);
-    const end = new Date(ev.end);
+    const start = new Date(ev.start), end = new Date(ev.end);
     if (!ev.all_day) return fmtTime.format(start);
-
     const effectiveEnd = new Date(end.getTime() - 1);
-    const sameDay = fmtLongDate.format(start) === fmtLongDate.format(effectiveEnd);
-    return sameDay ? "Dia inteiro" : fmtLongDate.format(start) + " a " + fmtLongDate.format(effectiveEnd);
+    return dateKey(start) === dateKey(effectiveEnd) ? "Dia inteiro" : fmtLongDate.format(start) + " a " + fmtLongDate.format(effectiveEnd);
   }
 
   function buildGoogleCalendarUrl(ev) {
-    const start = new Date(ev.start);
-    const end = new Date(ev.end);
-    const formatUtc = (date) => date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
-
-    let dates;
-    if (ev.all_day) {
-      const dateOnly = (value) => dateKey(new Date(value)).replace(/-/g, "");
-      dates = dateOnly(start) + "/" + dateOnly(end);
-    } else {
-      dates = formatUtc(start) + "/" + formatUtc(end);
-    }
-
+    const start = new Date(ev.start), end = new Date(ev.end);
+    const utc = (d) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
+    const only = (d) => dateKey(new Date(d)).replace(/-/g, "");
+    const dates = ev.all_day ? only(start) + "/" + only(end) : utc(start) + "/" + utc(end);
     const params = new URLSearchParams({ action: "TEMPLATE", text: ev.title, dates });
     if (ev.location) params.set("location", ev.location);
     if (ev.description) params.set("details", ev.description);
     return "https://calendar.google.com/calendar/render?" + params.toString();
   }
 
-  function populateFilters(events) {
-    const categories = Array.from(new Set(events.map((ev) => ev.category).filter(Boolean)))
-      .sort((a, b) => a.localeCompare(b, "pt-BR"));
+  function optionList(container, values, selectedSet, kind) {
+    container.innerHTML = "";
+    values.forEach(({ key, label }) => {
+      const item = document.createElement("label");
+      item.dataset.search = normalize(label);
+      const input = document.createElement("input");
+      input.type = "checkbox";
+      input.value = key;
+      input.checked = selectedSet.has(key);
+      input.dataset.filterKind = kind;
+      item.append(input, document.createTextNode(" " + label));
+      container.appendChild(item);
+    });
+  }
 
-    categorySelect.innerHTML = '<option value="all">Todas as categorias</option>';
-    categories.forEach((category) => {
+  function populateFilterChoices(events) {
+    const meta = events.map((ev) => ({ ev, p: parseEvent(ev) }));
+    const unique = (items) => Array.from(new Map(items.filter((x) => x.key && x.label).map((x) => [x.key, x])).values())
+      .sort((a, b) => a.label.localeCompare(b.label, "pt-BR"));
+
+    optionList(els.filterTypes, unique(meta.map(({p}) => ({ key: normalize(p.type), label: p.type }))), filters.types, "types");
+    optionList(els.filterScopes, unique(meta.map(({p}) => ({ key: normalize(p.scope), label: p.scope }))), filters.scopes, "scopes");
+    optionList(els.filterParishes, unique(meta.map(({p}) => ({ key: p.parishKey, label: p.parishLabel }))), filters.parishes, "parishes");
+    optionList(els.filterCities, unique(meta.map(({p}) => ({ key: normalize(p.city), label: p.city }))), filters.cities, "cities");
+
+    const years = Array.from(new Set(events.map((ev) => new Date(ev.start).getFullYear()))).sort();
+    els.year.innerHTML = "";
+    years.forEach((year) => {
       const option = document.createElement("option");
-      option.value = category;
-      option.textContent = category;
-      categorySelect.appendChild(option);
+      option.value = String(year);
+      option.textContent = String(year);
+      els.year.appendChild(option);
     });
-    categorySelect.value = currentCategory;
+    if (!years.includes(Number(filters.year)) && years.length) filters.year = String(years[0]);
+    els.year.value = filters.year;
+  }
 
-    const parishMap = new Map();
-    events.forEach((ev) => {
-      const label = extractParish(ev.title);
-      const key = parishKey(ev.title);
-      if (label && key && !parishMap.has(key)) parishMap.set(key, label);
-    });
+  function selectedCheckboxes(kind) {
+    return new Set(Array.from(document.querySelectorAll('input[data-filter-kind="' + kind + '"]:checked')).map((input) => input.value));
+  }
 
-    const parishes = Array.from(parishMap.entries()).sort((a, b) => a[1].localeCompare(b[1], "pt-BR"));
-    parishSelect.innerHTML = '<option value="all">Todas as paróquias</option>';
-    parishes.forEach(([key, label]) => {
-      const option = document.createElement("option");
-      option.value = key;
-      option.textContent = label;
-      parishSelect.appendChild(option);
-    });
-    parishSelect.value = currentParish;
-    parishSelect.closest(".agenda-select-field").hidden = currentScope !== "main";
+  function inPeriod(ev) {
+    if (currentScope !== "main" || filters.period === "all") return true;
+    const date = new Date(ev.start), now = new Date();
+
+    if (filters.period === "upcoming") return date >= new Date(now.getTime() - 86400000);
+    if (filters.period === "month") return monthKey(date) === monthKey(now);
+    if (filters.period === "year") return String(date.getFullYear()) === filters.year;
+    if (filters.period === "custom") {
+      const key = dateKey(date);
+      if (filters.start && key < filters.start) return false;
+      if (filters.end && key > filters.end) return false;
+    }
+    return true;
   }
 
   function filteredEvents() {
-    const term = normalize(search.value.trim());
-
+    const term = normalize(els.search.value);
     return currentEvents.filter((ev) => {
-      if (!inSelectedPeriod(ev)) return false;
-      if (currentCategory !== "all" && ev.category !== currentCategory) return false;
-      if (currentParish !== "all" && parishKey(ev.title) !== currentParish) return false;
-
+      const p = parseEvent(ev);
+      if (!inPeriod(ev)) return false;
+      if (filters.types.size && !filters.types.has(normalize(p.type))) return false;
+      if (filters.scopes.size && !filters.scopes.has(normalize(p.scope))) return false;
+      if (filters.parishes.size && !filters.parishes.has(p.parishKey)) return false;
+      if (filters.cities.size && !filters.cities.has(normalize(p.city))) return false;
+      if (ev.cancelled && !filters.cancelled) return false;
+      if (!ev.cancelled && !filters.confirmed) return false;
       if (!term) return true;
-      const haystack = normalize([ev.title, ev.location, ev.description, ev.category, ev.source_label].filter(Boolean).join(" "));
-      return haystack.includes(term);
+      return normalize([ev.title, ev.location, ev.description, p.type, p.scope, p.parishLabel, p.city].filter(Boolean).join(" ")).includes(term);
     });
   }
 
   function renderEventCard(ev) {
-    const date = new Date(ev.start);
+    const date = new Date(ev.start), p = parseEvent(ev);
     const card = document.createElement("article");
     card.className = "agenda-event" + (ev.cancelled ? " is-cancelled" : "");
 
-    const badges = ['<span class="agenda-badge">' + esc(ev.category || ev.source_label) + "</span>"];
-    if (ev.cancelled) badges.unshift('<span class="agenda-badge cancelled">Cancelado</span>');
+    const badges = [];
+    if (ev.cancelled) badges.push('<span class="agenda-badge cancelled">Cancelado</span>');
+    badges.push('<span class="agenda-badge">' + esc(p.type || ev.category) + "</span>");
 
-    const desc = ev.description && currentScope !== "liturgico"
-      ? '<p class="agenda-description">' + esc(ev.description).replace(/\n/g, "<br>") + "</p>"
-      : "";
-
-    const calendarAction = ev.cancelled ? "" :
-      '<a class="agenda-add" target="_blank" rel="noopener" href="' + esc(buildGoogleCalendarUrl(ev)) + '">Adicionar à minha agenda</a>';
-
+    const meta = [formatRange(ev), p.city || ev.location].filter(Boolean).join(" · ");
     card.innerHTML =
-      '<div class="agenda-date">' +
-        '<strong class="agenda-day">' + esc(fmtDay.format(date)) + "</strong>" +
-        '<span class="agenda-month-short">' + esc(fmtMonthShort.format(date).replace(".", "").toUpperCase()) + "</span>" +
-        '<span class="agenda-weekday">' + esc(fmtWeek.format(date)) + "</span>" +
-      "</div>" +
-      '<div class="agenda-event-copy">' +
-        '<div class="agenda-badges">' + badges.join("") + "</div>" +
-        "<h3>" + esc(ev.title) + "</h3>" +
-        '<p class="agenda-meta">' + esc(formatRange(ev)) + (ev.location ? " · " + esc(ev.location) : "") + "</p>" +
-        desc + calendarAction +
-      "</div>";
-
+      '<div class="agenda-date"><strong class="agenda-day">' + esc(fmtDay.format(date)) + '</strong><span class="agenda-month-short">' +
+      esc(fmtMonthShort.format(date).replace(".", "").toUpperCase()) + '</span></div>' +
+      '<div class="agenda-event-copy"><div class="agenda-badges">' + badges.join("") + '</div><h3>' + esc(ev.title) + '</h3>' +
+      '<div class="agenda-event-bottom"><p class="agenda-meta">' + esc(meta) + '</p>' +
+      (ev.cancelled ? "" : '<a class="agenda-add" target="_blank" rel="noopener" href="' + esc(buildGoogleCalendarUrl(ev)) + '">+ Agenda</a>') +
+      "</div></div>";
     return card;
   }
 
   function renderList(events) {
-    list.innerHTML = "";
-    if (!events.length) {
-      status.textContent = "Nenhum acontecimento encontrado com estes filtros.";
-      return;
-    }
-
-    status.textContent = (events.length === 1 ? "1 acontecimento" : events.length + " acontecimentos") + " encontrado" + (events.length === 1 ? "" : "s") + ".";
+    els.list.innerHTML = "";
+    if (!events.length) { els.status.textContent = "Nenhum acontecimento encontrado com estes filtros."; return; }
+    els.status.textContent = (events.length === 1 ? "1 acontecimento encontrado." : events.length + " acontecimentos encontrados.");
 
     const groups = new Map();
     events.forEach((ev) => {
@@ -254,143 +274,191 @@
       heading.className = "agenda-month-title";
       heading.textContent = fmtMonthYear.format(new Date(monthEvents[0].start));
       section.appendChild(heading);
-
       const cards = document.createElement("div");
       cards.className = "agenda-month-events";
       monthEvents.forEach((ev) => cards.appendChild(renderEventCard(ev)));
       section.appendChild(cards);
       frag.appendChild(section);
     });
-    list.appendChild(frag);
+    els.list.appendChild(frag);
   }
 
-  function renderDayEvents(dayKey, events) {
-    const selected = events.filter((ev) => dateKey(new Date(ev.start)) === dayKey);
-    dayEvents.innerHTML = "";
+  function renderDayEvents(key, events) {
+    els.dayEvents.innerHTML = "";
+    const selected = events.filter((ev) => dateKey(new Date(ev.start)) === key);
     if (!selected.length) return;
-
-    const heading = document.createElement("h3");
-    heading.textContent = fmtLongDate.format(new Date(selected[0].start));
-    dayEvents.appendChild(heading);
-    selected.forEach((ev) => dayEvents.appendChild(renderEventCard(ev)));
+    const h = document.createElement("h3");
+    h.textContent = fmtLongDate.format(new Date(selected[0].start));
+    els.dayEvents.appendChild(h);
+    selected.forEach((ev) => els.dayEvents.appendChild(renderEventCard(ev)));
   }
 
   function renderCalendar(events) {
-    const cursor = calendarCursor;
-    calendarTitle.textContent = fmtMonthYear.format(cursor);
-    calendarGrid.innerHTML = "";
-    dayEvents.innerHTML = "";
+    els.calendarTitle.textContent = fmtMonthYear.format(calendarCursor);
+    els.calendarGrid.innerHTML = "";
+    els.dayEvents.innerHTML = "";
+    const year = calendarCursor.getFullYear(), month = calendarCursor.getMonth();
+    const first = new Date(year, month, 1, 12), last = new Date(year, month + 1, 0, 12);
 
-    const year = cursor.getFullYear();
-    const month = cursor.getMonth();
-    const first = new Date(year, month, 1, 12);
-    const last = new Date(year, month + 1, 0, 12);
-    const leading = first.getDay();
-
-    for (let i = 0; i < leading; i++) {
+    for (let i = 0; i < first.getDay(); i++) {
       const blank = document.createElement("div");
       blank.className = "agenda-calendar-cell is-empty";
-      calendarGrid.appendChild(blank);
+      els.calendarGrid.appendChild(blank);
     }
 
     for (let day = 1; day <= last.getDate(); day++) {
-      const date = new Date(year, month, day, 12);
-      const key = dateKey(date);
-      const dayMatches = events.filter((ev) => dateKey(new Date(ev.start)) === key);
-
+      const date = new Date(year, month, day, 12), key = dateKey(date);
+      const matches = events.filter((ev) => dateKey(new Date(ev.start)) === key);
       const cell = document.createElement("button");
       cell.type = "button";
-      cell.className = "agenda-calendar-cell" + (dayMatches.length ? " has-events" : "");
-      cell.innerHTML = '<span class="agenda-calendar-number">' + day + '</span>' +
-        (dayMatches.length ? '<span class="agenda-calendar-count">' + dayMatches.length + '</span>' : "");
-
-      const preview = document.createElement("span");
-      preview.className = "agenda-calendar-preview";
-      dayMatches.slice(0, 2).forEach((ev) => {
-        const item = document.createElement("span");
-        item.textContent = ev.title;
-        preview.appendChild(item);
-      });
-      cell.appendChild(preview);
-
-      if (dayMatches.length) cell.addEventListener("click", () => renderDayEvents(key, events));
-      calendarGrid.appendChild(cell);
+      cell.className = "agenda-calendar-cell" + (matches.length ? " has-events" : "");
+      cell.innerHTML = '<span class="agenda-calendar-number">' + day + "</span>" +
+        (matches.length ? '<span class="agenda-calendar-count">' + matches.length + "</span>" : "");
+      if (matches.length) cell.addEventListener("click", () => renderDayEvents(key, events));
+      els.calendarGrid.appendChild(cell);
     }
 
     const monthMatches = events.filter((ev) => {
       const d = new Date(ev.start);
       return d.getFullYear() === year && d.getMonth() === month;
     });
-    status.textContent = monthMatches.length === 1 ? "1 acontecimento neste mês." : monthMatches.length + " acontecimentos neste mês.";
+    els.status.textContent = monthMatches.length === 1 ? "1 acontecimento neste mês." : monthMatches.length + " acontecimentos neste mês.";
   }
 
-  function applyFilters() {
+  function filterSummaryLabels() {
+    const labels = [];
+    if (filters.period === "upcoming") labels.push("Próximos");
+    if (filters.period === "month") labels.push("Mês atual");
+    if (filters.period === "year") labels.push("Ano " + filters.year);
+    if (filters.period === "custom") labels.push((filters.start || "…") + " a " + (filters.end || "…"));
+    if (filters.types.size) labels.push(...Array.from(filters.types));
+    if (filters.scopes.size) labels.push(...Array.from(filters.scopes));
+    if (filters.parishes.size) labels.push(filters.parishes.size + " paróquia(s)");
+    if (filters.cities.size) labels.push(filters.cities.size + " cidade(s)");
+    if (!filters.cancelled) labels.push("somente confirmados");
+    if (!filters.confirmed) labels.push("somente cancelados");
+    return labels;
+  }
+
+  function renderActiveFilters() {
+    els.activeFilters.innerHTML = "";
+    const labels = filterSummaryLabels();
+    const count = Math.max(0, labels.length - (filters.period === "upcoming" ? 1 : 0));
+    els.filterCount.hidden = !count;
+    els.filterCount.textContent = String(count);
+    labels.forEach((label) => {
+      const span = document.createElement("span");
+      span.textContent = label;
+      els.activeFilters.appendChild(span);
+    });
+  }
+
+  function renderPrint(events) {
+    els.printSummary.textContent = filterSummaryLabels().join(" · ");
+    els.printList.innerHTML = "";
+    events.forEach((ev) => {
+      const row = document.createElement("div");
+      row.className = "agenda-print-row";
+      const d = new Date(ev.start);
+      row.innerHTML = '<strong>' + esc(fmtLongDate.format(d)) + '</strong><span>' + esc(formatRange(ev)) + '</span><div>' +
+        esc(ev.title) + (ev.cancelled ? " — CANCELADO" : "") + "</div>";
+      els.printList.appendChild(row);
+    });
+  }
+
+  function apply() {
     const events = filteredEvents();
+    renderActiveFilters();
+    renderPrint(events);
     if (currentView === "month") renderCalendar(events);
     else renderList(events);
   }
 
   function setView(view) {
     currentView = view;
-    viewButtons.forEach((button) => button.classList.toggle("active", button.dataset.view === view));
-    const isMonth = view === "month";
-    calendar.hidden = !isMonth;
-    list.hidden = isMonth;
-    applyFilters();
+    els.viewButtons.forEach((button) => button.classList.toggle("active", button.dataset.view === view));
+    els.calendar.hidden = view !== "month";
+    els.list.hidden = view === "month";
+    apply();
+  }
+
+  function openFilters() {
+    populateFilterChoices(currentEvents);
+    document.querySelector('input[name="filter-period"][value="' + filters.period + '"]').checked = true;
+    els.year.value = filters.year;
+    els.start.value = filters.start;
+    els.end.value = filters.end;
+    els.confirmed.checked = filters.confirmed;
+    els.cancelled.checked = filters.cancelled;
+    els.filterModal.hidden = false;
+    document.body.classList.add("filter-open");
+  }
+
+  function closeFilters() {
+    els.filterModal.hidden = true;
+    document.body.classList.remove("filter-open");
+  }
+
+  function clearFilters() {
+    filters.period = "upcoming"; filters.types.clear(); filters.scopes.clear(); filters.parishes.clear(); filters.cities.clear();
+    filters.confirmed = true; filters.cancelled = true; filters.start = ""; filters.end = "";
+    closeFilters(); apply();
   }
 
   async function load(scope) {
     currentScope = scope;
-    currentPeriod = "upcoming";
-    currentCategory = "all";
-    currentParish = "all";
-    currentEvents = [];
-    list.innerHTML = "";
-    calendarGrid.innerHTML = "";
-    dayEvents.innerHTML = "";
-    status.textContent = "Carregando agenda…";
-    updated.textContent = "";
-    search.value = "";
-    tabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.scope === scope));
+    els.status.textContent = "Carregando agenda…";
+    els.updated.textContent = "";
+    els.tabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.scope === scope));
+    els.filterButton.hidden = scope !== "main";
+    els.printButton.hidden = false;
 
     try {
-      const response = await fetch(API + "?scope=" + encodeURIComponent(scope) + "&days=365", { cache: "no-store" });
+      const response = await fetch(API + "?scope=" + encodeURIComponent(scope) + "&days=730", { cache: "no-store" });
       if (!response.ok) throw new Error("http");
       const data = await response.json();
-
       currentEvents = data.events || [];
-      periodSelect.closest(".agenda-select-field").hidden = currentScope !== "main";
-      periodSelect.value = currentPeriod;
-      populateFilters(currentEvents);
 
-      const firstEvent = currentEvents.find((ev) => new Date(ev.start) >= new Date());
-      calendarCursor = firstEvent ? startOfMonth(new Date(firstEvent.start)) : startOfMonth(new Date());
-      applyFilters();
+      const future = currentEvents.find((ev) => new Date(ev.start) >= new Date());
+      calendarCursor = future ? startOfMonth(new Date(future.start)) : startOfMonth(new Date());
+      populateFilterChoices(currentEvents);
+      apply();
 
-      const syncDates = (data.sources || [])
-        .map((source) => source.last_synced_at)
-        .filter(Boolean)
-        .map((value) => new Date(value))
-        .filter((date) => !Number.isNaN(date.getTime()));
-
-      const reference = syncDates.length
-        ? new Date(Math.max(...syncDates.map((date) => date.getTime())))
-        : (data.generated_at ? new Date(data.generated_at) : null);
-
-      if (reference && !Number.isNaN(reference.getTime())) updated.textContent = "Atualizado em " + fmtUpdated.format(reference);
+      const dates = (data.sources || []).map((s) => s.last_synced_at).filter(Boolean).map((v) => new Date(v)).filter((d) => !Number.isNaN(d.getTime()));
+      const ref = dates.length ? new Date(Math.max(...dates.map((d) => d.getTime()))) : new Date(data.generated_at);
+      if (!Number.isNaN(ref.getTime())) els.updated.textContent = "Atualizado em " + fmtUpdated.format(ref);
     } catch {
-      status.textContent = "Não foi possível carregar a agenda agora. Tente novamente em alguns instantes.";
+      els.status.textContent = "Não foi possível carregar a agenda agora. Tente novamente em alguns instantes.";
     }
   }
 
-  search.addEventListener("input", applyFilters);
-  periodSelect.addEventListener("change", () => { currentPeriod = periodSelect.value; applyFilters(); });
-  categorySelect.addEventListener("change", () => { currentCategory = categorySelect.value; applyFilters(); });
-  parishSelect.addEventListener("change", () => { currentParish = parishSelect.value; applyFilters(); });
-  viewButtons.forEach((button) => button.addEventListener("click", () => setView(button.dataset.view || "list")));
-  prevMonth.addEventListener("click", () => { calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() - 1, 1, 12); applyFilters(); });
-  nextMonth.addEventListener("click", () => { calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() + 1, 1, 12); applyFilters(); });
-  tabs.forEach((tab) => tab.addEventListener("click", () => load(tab.dataset.scope || "main")));
+  els.search.addEventListener("input", apply);
+  els.filterButton.addEventListener("click", openFilters);
+  document.querySelectorAll("[data-close-filter]").forEach((el) => el.addEventListener("click", closeFilters));
+  els.clearFilters.addEventListener("click", clearFilters);
+  els.applyFilters.addEventListener("click", () => {
+    filters.period = document.querySelector('input[name="filter-period"]:checked').value;
+    filters.year = els.year.value;
+    filters.start = els.start.value;
+    filters.end = els.end.value;
+    filters.types = selectedCheckboxes("types");
+    filters.scopes = selectedCheckboxes("scopes");
+    filters.parishes = selectedCheckboxes("parishes");
+    filters.cities = selectedCheckboxes("cities");
+    filters.confirmed = els.confirmed.checked;
+    filters.cancelled = els.cancelled.checked;
+    closeFilters(); apply();
+  });
+  els.parishSearch.addEventListener("input", () => {
+    const term = normalize(els.parishSearch.value);
+    Array.from(els.filterParishes.children).forEach((label) => { label.hidden = term && !label.dataset.search.includes(term); });
+  });
+  els.viewButtons.forEach((button) => button.addEventListener("click", () => setView(button.dataset.view || "list")));
+  els.prevMonth.addEventListener("click", () => { calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() - 1, 1, 12); apply(); });
+  els.nextMonth.addEventListener("click", () => { calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() + 1, 1, 12); apply(); });
+  els.tabs.forEach((tab) => tab.addEventListener("click", () => load(tab.dataset.scope || "main")));
+  els.printButton.addEventListener("click", () => { renderPrint(filteredEvents()); window.print(); });
+  document.addEventListener("keydown", (event) => { if (event.key === "Escape" && !els.filterModal.hidden) closeFilters(); });
 
   load("main");
 })();
