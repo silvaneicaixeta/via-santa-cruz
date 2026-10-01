@@ -90,6 +90,25 @@
       .trim();
   }
 
+  function canonicalType(title, source) {
+    const t = normalize(title);
+    if (source === "crisma" || /^crisma\b/.test(t)) return "Crisma";
+    if (source === "padroeiros" || /\bpadroeir[oa]\b/.test(t)) return "Padroeiro";
+    if (/\bnovena\b|\bnovenario\b/.test(t)) return "Novena / Novenário";
+    if (/\bfesta\b/.test(t)) return "Festa";
+    if (/\bmissa\b|\bcelebracao\b|\bhora santa\b|\bdedicacao\b/.test(t)) return "Celebração";
+    if (/\breuniao\b|\bconsep\b|\bconser\b/.test(t)) return "Reunião";
+    if (/\bformacao\b/.test(t)) return "Formação";
+    if (/\bretiro\b/.test(t)) return "Retiro";
+    if (/\bassembleia\b/.test(t)) return "Assembleia";
+    if (/\bcoleta\b/.test(t)) return "Coleta";
+    if (/\bposse\b|\bconstituicao\b|\bordenacao\b|\berecao\b/.test(t)) return "Ato canônico";
+    if (/\bcongresso\b|\bencontro\b|\bromaria\b|\bdnj\b/.test(t)) return "Encontro / Congresso";
+    if (/\baniv\b|\baniversario\b|\bfundacao\b|\binstalacao\b|^dia\b|\bconclusao do ano pastoral\b/.test(t)) return "Efeméride";
+    if (/\bsemana\b|\bmes da\b|\bmes do\b|\babertura do mes\b/.test(t)) return "Tempo pastoral";
+    return "Outros";
+  }
+
   function parseEvent(ev) {
     const title = String(ev.title || "").trim();
     const parts = title.split(/\s+-\s+/).map((p) => p.trim()).filter(Boolean);
@@ -136,7 +155,7 @@
       "padroeiros": "Paróquias"
     };
     const scope = sourceScope[ev.source] || ev.source_label || "Diocese";
-    if (ev.source === "padroeiros") type = "Padroeiro";
+    type = canonicalType(title, ev.source);
 
     const parishLabel = parish ? parish + (city ? " — " + city : "") : "";
     const parishKey = parish ? normalizeParishName(parish) + "|" + normalize(city) : "";
