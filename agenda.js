@@ -82,12 +82,48 @@
 
   function normalizeParishName(value) {
     return normalize(value)
+      .replace(/^paroquia\s+/g, "")
       .replace(/\bsta\.?\b/g, "santa")
       .replace(/\bsto\.?\b/g, "santo")
       .replace(/\bn\.?\s*sra\.?\b/g, "nossa senhora")
       .replace(/\bs\.?\s*jose\b/g, "sao jose")
+      .replace(/[.,;]+$/g, "")
       .replace(/\s+/g, " ")
       .trim();
+  }
+
+  function displayParishName(value) {
+    return String(value || "")
+      .replace(/^Paróquia\s+/i, "")
+      .replace(/\bN\.?\s*Sra\.?\b/gi, "Nossa Senhora")
+      .replace(/\bSto\.?\b/gi, "Santo")
+      .replace(/\bSta\.?\b/gi, "Santa")
+      .replace(/\s+/g, " ")
+      .replace(/[.,;]+$/g, "")
+      .trim();
+  }
+
+  function cityKey(value) {
+    return normalize(value)
+      .replace(/\bsto\.?\b/g, "santo")
+      .replace(/[.,;]+$/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function displayCity(value) {
+    const cleaned = String(value || "")
+      .replace(/\s*\([^)]*\)\s*$/g, "")
+      .replace(/[.,;]+$/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    const aliases = {
+      "rio pardo": "Rio Pardo de Minas",
+      "sto. antônio do retiro": "Santo Antônio do Retiro",
+      "sto antônio do retiro": "Santo Antônio do Retiro"
+    };
+    return aliases[normalize(cleaned)] || cleaned;
   }
 
   function canonicalType(title, source) {
@@ -143,7 +179,22 @@
       if (legacy) { parish = legacy[1].trim(); city = legacy[2].trim(); }
     }
 
-    if (!city && ev.location && !/[0-9]/.test(ev.location)) city = String(ev.location).trim();
+    if (!parish) {
+      const legacyComma = title.match(/(?:QPar\.|Par\.|Paróquia)\s+(.+?),\s*([^,()]+?)(?:\s*\(|$)/i);
+      if (legacyComma) { parish = legacyComma[1].trim(); city = legacyComma[2].trim(); }
+    }
+
+    if (parish && !city) {
+      const embeddedEm = parish.match(/^(.+?)\s+em\s+(.+)$/i);
+      const embeddedComma = parish.match(/^(.+?),\s*(.+)$/);
+      if (embeddedEm) { parish = embeddedEm[1].trim(); city = embeddedEm[2].trim(); }
+      else if (embeddedComma) { parish = embeddedComma[1].trim(); city = embeddedComma[2].trim(); }
+    }
+
+    parish = displayParishName(parish);
+    city = displayCity(city);
+
+    if (!city && ev.location && !/[0-9]/.test(ev.location)) city = displayCity(ev.location);
 
     const sourceScope = {
       "leste-ii": "Leste II",
@@ -158,9 +209,9 @@
     type = canonicalType(title, ev.source);
 
     const parishLabel = parish ? parish + (city ? " — " + city : "") : "";
-    const parishKey = parish ? normalizeParishName(parish) + "|" + normalize(city) : "";
+    const parishKey = parish ? normalizeParishName(parish) + "|" + cityKey(city) : "";
 
-    return { type, community, parish, city, parishLabel, parishKey, scope };
+    return { type, community, parish, city, cityKey: cityKey(city), parishLabel, parishKey, scope };
   }
 
   function formatRange(ev) {
@@ -204,7 +255,7 @@
     optionList(els.filterTypes, unique(meta.map(({p}) => ({ key: normalize(p.type), label: p.type }))), filters.types, "types");
     optionList(els.filterScopes, unique(meta.map(({p}) => ({ key: normalize(p.scope), label: p.scope }))), filters.scopes, "scopes");
     optionList(els.filterParishes, unique(meta.map(({p}) => ({ key: p.parishKey, label: p.parishLabel }))), filters.parishes, "parishes");
-    optionList(els.filterCities, unique(meta.map(({p}) => ({ key: normalize(p.city), label: p.city }))), filters.cities, "cities");
+    optionList(els.filterCities, unique(meta.map(({p}) => ({ key: p.cityKey, label: p.city }))), filters.cities, "cities");
 
     const years = Array.from(new Set(events.map((ev) => new Date(ev.start).getFullYear()))).sort();
     els.year.innerHTML = "";
@@ -226,6 +277,11 @@
     if (currentScope !== "main" || filters.period === "all") return true;
     const date = new Date(ev.start), now = new Date();
 
+    if (filters.period === "next30") {
+      const start = new Date(now.getTime() - 86400000);
+      const end = new Date(now.getTime() + 30 * 86400000);
+      return date >= start && date <= end;
+    }
     if (filters.period === "upcoming") {
       const start = new Date(now.getTime() - 86400000);
       const end = new Date(now.getTime() + 90 * 86400000);
@@ -253,7 +309,7 @@
       if (filters.types.size && !filters.types.has(normalize(p.type))) return false;
       if (filters.scopes.size && !filters.scopes.has(normalize(p.scope))) return false;
       if (filters.parishes.size && !filters.parishes.has(p.parishKey)) return false;
-      if (filters.cities.size && !filters.cities.has(normalize(p.city))) return false;
+      if (filters.cities.size && !filters.cities.has(p.cityKey)) return false;
       if (ev.cancelled && !filters.cancelled) return false;
       if (!ev.cancelled && !filters.confirmed) return false;
       if (!term) return true;
@@ -355,6 +411,7 @@
 
   function filterSummaryLabels() {
     const labels = [];
+    if (filters.period === "next30") labels.push("Próximos 30 dias");
     if (filters.period === "upcoming") labels.push("Próximos 90 dias");
     if (filters.period === "month") labels.push("Mês atual — completo");
     if (filters.period === "past30") labels.push("Últimos 30 dias");
@@ -385,14 +442,29 @@
   function renderPrint(events) {
     els.printSummary.textContent = filterSummaryLabels().join(" · ");
     els.printList.innerHTML = "";
+    let lastMonth = "";
+
     events.forEach((ev) => {
+      const d = new Date(ev.start);
+      const month = fmtMonthYear.format(d);
+      if (month !== lastMonth) {
+        const heading = document.createElement("h2");
+        heading.className = "agenda-print-month";
+        heading.textContent = month.charAt(0).toUpperCase() + month.slice(1);
+        els.printList.appendChild(heading);
+        lastMonth = month;
+      }
+
       const row = document.createElement("div");
       row.className = "agenda-print-row";
-      const d = new Date(ev.start);
-      row.innerHTML = '<strong>' + esc(fmtLongDate.format(d)) + '</strong><span>' + esc(formatRange(ev)) + '</span><div>' +
+      const time = ev.all_day ? (currentScope === "liturgico" ? "" : "Dia inteiro") : fmtTime.format(d);
+      row.innerHTML = '<strong>' + esc(pdfDayLabel(ev)) + '</strong><span>' + esc(time) + '</span><div>' +
         esc(ev.title) + (ev.cancelled ? " — CANCELADO" : "") + "</div>";
       els.printList.appendChild(row);
     });
+
+    const foot = document.getElementById("agenda-print-foot");
+    if (foot) foot.textContent = "viasantacruz.com.br · Gerado em " + generatedStamp() + " · Programação sujeita a alterações a qualquer momento.";
   }
 
   function pdfSafeText(value) {
@@ -401,6 +473,28 @@
       .replace(/[\u{25A0}-\u{25FF}]/gu, "")
       .replace(/\s+/g, " ")
       .trim();
+  }
+
+  function pdfDayLabel(ev) {
+    const start = new Date(ev.start);
+    const end = new Date(ev.end);
+    const effectiveEnd = ev.all_day ? new Date(end.getTime() - 1) : end;
+
+    const startDay = fmtDay.format(start);
+    const endDay = fmtDay.format(effectiveEnd);
+    const startMonth = fmtMonthShort.format(start).replace(".", "").toLowerCase();
+    const endMonth = fmtMonthShort.format(effectiveEnd).replace(".", "").toLowerCase();
+
+    if (dateKey(start) === dateKey(effectiveEnd)) return startDay;
+    if (monthKey(start) === monthKey(effectiveEnd)) return startDay + "–" + endDay;
+    return startDay + " " + startMonth + "–" + endDay + " " + endMonth;
+  }
+
+  function generatedStamp() {
+    return new Intl.DateTimeFormat("pt-BR", {
+      day: "2-digit", month: "2-digit", year: "numeric",
+      hour: "2-digit", minute: "2-digit", timeZone: TZ
+    }).format(new Date());
   }
 
   function generatePdf(events) {
@@ -464,23 +558,32 @@
         lastMonth = month;
       }
 
-      const date = pdfSafeText(fmtLongDate.format(d));
-      const time = currentScope === "liturgico" && ev.all_day ? "" : pdfSafeText(formatRange(ev));
+      const date = pdfSafeText(pdfDayLabel(ev));
+      let time = "";
+      if (!(currentScope === "liturgico" && ev.all_day)) {
+        if (ev.all_day) time = "Dia inteiro";
+        else time = pdfSafeText(fmtTime.format(d));
+      }
+
       const title = pdfSafeText(ev.title) + (ev.cancelled ? " - CANCELADO" : "");
-      const titleLines = doc.splitTextToSize(title, usableWidth - 48);
-      const rowHeight = Math.max(8, titleLines.length * 4.2 + 2);
+      const dateWidth = 27;
+      const timeWidth = 24;
+      const titleX = marginX + dateWidth + timeWidth;
+      const titleLines = doc.splitTextToSize(title, pageWidth - marginX - titleX);
+      const rowHeight = Math.max(7.5, titleLines.length * 4.2 + 1.5);
       ensure(rowHeight + 3);
 
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(8.5);
+      doc.setFontSize(9);
       doc.text(date, marginX, y);
 
       doc.setFont("helvetica", "normal");
-      if (time) doc.text(time, marginX + 34, y);
+      doc.setFontSize(8.5);
+      if (time) doc.text(time, marginX + dateWidth, y);
 
       doc.setFont("helvetica", "normal");
       doc.setFontSize(9);
-      doc.text(titleLines, marginX + 48, y);
+      doc.text(titleLines, titleX, y);
 
       y += rowHeight;
       doc.setDrawColor(225);
@@ -488,11 +591,19 @@
       y += 3;
     });
 
-    ensure(12);
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(7.5);
-    doc.setTextColor(95);
-    doc.text("Programação sujeita a alterações. Documento gerado pela Agenda Via Santa Cruz.", marginX, y);
+    const stamp = generatedStamp();
+    const pages = doc.getNumberOfPages();
+    for (let page = 1; page <= pages; page++) {
+      doc.setPage(page);
+      doc.setDrawColor(210);
+      doc.line(marginX, pageHeight - 13, pageWidth - marginX, pageHeight - 13);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(7.2);
+      doc.setTextColor(90);
+      doc.text("viasantacruz.com.br · Gerado em " + stamp, marginX, pageHeight - 8);
+      doc.text("Programação sujeita a alterações a qualquer momento.", pageWidth - marginX, pageHeight - 8, { align: "right" });
+      doc.setTextColor(0);
+    }
 
     const now = new Date();
     const filename = "agenda-diocesana-" + now.toISOString().slice(0, 10) + ".pdf";
