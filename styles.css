@@ -1200,3 +1200,12 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .agenda-radio{align-items:flex-start}
   .agenda-radio input{margin-top:.16rem;flex:0 0 auto}
 }
+
+
+/* PDF e filtros — revisão 2 */
+.agenda-action-count[hidden]{display:none!important}
+.agenda-print-month{margin:7mm 0 2mm;font:700 13pt "Playfair Display",Georgia,serif}
+@media print{
+  .agenda-print-row{grid-template-columns:25mm 22mm 1fr}
+  .agenda-print-foot{position:fixed;left:14mm;right:14mm;bottom:5mm;margin:0;padding-top:2mm;border-top:1px solid #ccc;font-size:7.5pt;background:#fff}
+}
