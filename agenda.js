@@ -4,6 +4,7 @@
   const status = document.getElementById("agenda-status");
   const updated = document.getElementById("agenda-updated");
   const search = document.getElementById("agenda-search");
+  const periodSelect = document.getElementById("agenda-period");
   const categorySelect = document.getElementById("agenda-category");
   const parishSelect = document.getElementById("agenda-parish");
   const tabs = Array.from(document.querySelectorAll(".agenda-tab"));
@@ -25,6 +26,7 @@
   const fmtUpdated = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit", timeZone: TZ });
 
   let currentScope = "main";
+  let currentPeriod = "upcoming";
   let currentCategory = "all";
   let currentParish = "all";
   let currentView = "list";
@@ -61,26 +63,65 @@
   }
 
   function extractParish(title) {
-    const value = String(title || "");
-    const matches = [...value.matchAll(/(?:Par\.|Paróquia)\s+([^\n]+)/gi)];
+    const value = String(title || "").trim();
+
+    // Padrão dos padroeiros: "Padroeiro Par. Nome / Cidade".
+    const patron = value.match(/(?:Padroeir[oa]\s+)?(?:Quase\s+Par\.|QPar\.|Par\.|Paróquia)\s+(.+?)\s*\/\s*(.+)$/i);
+    if (patron) {
+      const parishName = patron[1].replace(/^Paróquia\s+/i, "").trim();
+      const city = patron[2].trim();
+      return parishName + " — " + city;
+    }
+
+    // Padrões mais comuns dos demais calendários: "... Par. Nome em Cidade".
+    const matches = [...value.matchAll(/(?:QPar\.|Quase\s+Par\.|Par\.|Paróquia)\s+([^\n]+)/gi)];
     if (!matches.length) return "";
+
     let label = matches[matches.length - 1][1]
       .replace(/^Paróquia\s+/i, "")
       .replace(/\s*\([^)]*\)\s*$/g, "")
       .replace(/\s+\(Ver Horário\)\s*$/i, "")
       .trim();
 
-    // Mantém a cidade quando ela faz parte do título e remove complementos muito específicos.
     label = label.replace(/\s+-\s+.*$/g, "").trim();
     return label;
   }
 
   function parishKey(title) {
     return normalize(extractParish(title))
-      .replace(/^sta\.?\s+/,"santa ")
-      .replace(/^sto\.?\s+/,"santo ")
-      .replace(/^n\.?\s*sra\.?\s+/,"nossa senhora ")
-      .replace(/^qpar\.?\s+/,"");
+      .replace(/\bsta\.?\b/g, "santa")
+      .replace(/\bsto\.?\b/g, "santo")
+      .replace(/\bn\.?\s*sra\.?\b/g, "nossa senhora")
+      .replace(/\bqpar\.?\b/g, "")
+      .replace(/\bpar\.?(?=\s)/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function inSelectedPeriod(ev) {
+    if (currentScope !== "main" || currentPeriod === "all") return true;
+
+    const eventDate = new Date(ev.start);
+    const now = new Date();
+
+    if (currentPeriod === "upcoming") return eventDate >= new Date(now.getTime() - 86400000);
+
+    const eventParts = new Intl.DateTimeFormat("en-CA", {
+      year: "numeric", month: "2-digit", day: "2-digit", timeZone: TZ
+    }).formatToParts(eventDate);
+    const nowParts = new Intl.DateTimeFormat("en-CA", {
+      year: "numeric", month: "2-digit", day: "2-digit", timeZone: TZ
+    }).formatToParts(now);
+
+    const part = (parts, type) => parts.find((p) => p.type === type).value;
+    const eventYear = part(eventParts, "year");
+    const eventMonth = part(eventParts, "month");
+    const nowYear = part(nowParts, "year");
+    const nowMonth = part(nowParts, "month");
+
+    if (currentPeriod === "month") return eventYear === nowYear && eventMonth === nowMonth;
+    if (currentPeriod === "year") return eventYear === nowYear;
+    return true;
   }
 
   function formatRange(ev) {
@@ -148,6 +189,7 @@
     const term = normalize(search.value.trim());
 
     return currentEvents.filter((ev) => {
+      if (!inSelectedPeriod(ev)) return false;
       if (currentCategory !== "all" && ev.category !== currentCategory) return false;
       if (currentParish !== "all" && parishKey(ev.title) !== currentParish) return false;
 
@@ -299,6 +341,7 @@
 
   async function load(scope) {
     currentScope = scope;
+    currentPeriod = "upcoming";
     currentCategory = "all";
     currentParish = "all";
     currentEvents = [];
@@ -316,6 +359,8 @@
       const data = await response.json();
 
       currentEvents = data.events || [];
+      periodSelect.closest(".agenda-select-field").hidden = currentScope !== "main";
+      periodSelect.value = currentPeriod;
       populateFilters(currentEvents);
 
       const firstEvent = currentEvents.find((ev) => new Date(ev.start) >= new Date());
@@ -339,6 +384,7 @@
   }
 
   search.addEventListener("input", applyFilters);
+  periodSelect.addEventListener("change", () => { currentPeriod = periodSelect.value; applyFilters(); });
   categorySelect.addEventListener("change", () => { currentCategory = categorySelect.value; applyFilters(); });
   parishSelect.addEventListener("change", () => { currentParish = parishSelect.value; applyFilters(); });
   viewButtons.forEach((button) => button.addEventListener("click", () => setView(button.dataset.view || "list")));
