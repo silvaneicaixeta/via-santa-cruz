@@ -64,9 +64,8 @@
         </div>
 
         <div class="agenda-toolbar" aria-label="Seções da agenda">
-          <button class="agenda-tab active" data-scope="main" type="button">Próximos</button>
+          <button class="agenda-tab active" data-scope="main" type="button">Agenda Diocesana</button>
           <button class="agenda-tab" data-scope="liturgico" type="button">Liturgia</button>
-          <button class="agenda-tab" data-scope="padroeiros" type="button">Padroeiros</button>
         </div>
 
         <div class="agenda-tools">
@@ -76,6 +75,16 @@
           </label>
 
           <div class="agenda-filter-grid">
+            <label class="agenda-select-field">
+              <span class="agenda-field-label">Período</span>
+              <select id="agenda-period" aria-label="Filtrar por período">
+                <option value="upcoming">Próximos</option>
+                <option value="month">Este mês</option>
+                <option value="year">Este ano</option>
+                <option value="all">Todo o período disponível</option>
+              </select>
+            </label>
+
             <label class="agenda-select-field">
               <span class="agenda-field-label">Categoria</span>
               <select id="agenda-category" aria-label="Filtrar por categoria">
