@@ -39,6 +39,7 @@
   const fmtDay = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", timeZone: TZ });
   const fmtMonthShort = new Intl.DateTimeFormat("pt-BR", { month: "short", timeZone: TZ });
   const fmtWeek = new Intl.DateTimeFormat("pt-BR", { weekday: "long", timeZone: TZ });
+  const fmtWeekShort = new Intl.DateTimeFormat("pt-BR", { weekday: "short", timeZone: TZ });
   const fmtTime = new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit", timeZone: TZ });
   const fmtMonthYear = new Intl.DateTimeFormat("pt-BR", { month: "long", year: "numeric", timeZone: TZ });
   const fmtLongDate = new Intl.DateTimeFormat("pt-BR", { day: "numeric", month: "long", year: "numeric", timeZone: TZ });
@@ -475,6 +476,11 @@
       .trim();
   }
 
+  function pdfWeekday(date) {
+    const value = fmtWeekShort.format(date).replace(".", "").toLowerCase();
+    return value.charAt(0).toUpperCase() + value.slice(1);
+  }
+
   function pdfDayLabel(ev) {
     const start = new Date(ev.start);
     const end = new Date(ev.end);
@@ -484,10 +490,12 @@
     const endDay = fmtDay.format(effectiveEnd);
     const startMonth = fmtMonthShort.format(start).replace(".", "").toLowerCase();
     const endMonth = fmtMonthShort.format(effectiveEnd).replace(".", "").toLowerCase();
+    const startWeek = pdfWeekday(start);
+    const endWeek = pdfWeekday(effectiveEnd);
 
-    if (dateKey(start) === dateKey(effectiveEnd)) return startDay;
-    if (monthKey(start) === monthKey(effectiveEnd)) return startDay + "–" + endDay;
-    return startDay + " " + startMonth + "–" + endDay + " " + endMonth;
+    if (dateKey(start) === dateKey(effectiveEnd)) return startWeek + " " + startDay;
+    if (monthKey(start) === monthKey(effectiveEnd)) return startWeek + "–" + endWeek + " " + startDay + "–" + endDay;
+    return startWeek + " " + startDay + " " + startMonth + "–" + endWeek + " " + endDay + " " + endMonth;
   }
 
   function generatedStamp() {
@@ -566,8 +574,8 @@
       }
 
       const title = pdfSafeText(ev.title) + (ev.cancelled ? " - CANCELADO" : "");
-      const dateWidth = 27;
-      const timeWidth = 24;
+      const dateWidth = 36;
+      const timeWidth = 22;
       const titleX = marginX + dateWidth + timeWidth;
       const titleLines = doc.splitTextToSize(title, pageWidth - marginX - titleX);
       const rowHeight = Math.max(7.5, titleLines.length * 4.2 + 1.5);
