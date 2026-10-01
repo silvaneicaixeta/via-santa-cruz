@@ -226,8 +226,16 @@
     if (currentScope !== "main" || filters.period === "all") return true;
     const date = new Date(ev.start), now = new Date();
 
-    if (filters.period === "upcoming") return date >= new Date(now.getTime() - 86400000);
+    if (filters.period === "upcoming") {
+      const start = new Date(now.getTime() - 86400000);
+      const end = new Date(now.getTime() + 90 * 86400000);
+      return date >= start && date <= end;
+    }
     if (filters.period === "month") return monthKey(date) === monthKey(now);
+    if (filters.period === "past30") {
+      const start = new Date(now.getTime() - 30 * 86400000);
+      return date >= start && date <= now;
+    }
     if (filters.period === "year") return String(date.getFullYear()) === filters.year;
     if (filters.period === "custom") {
       const key = dateKey(date);
@@ -260,9 +268,10 @@
 
     const badges = [];
     if (ev.cancelled) badges.push('<span class="agenda-badge cancelled">Cancelado</span>');
-    badges.push('<span class="agenda-badge">' + esc(p.type || ev.category) + "</span>");
+    if (currentScope !== "liturgico") badges.push('<span class="agenda-badge">' + esc(p.type || ev.category) + "</span>");
 
-    const meta = [formatRange(ev), p.city || ev.location].filter(Boolean).join(" · ");
+    const timeLabel = currentScope === "liturgico" && ev.all_day ? "" : formatRange(ev);
+    const meta = [timeLabel, p.city || ev.location].filter(Boolean).join(" · ");
     card.innerHTML =
       '<div class="agenda-date"><strong class="agenda-day">' + esc(fmtDay.format(date)) + '</strong><span class="agenda-month-short">' +
       esc(fmtMonthShort.format(date).replace(".", "").toUpperCase()) + '</span></div>' +
@@ -346,8 +355,9 @@
 
   function filterSummaryLabels() {
     const labels = [];
-    if (filters.period === "upcoming") labels.push("Próximos");
-    if (filters.period === "month") labels.push("Mês atual");
+    if (filters.period === "upcoming") labels.push("Próximos 90 dias");
+    if (filters.period === "month") labels.push("Mês atual — completo");
+    if (filters.period === "past30") labels.push("Últimos 30 dias");
     if (filters.period === "year") labels.push("Ano " + filters.year);
     if (filters.period === "custom") labels.push((filters.start || "…") + " a " + (filters.end || "…"));
     if (filters.types.size) labels.push(...Array.from(filters.types));
@@ -383,6 +393,115 @@
         esc(ev.title) + (ev.cancelled ? " — CANCELADO" : "") + "</div>";
       els.printList.appendChild(row);
     });
+  }
+
+  function pdfSafeText(value) {
+    return String(value || "")
+      .replace(/[\u{1F300}-\u{1FAFF}]/gu, "")
+      .replace(/[\u{25A0}-\u{25FF}]/gu, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function generatePdf(events) {
+    const api = window.jspdf && window.jspdf.jsPDF;
+    if (!api) {
+      renderPrint(events);
+      window.print();
+      return;
+    }
+
+    const doc = new api({ unit: "mm", format: "a4", orientation: "portrait" });
+    const marginX = 15;
+    const pageWidth = 210;
+    const pageHeight = 297;
+    const usableWidth = pageWidth - marginX * 2;
+    let y = 18;
+
+    const nextPage = () => {
+      doc.addPage();
+      y = 18;
+    };
+
+    const ensure = (height) => {
+      if (y + height > pageHeight - 18) nextPage();
+    };
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
+    doc.text("DIOCESE DE JANAÚBA", marginX, y);
+    y += 6;
+
+    doc.setFont("times", "bold");
+    doc.setFontSize(18);
+    doc.text("Agenda Diocesana - seleção", marginX, y);
+    y += 8;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8.5);
+    const summary = pdfSafeText(filterSummaryLabels().join(" · "));
+    if (summary) {
+      const summaryLines = doc.splitTextToSize(summary, usableWidth);
+      doc.text(summaryLines, marginX, y);
+      y += summaryLines.length * 4 + 3;
+    }
+
+    doc.setDrawColor(190);
+    doc.line(marginX, y, pageWidth - marginX, y);
+    y += 6;
+
+    let lastMonth = "";
+    events.forEach((ev) => {
+      const d = new Date(ev.start);
+      const month = fmtMonthYear.format(d);
+
+      if (month !== lastMonth) {
+        ensure(12);
+        doc.setFont("times", "bold");
+        doc.setFontSize(13);
+        doc.text(month.charAt(0).toUpperCase() + month.slice(1), marginX, y);
+        y += 7;
+        lastMonth = month;
+      }
+
+      const date = pdfSafeText(fmtLongDate.format(d));
+      const time = currentScope === "liturgico" && ev.all_day ? "" : pdfSafeText(formatRange(ev));
+      const title = pdfSafeText(ev.title) + (ev.cancelled ? " - CANCELADO" : "");
+      const titleLines = doc.splitTextToSize(title, usableWidth - 48);
+      const rowHeight = Math.max(8, titleLines.length * 4.2 + 2);
+      ensure(rowHeight + 3);
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(8.5);
+      doc.text(date, marginX, y);
+
+      doc.setFont("helvetica", "normal");
+      if (time) doc.text(time, marginX + 34, y);
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.text(titleLines, marginX + 48, y);
+
+      y += rowHeight;
+      doc.setDrawColor(225);
+      doc.line(marginX, y, pageWidth - marginX, y);
+      y += 3;
+    });
+
+    ensure(12);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor(95);
+    doc.text("Programação sujeita a alterações. Documento gerado pela Agenda Via Santa Cruz.", marginX, y);
+
+    const now = new Date();
+    const filename = "agenda-diocesana-" + now.toISOString().slice(0, 10) + ".pdf";
+    try {
+      doc.save(filename);
+    } catch {
+      const url = doc.output("bloburl");
+      window.open(url, "_blank", "noopener");
+    }
   }
 
   function apply() {
@@ -476,7 +595,15 @@
   els.prevMonth.addEventListener("click", () => { calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() - 1, 1, 12); apply(); });
   els.nextMonth.addEventListener("click", () => { calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() + 1, 1, 12); apply(); });
   els.tabs.forEach((tab) => tab.addEventListener("click", () => load(tab.dataset.scope || "main")));
-  els.printButton.addEventListener("click", () => { renderPrint(filteredEvents()); window.print(); });
+  els.printButton.addEventListener("click", () => {
+    const events = filteredEvents();
+    if (!events.length) {
+      els.status.textContent = "Não há acontecimentos nesta seleção para gerar o PDF.";
+      return;
+    }
+    renderPrint(events);
+    generatePdf(events);
+  });
   document.addEventListener("keydown", (event) => { if (event.key === "Escape" && !els.filterModal.hidden) closeFilters(); });
 
   load("main");
