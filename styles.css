@@ -1192,3 +1192,11 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .agenda-intro{margin-bottom:1.6rem}
   .agenda-intro h2{font-size:clamp(1.8rem,8vw,2.45rem);line-height:1.06}
 }
+
+
+/* Liturgia e exportação */
+.agenda-event-copy > .agenda-badges:empty{display:none}
+@media(max-width:680px){
+  .agenda-radio{align-items:flex-start}
+  .agenda-radio input{margin-top:.16rem;flex:0 0 auto}
+}
