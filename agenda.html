@@ -21,25 +21,15 @@
 </head>
 <body>
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
-
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="/" aria-label="Via Santa Cruz — início">
         <img src="/assets/vsc-mark.svg" alt="Via Santa Cruz" width="78" height="54">
-        <span class="brand-copy">
-          <strong>Via Santa Cruz</strong>
-          <small>Projetos que nascem para servir.</small>
-        </span>
+        <span class="brand-copy"><strong>Via Santa Cruz</strong><small>Projetos que nascem para servir.</small></span>
       </a>
-
-      <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu">
-        <span></span><span></span><span></span>
-      </button>
-
+      <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu"><span></span><span></span><span></span></button>
       <nav class="main-nav" id="main-nav" aria-label="Navegação principal">
-        <a href="/">Início</a>
-        <a class="active" href="/projetos.html">Projetos</a>
-        <a href="/sobre.html">Sobre</a>
+        <a href="/">Início</a><a class="active" href="/projetos.html">Projetos</a><a href="/sobre.html">Sobre</a>
       </nav>
     </div>
   </header>
@@ -68,46 +58,20 @@
           <button class="agenda-tab" data-scope="liturgico" type="button">Liturgia</button>
         </div>
 
-        <div class="agenda-tools">
+        <div class="agenda-actions">
           <label class="agenda-search">
-            <span class="agenda-field-label">Buscar</span>
-            <input id="agenda-search" type="search" placeholder="Celebração, cidade, palavra…" autocomplete="off">
+            <span class="sr-only">Buscar na agenda</span>
+            <input id="agenda-search" type="search" placeholder="Buscar acontecimento, paróquia, cidade…" autocomplete="off">
           </label>
-
-          <div class="agenda-filter-grid">
-            <label class="agenda-select-field">
-              <span class="agenda-field-label">Período</span>
-              <select id="agenda-period" aria-label="Filtrar por período">
-                <option value="upcoming">Próximos</option>
-                <option value="month">Este mês</option>
-                <option value="year">Este ano</option>
-                <option value="all">Todo o período disponível</option>
-              </select>
-            </label>
-
-            <label class="agenda-select-field">
-              <span class="agenda-field-label">Categoria</span>
-              <select id="agenda-category" aria-label="Filtrar por categoria">
-                <option value="all">Todas as categorias</option>
-              </select>
-            </label>
-
-            <label class="agenda-select-field">
-              <span class="agenda-field-label">Paróquia</span>
-              <select id="agenda-parish" aria-label="Filtrar por paróquia">
-                <option value="all">Todas as paróquias</option>
-              </select>
-            </label>
-
-            <div class="agenda-view-field">
-              <span class="agenda-field-label">Visualização</span>
-              <div class="agenda-view-toggle" role="group" aria-label="Visualização da agenda">
-                <button class="agenda-view-button active" data-view="list" type="button">Lista</button>
-                <button class="agenda-view-button" data-view="month" type="button">Mês</button>
-              </div>
-            </div>
+          <button id="agenda-filter-button" class="agenda-action-button" type="button">Filtros <span id="agenda-filter-count" class="agenda-action-count" hidden>0</span></button>
+          <div class="agenda-view-toggle" role="group" aria-label="Visualização da agenda">
+            <button class="agenda-view-button active" data-view="list" type="button">Lista</button>
+            <button class="agenda-view-button" data-view="month" type="button">Mês</button>
           </div>
+          <button id="agenda-print-button" class="agenda-action-button agenda-print-button" type="button">Imprimir / PDF</button>
         </div>
+
+        <div id="agenda-active-filters" class="agenda-active-filters" aria-live="polite"></div>
 
         <div id="agenda-calendar" class="agenda-calendar" hidden>
           <div class="agenda-calendar-head">
@@ -126,21 +90,83 @@
           <div id="agenda-status" class="agenda-status" role="status">Carregando agenda…</div>
           <div id="agenda-updated" class="agenda-updated" aria-live="polite"></div>
         </div>
-
         <div id="agenda-list" class="agenda-list" aria-live="polite"></div>
+
+        <section id="agenda-print-sheet" class="agenda-print-sheet" aria-hidden="true">
+          <div class="agenda-print-head">
+            <p>DIOCESE DE JANAÚBA</p>
+            <h1>Agenda Diocesana — seleção</h1>
+            <div id="agenda-print-summary"></div>
+          </div>
+          <div id="agenda-print-list"></div>
+          <p class="agenda-print-foot">Programação sujeita a alterações. Documento gerado a partir da Agenda Via Santa Cruz.</p>
+        </section>
       </div>
     </section>
   </main>
+
+  <div id="agenda-filter-modal" class="agenda-filter-modal" hidden>
+    <div class="agenda-filter-backdrop" data-close-filter></div>
+    <section class="agenda-filter-panel" role="dialog" aria-modal="true" aria-labelledby="agenda-filter-title">
+      <header class="agenda-filter-head">
+        <div><span>Agenda Diocesana</span><h2 id="agenda-filter-title">Filtros de pesquisa</h2></div>
+        <button type="button" class="agenda-filter-close" aria-label="Fechar filtros" data-close-filter>×</button>
+      </header>
+      <div class="agenda-filter-body">
+        <details open>
+          <summary>Período</summary>
+          <div class="agenda-filter-section">
+            <label class="agenda-radio"><input type="radio" name="filter-period" value="upcoming" checked> Próximos acontecimentos</label>
+            <label class="agenda-radio"><input type="radio" name="filter-period" value="month"> Mês atual</label>
+            <label class="agenda-radio"><input type="radio" name="filter-period" value="year"> Ano específico</label>
+            <select id="filter-year" class="agenda-filter-select" aria-label="Ano"></select>
+            <label class="agenda-radio"><input type="radio" name="filter-period" value="custom"> Intervalo personalizado</label>
+            <div class="agenda-date-range"><input id="filter-start" type="date" aria-label="Data inicial"><input id="filter-end" type="date" aria-label="Data final"></div>
+            <label class="agenda-radio"><input type="radio" name="filter-period" value="all"> Todo o período disponível</label>
+          </div>
+        </details>
+
+        <details open>
+          <summary>Tipo de acontecimento</summary>
+          <div id="filter-types" class="agenda-check-grid"></div>
+        </details>
+
+        <details>
+          <summary>Âmbito</summary>
+          <div id="filter-scopes" class="agenda-check-grid"></div>
+        </details>
+
+        <details>
+          <summary>Paróquia</summary>
+          <div class="agenda-filter-search-wrap"><input id="filter-parish-search" type="search" placeholder="Buscar paróquia…"></div>
+          <div id="filter-parishes" class="agenda-check-grid agenda-check-grid-scroll"></div>
+        </details>
+
+        <details>
+          <summary>Cidade</summary>
+          <div id="filter-cities" class="agenda-check-grid agenda-check-grid-scroll"></div>
+        </details>
+
+        <details>
+          <summary>Situação</summary>
+          <div class="agenda-check-grid">
+            <label><input id="filter-confirmed" type="checkbox" checked> Confirmados</label>
+            <label><input id="filter-cancelled" type="checkbox" checked> Cancelados</label>
+          </div>
+        </details>
+      </div>
+      <footer class="agenda-filter-footer">
+        <button id="agenda-clear-filters" type="button" class="agenda-filter-secondary">Limpar</button>
+        <button id="agenda-apply-filters" type="button" class="agenda-filter-primary">Aplicar filtros</button>
+      </footer>
+    </section>
+  </div>
 
   <footer class="site-footer">
     <div class="container footer-inner">
       <a class="footer-brand" href="/"><span>Via Santa Cruz</span></a>
       <p>© <span id="year"></span> Via Santa Cruz<br><a class="idealizer-link" href="/idealizador.html">Idealização: Pe. Silvanei Caixeta</a></p>
-      <nav aria-label="Navegação do rodapé">
-        <a href="/">Início</a>
-        <a href="/projetos.html">Projetos</a>
-        <a href="/sobre.html">Sobre</a>
-      </nav>
+      <nav aria-label="Navegação do rodapé"><a href="/">Início</a><a href="/projetos.html">Projetos</a><a href="/sobre.html">Sobre</a></nav>
       <a class="domain" href="https://viasantacruz.com.br">viasantacruz.com.br</a>
     </div>
   </footer>
