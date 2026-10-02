@@ -2,6 +2,7 @@
   const SUPABASE_URL = "https://vgpivbxykeobgjzqlqcl.supabase.co";
   const SUPABASE_KEY = "sb_publishable_CplQkGKykMUsHso_vRki-g_gIsZJDgh";
   const API = SUPABASE_URL + "/functions/v1/vsc-agenda";
+  const ACCESS_REQUEST_API = SUPABASE_URL + "/functions/v1/vsc-agenda-access-request";
   const TZ = "America/Sao_Paulo";
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
     auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
@@ -14,6 +15,16 @@
     loginEmail: document.getElementById("agenda-login-email"),
     loginPassword: document.getElementById("agenda-login-password"),
     forgotPassword: document.getElementById("agenda-forgot-password"),
+    requestAccessButton: document.getElementById("agenda-request-access-button"),
+    accessRequestForm: document.getElementById("agenda-access-request-form"),
+    requestName: document.getElementById("agenda-request-name"),
+    requestEmail: document.getElementById("agenda-request-email"),
+    requestRole: document.getElementById("agenda-request-role"),
+    requestInstitution: document.getElementById("agenda-request-institution"),
+    requestMinistry: document.getElementById("agenda-request-ministry"),
+    requestNotes: document.getElementById("agenda-request-notes"),
+    requestWebsite: document.getElementById("agenda-request-website"),
+    requestCancel: document.getElementById("agenda-request-cancel"),
     authMessage: document.getElementById("agenda-auth-message"),
     passwordForm: document.getElementById("agenda-password-form"),
     newPassword: document.getElementById("agenda-new-password"),
@@ -63,8 +74,10 @@
     els.authView.hidden = false;
     els.protectedContent.hidden = true;
     els.passwordForm.hidden = true;
+    els.accessRequestForm.hidden = true;
     els.loginForm.hidden = false;
     els.forgotPassword.hidden = false;
+    els.requestAccessButton.hidden = false;
     els.authMessage.textContent = message;
   }
 
@@ -72,7 +85,9 @@
     els.authView.hidden = false;
     els.protectedContent.hidden = true;
     els.loginForm.hidden = true;
+    els.accessRequestForm.hidden = true;
     els.forgotPassword.hidden = true;
+    els.requestAccessButton.hidden = true;
     els.passwordForm.hidden = false;
     els.authMessage.textContent = message;
   }
@@ -857,6 +872,52 @@
     generatePdf(events);
   });
   document.addEventListener("keydown", (event) => { if (event.key === "Escape" && !els.filterModal.hidden) closeFilters(); });
+
+  els.requestAccessButton.addEventListener("click", () => {
+    els.loginForm.hidden = true;
+    els.passwordForm.hidden = true;
+    els.accessRequestForm.hidden = false;
+    els.forgotPassword.hidden = true;
+    els.requestAccessButton.hidden = true;
+    els.authMessage.textContent = "";
+  });
+
+  els.requestCancel.addEventListener("click", () => showLogin(""));
+
+  els.accessRequestForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    els.authMessage.textContent = "Enviando solicitação…";
+
+    const payload = {
+      full_name: els.requestName.value.trim(),
+      email: els.requestEmail.value.trim(),
+      requested_role: els.requestRole.value,
+      institution: els.requestInstitution.value.trim(),
+      ministry_role: els.requestMinistry.value.trim(),
+      notes: els.requestNotes.value.trim(),
+      website: els.requestWebsite.value
+    };
+
+    try {
+      const response = await fetch(ACCESS_REQUEST_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const result = await response.json().catch(() => ({}));
+
+      if (response.status === 409 && result.error === "already_authorized") {
+        els.authMessage.textContent = "Este e-mail já possui acesso à Agenda. Use a opção de entrada ou recuperação de senha.";
+        return;
+      }
+      if (!response.ok) throw new Error("request_failed");
+
+      els.accessRequestForm.reset();
+      showLogin("Solicitação recebida. Após a análise, se o acesso for aprovado, você receberá um e-mail com as instruções para entrar.");
+    } catch {
+      els.authMessage.textContent = "Não foi possível enviar a solicitação agora. Tente novamente em alguns instantes.";
+    }
+  });
 
   els.loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
