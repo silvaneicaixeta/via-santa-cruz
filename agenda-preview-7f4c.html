@@ -1230,6 +1230,53 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .agenda-print-foot{position:fixed;left:14mm;right:14mm;bottom:5mm;margin:0;padding-top:2mm;border-top:1px solid #ccc;font-size:7.5pt;background:#fff}
 }
 
+
+/* Refinamento tipográfico global — títulos mais proporcionais */
+.hero h1 {
+  font-size: clamp(2.85rem, 5.4vw, 5.25rem);
+  max-width: 650px;
+}
+.page-hero h1 {
+  font-size: clamp(2.55rem, 4.8vw, 4.65rem);
+  max-width: 820px;
+}
+.section h2 {
+  font-size: clamp(2.15rem, 3.4vw, 3.35rem);
+}
+.project-grid-pages .project-card h2 {
+  font-size: clamp(2.15rem, 3.2vw, 3.25rem);
+}
+@media (max-width: 680px) {
+  .hero-content { padding: 48px 0 44px; }
+  .hero h1 {
+    font-size: clamp(2.25rem, 10.5vw, 3.15rem);
+    line-height: 1.02;
+  }
+  .hero-lead {
+    font-size: 1rem;
+    line-height: 1.42;
+    margin-top: 1rem;
+  }
+  .page-hero {
+    padding: 48px 0 42px;
+  }
+  .page-hero h1 {
+    font-size: clamp(2.05rem, 9vw, 2.85rem);
+    line-height: 1.04;
+  }
+  .page-hero p:last-child {
+    font-size: 1rem;
+    line-height: 1.42;
+    margin-top: .85rem;
+  }
+  .section h2 {
+    font-size: clamp(1.9rem, 8.2vw, 2.55rem);
+  }
+  .project-grid-pages .project-card h2 {
+    font-size: clamp(1.95rem, 8vw, 2.5rem);
+  }
+}
+
 .preview-ribbon{background:#123C2E;color:#fff;text-align:center;padding:.62rem 1rem;font-size:.86rem;font-weight:900;letter-spacing:.04em}.preview-ribbon span{color:#C8A15A}
 </style>
 </head>
@@ -1885,9 +1932,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
     const startWeek = pdfWeekday(start);
     const endWeek = pdfWeekday(effectiveEnd);
 
-    if (dateKey(start) === dateKey(effectiveEnd)) return startWeek + " " + startDay;
-    if (monthKey(start) === monthKey(effectiveEnd)) return startWeek + "–" + endWeek + " " + startDay + "–" + endDay;
-    return startWeek + " " + startDay + " " + startMonth + "–" + endWeek + " " + endDay + " " + endMonth;
+    if (dateKey(start) === dateKey(effectiveEnd)) return startDay + " " + startWeek;
+    if (monthKey(start) === monthKey(effectiveEnd)) return startDay + " " + startWeek + "–" + endDay + " " + endWeek;
+    return startDay + " " + startWeek + " " + startMonth + "–" + endDay + " " + endWeek + " " + endMonth;
   }
 
   function generatedStamp() {
@@ -1965,30 +2012,36 @@ button, a { -webkit-tap-highlight-color: transparent; }
         else time = pdfSafeText(fmtTime.format(d));
       }
 
-      const title = pdfSafeText(ev.title) + (ev.cancelled ? " - CANCELADO" : "");
+      const cleanTitle = pdfSafeText(ev.title);
+      const titleText = ev.cancelled ? "CANCELADO — " + cleanTitle : cleanTitle;
       const dateWidth = 36;
       const timeWidth = 22;
       const titleX = marginX + dateWidth + timeWidth;
-      const titleLines = doc.splitTextToSize(title, pageWidth - marginX - titleX);
-      const rowHeight = Math.max(7.5, titleLines.length * 4.2 + 1.5);
-      ensure(rowHeight + 3);
+      const titleLines = doc.splitTextToSize(titleText, pageWidth - marginX - titleX);
+      const rowHeight = Math.max(8.5, titleLines.length * 4.2 + 2.5);
+      ensure(rowHeight + 5);
+
+      y += 2.2;
 
       doc.setFont("helvetica", "bold");
       doc.setFontSize(9);
+      doc.setTextColor(0);
       doc.text(date, marginX, y);
 
       doc.setFont("helvetica", "normal");
       doc.setFontSize(8.5);
       if (time) doc.text(time, marginX + dateWidth, y);
 
-      doc.setFont("helvetica", "normal");
+      doc.setFont("helvetica", ev.cancelled ? "bold" : "normal");
       doc.setFontSize(9);
+      if (ev.cancelled) doc.setTextColor(145, 55, 45);
       doc.text(titleLines, titleX, y);
+      doc.setTextColor(0);
 
       y += rowHeight;
       doc.setDrawColor(225);
       doc.line(marginX, y, pageWidth - marginX, y);
-      y += 3;
+      y += 2.5;
     });
 
     const stamp = generatedStamp();
