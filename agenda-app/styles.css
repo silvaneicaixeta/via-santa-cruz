@@ -1409,3 +1409,26 @@ body{background:#f8f4ea}
 @media print{
   .agenda-app-header,.agenda-app-footer,.agenda-app-intro,.agenda-source-bar,.agenda-actions,.agenda-active-filters,.agenda-calendar,.agenda-result-line,.agenda-list,.agenda-sync-footer{display:none!important}
 }
+
+
+/* Assinatura de pertencimento — Via Santa Cruz */
+.agenda-vsc-cross{
+  display:inline-block;
+  color:var(--gold-dark);
+  font-size:.82em;
+  transform:translateY(-.02em);
+}
+.agenda-vsc-signature{
+  display:inline-flex;
+  align-items:center;
+  gap:.42rem;
+  color:var(--green)!important;
+  text-decoration:none;
+  font-weight:700!important;
+}
+.agenda-vsc-signature strong{
+  font-weight:900;
+}
+.agenda-vsc-signature:hover{
+  color:var(--gold-dark)!important;
+}
