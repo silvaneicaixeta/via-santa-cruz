@@ -96,12 +96,12 @@
     els.authMessage.textContent = message;
   }
 
-  function showAgenda(displayName, role) {
+  function showAgenda(displayName, canManageUsers) {
     els.authView.hidden = true;
     els.protectedContent.hidden = false;
     if (els.appUser) els.appUser.hidden = false;
     if (els.userLabel) els.userLabel.textContent = displayName || "Conta autorizada";
-    if (els.adminOpen) els.adminOpen.hidden = role !== "admin";
+    if (els.adminOpen) els.adminOpen.hidden = !canManageUsers;
   }
 
   async function authorizedFetch(url) {
@@ -796,7 +796,7 @@
         showPasswordSetup("Antes de continuar, defina uma senha pessoal para esta conta.");
         return;
       }
-      showAgenda(access.display_name || "Conta autorizada", access.can_manage_users ? "admin" : (access.role || ""));
+      showAgenda(access.display_name || "Conta autorizada", Boolean(access.can_manage_users));
 
       agendaEvents = agendaData.events || [];
       liturgyEvents = liturgyData.events || [];
