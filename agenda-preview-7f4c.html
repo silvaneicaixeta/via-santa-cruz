@@ -2018,10 +2018,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
       const timeWidth = 22;
       const titleX = marginX + dateWidth + timeWidth;
       const titleLines = doc.splitTextToSize(titleText, pageWidth - marginX - titleX);
-      const rowHeight = Math.max(8.5, titleLines.length * 4.2 + 2.5);
-      ensure(rowHeight + 5);
+      const rowHeight = Math.max(5.8, titleLines.length * 4.2 + 0.8);
+      ensure(rowHeight + 4);
 
-      y += 2.2;
+      y += 1.8;
 
       doc.setFont("helvetica", "bold");
       doc.setFontSize(9);
@@ -2041,7 +2041,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
       y += rowHeight;
       doc.setDrawColor(225);
       doc.line(marginX, y, pageWidth - marginX, y);
-      y += 2.5;
+      y += 1.8;
     });
 
     const stamp = generatedStamp();
@@ -2126,9 +2126,14 @@ button, a { -webkit-tap-highlight-color: transparent; }
       populateFilterChoices(currentEvents);
       apply();
 
-      const dates = (data.sources || []).map((s) => s.last_synced_at).filter(Boolean).map((v) => new Date(v)).filter((d) => !Number.isNaN(d.getTime()));
-      const ref = dates.length ? new Date(Math.max(...dates.map((d) => d.getTime()))) : new Date(data.generated_at);
-      if (!Number.isNaN(ref.getTime())) els.updated.textContent = "Atualizado em " + fmtUpdated.format(ref);
+      const dates = (data.sources || [])
+        .filter((s) => s.available && s.last_synced_at)
+        .map((s) => new Date(s.last_synced_at))
+        .filter((d) => !Number.isNaN(d.getTime()));
+      const ref = dates.length ? new Date(Math.min(...dates.map((d) => d.getTime()))) : new Date(data.generated_at);
+      if (!Number.isNaN(ref.getTime())) {
+        els.updated.textContent = "Dados sincronizados até " + fmtUpdated.format(ref) + ". Alterações posteriores podem ainda não aparecer aqui.";
+      }
     } catch {
       els.status.textContent = "Não foi possível carregar a agenda agora. Tente novamente em alguns instantes.";
     }
