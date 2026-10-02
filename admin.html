@@ -118,63 +118,6 @@
         </div>
 
         <section class="admin-card panel recent">
-          <p class="section-kicker">Agenda</p>
-          <h2>Saúde da sincronização</h2>
-          <div class="metric-grid" style="margin-top:1rem">
-            <div class="metric"><strong id="agenda-sources">—</strong><span>Fontes sincronizadas</span></div>
-            <div class="metric"><strong id="agenda-events">—</strong><span>Eventos futuros</span></div>
-            <div class="metric"><strong id="agenda-sync">—</strong><span>Sincronização mais antiga</span></div>
-            <div class="metric"><strong id="agenda-requests">—</strong><span>Solicitações recebidas</span></div>
-          </div>
-          <div id="agenda-health-message" class="privacy-note"></div>
-        </section>
-
-        <section class="admin-card panel recent">
-          <p class="section-kicker">Solicitações de datas</p>
-          <h2>Mais recentes</h2>
-          <div style="overflow-x:auto">
-            <table class="recent-table">
-              <thead><tr><th>Recebida</th><th>Paróquia</th><th>Data pedida</th><th>Tipo</th><th>Situação</th></tr></thead>
-              <tbody id="requests-body"></tbody>
-            </table>
-          </div>
-        </section>
-
-        <section class="admin-card panel recent">
-          <p class="section-kicker">Acesso à Agenda</p>
-          <h2>Solicitações pendentes</h2>
-          <div style="overflow-x:auto">
-            <table class="recent-table">
-              <thead><tr><th>Data</th><th>Nome</th><th>Vínculo</th><th>Instituição</th><th>Ação</th></tr></thead>
-              <tbody id="access-requests-body"></tbody>
-            </table>
-          </div>
-          <p class="privacy-note">Ao aprovar, o sistema concede o perfil escolhido e envia o convite de acesso por e-mail.</p>
-        </section>
-
-        <section class="admin-card panel recent">
-          <p class="section-kicker">Acesso à Agenda</p>
-          <h2>Usuários autorizados</h2>
-          <div style="overflow-x:auto">
-            <table class="recent-table">
-              <thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Último login</th><th>Situação</th><th>Ação</th></tr></thead>
-              <tbody id="agenda-users-body"></tbody>
-            </table>
-          </div>
-        </section>
-
-        <section class="admin-card panel recent">
-          <p class="section-kicker">Auditoria da Agenda</p>
-          <h2>Acessos e alterações recentes</h2>
-          <div style="overflow-x:auto">
-            <table class="recent-table">
-              <thead><tr><th>Data</th><th>Usuário</th><th>Ação</th><th>Detalhes</th></tr></thead>
-              <tbody id="agenda-audit-body"></tbody>
-            </table>
-          </div>
-        </section>
-
-        <section class="admin-card panel recent">
           <p class="section-kicker">Registros recentes</p>
           <h2>Últimas visualizações</h2>
           <div style="overflow-x:auto">
@@ -206,25 +149,6 @@
     const loginMessage = document.getElementById("login-message");
     const dashMessage = document.getElementById("dash-message");
     const period = document.getElementById("period");
-    const AGENDA_USERS_API = SUPABASE_URL + "/functions/v1/vsc-agenda-admin-users";
-
-    const roleLabels = {
-      admin: "Administração",
-      clergy: "Clero",
-      parish: "Paróquia",
-      curia: "Cúria",
-      collaborator: "Colaborador"
-    };
-
-    const auditLabels = {
-      agenda_access: "Acesso à Agenda",
-      access_request_submitted: "Solicitação enviada",
-      access_request_approved: "Acesso aprovado",
-      access_request_rejected: "Solicitação não aprovada",
-      access_suspended: "Acesso suspenso",
-      access_reactivated: "Acesso reativado"
-    };
-
     const pageNames = {
       "/": "Início",
       "/index.html": "Início",
@@ -285,172 +209,6 @@
       return response.json();
     }
 
-    async function agendaAdminFetch(options = {}) {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.access_token) throw new Error("session");
-      const response = await fetch(AGENDA_USERS_API, {
-        method: options.method || "GET",
-        headers: {
-          Authorization: "Bearer " + session.access_token,
-          apikey: SUPABASE_KEY,
-          "Content-Type": "application/json"
-        },
-        body: options.body ? JSON.stringify(options.body) : undefined,
-        cache: "no-store"
-      });
-      if (response.status === 401 || response.status === 403) throw new Error("forbidden");
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(data.detail || data.error || "agenda_admin");
-      return data;
-    }
-
-    function makeActionButton(label, onClick, danger = false) {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "button button-secondary";
-      button.style.padding = ".45rem .65rem";
-      button.style.minHeight = "0";
-      if (danger) button.style.color = "#7d362d";
-      button.textContent = label;
-      button.addEventListener("click", onClick);
-      return button;
-    }
-
-    async function loadAgendaAccess() {
-      const data = await agendaAdminFetch();
-
-      const reqBody = document.getElementById("access-requests-body");
-      reqBody.innerHTML = "";
-      const pending = (data.requests || []).filter(row => row.status === "pending");
-      if (!pending.length) {
-        const tr = document.createElement("tr");
-        const td = document.createElement("td");
-        td.colSpan = 5;
-        td.textContent = "Nenhuma solicitação pendente.";
-        tr.appendChild(td);
-        reqBody.appendChild(tr);
-      } else {
-        pending.forEach(row => {
-          const tr = document.createElement("tr");
-          const received = document.createElement("td");
-          received.textContent = new Date(row.created_at).toLocaleString("pt-BR");
-
-          const name = document.createElement("td");
-          name.innerHTML = "<strong></strong><br><small></small>";
-          name.querySelector("strong").textContent = row.full_name;
-          name.querySelector("small").textContent = row.email;
-
-          const role = document.createElement("td");
-          const select = document.createElement("select");
-          ["clergy","parish","curia","collaborator"].forEach(value => {
-            const option = document.createElement("option");
-            option.value = value;
-            option.textContent = roleLabels[value];
-            option.selected = value === row.requested_role;
-            select.appendChild(option);
-          });
-          role.appendChild(select);
-
-          const institution = document.createElement("td");
-          institution.textContent = [row.institution, row.ministry_role].filter(Boolean).join(" · ") || "—";
-
-          const actions = document.createElement("td");
-          actions.style.display = "flex";
-          actions.style.gap = ".4rem";
-          actions.style.flexWrap = "wrap";
-          actions.append(
-            makeActionButton("Aprovar", async () => {
-              dashMessage.textContent = "Aprovando acesso…";
-              try {
-                const result = await agendaAdminFetch({
-                  method: "POST",
-                  body: { action: "approve_request", request_id: row.id, role: select.value }
-                });
-                dashMessage.textContent = result.message || "Acesso aprovado.";
-                await loadAgendaAccess();
-              } catch (err) {
-                dashMessage.textContent = "Não foi possível aprovar: " + err.message;
-              }
-            }),
-            makeActionButton("Não aprovar", async () => {
-              if (!confirm("Marcar esta solicitação como não aprovada?")) return;
-              dashMessage.textContent = "Atualizando solicitação…";
-              try {
-                await agendaAdminFetch({ method: "POST", body: { action: "reject_request", request_id: row.id } });
-                dashMessage.textContent = "Solicitação marcada como não aprovada.";
-                await loadAgendaAccess();
-              } catch (err) {
-                dashMessage.textContent = "Não foi possível atualizar: " + err.message;
-              }
-            }, true)
-          );
-
-          tr.append(received,name,role,institution,actions);
-          reqBody.appendChild(tr);
-        });
-      }
-
-      const usersBody = document.getElementById("agenda-users-body");
-      usersBody.innerHTML = "";
-      (data.users || []).forEach(row => {
-        const tr = document.createElement("tr");
-        const last = row.last_sign_in_at ? new Date(row.last_sign_in_at).toLocaleString("pt-BR") : "Nunca";
-        [row.display_name, row.email, roleLabels[row.role] || row.role, last].forEach(value => {
-          const td = document.createElement("td");
-          td.textContent = value || "—";
-          tr.appendChild(td);
-        });
-
-        const statusTd = document.createElement("td");
-        statusTd.textContent = row.access_status === "active" ? "Ativo" : "Suspenso";
-        tr.appendChild(statusTd);
-
-        const actionTd = document.createElement("td");
-        if (row.role === "admin") {
-          actionTd.textContent = "—";
-        } else {
-          actionTd.appendChild(makeActionButton(
-            row.access_status === "active" ? "Suspender" : "Reativar",
-            async () => {
-              const next = row.access_status === "active" ? "suspended" : "active";
-              try {
-                await agendaAdminFetch({ method: "POST", body: { action: "status", user_id: row.user_id, access_status: next } });
-                dashMessage.textContent = next === "active" ? "Acesso reativado." : "Acesso suspenso.";
-                await loadAgendaAccess();
-              } catch (err) {
-                dashMessage.textContent = "Não foi possível alterar o acesso: " + err.message;
-              }
-            },
-            row.access_status === "active"
-          ));
-        }
-        tr.appendChild(actionTd);
-        usersBody.appendChild(tr);
-      });
-
-      const auditBody = document.getElementById("agenda-audit-body");
-      auditBody.innerHTML = "";
-      (data.audit || []).slice(0, 40).forEach(row => {
-        const tr = document.createElement("tr");
-        const detail = row.metadata ? Object.entries(row.metadata)
-          .filter(([key]) => !["role"].includes(key))
-          .slice(0, 3)
-          .map(([key,value]) => key + ": " + String(value))
-          .join(" · ") : "";
-        [
-          new Date(row.occurred_at).toLocaleString("pt-BR"),
-          row.email || (row.metadata?.email ?? "—"),
-          auditLabels[row.action] || row.action,
-          detail || "—"
-        ].forEach(value => {
-          const td = document.createElement("td");
-          td.textContent = value;
-          tr.appendChild(td);
-        });
-        auditBody.appendChild(tr);
-      });
-    }
-
     async function loadDashboard() {
       dashMessage.textContent = "Atualizando dados…";
       try {
@@ -465,38 +223,6 @@
         renderBars(document.getElementById("pages"), data.pages, "Ainda não há visualizações neste período.");
         renderBars(document.getElementById("referrers"), data.referrers, "Nenhuma referência externa registrada neste período.");
 
-        const agendaHealth = data.agenda_health || {};
-        document.getElementById("agenda-sources").textContent = (agendaHealth.sources_ok ?? 0) + "/" + (agendaHealth.sources_total ?? 0);
-        document.getElementById("agenda-events").textContent = agendaHealth.future_events ?? 0;
-        document.getElementById("agenda-requests").textContent = data.date_requests?.total ?? 0;
-        document.getElementById("agenda-sync").textContent = agendaHealth.oldest_sync_at
-          ? new Date(agendaHealth.oldest_sync_at).toLocaleString("pt-BR", { day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit" })
-          : "—";
-
-        const failedSources = (agendaHealth.sources || []).filter(source => source.enabled && source.last_status !== 200);
-        document.getElementById("agenda-health-message").textContent = failedSources.length
-          ? "Atenção: " + failedSources.map(source => source.label || source.source_key).join(", ") + " com falha na última sincronização."
-          : "Todas as fontes ativas da Agenda responderam corretamente na última sincronização registrada.";
-
-        const requestsBody = document.getElementById("requests-body");
-        requestsBody.innerHTML = "";
-        (data.date_requests?.recent || []).forEach(row => {
-          const tr = document.createElement("tr");
-          const values = [
-            new Date(row.created_at).toLocaleString("pt-BR"),
-            row.parish_name + (row.city ? " — " + row.city : ""),
-            new Date(row.requested_date + "T12:00:00").toLocaleDateString("pt-BR"),
-            row.event_type,
-            row.status.replaceAll("_"," ")
-          ];
-          values.forEach(value => {
-            const td = document.createElement("td");
-            td.textContent = value;
-            tr.appendChild(td);
-          });
-          requestsBody.appendChild(tr);
-        });
-
         const recentBody = document.getElementById("recent-body");
         recentBody.innerHTML = "";
         (data.recent || []).forEach(row => {
@@ -510,7 +236,6 @@
           recentBody.appendChild(tr);
         });
 
-        await loadAgendaAccess();
         dashMessage.textContent = "Dados atualizados em " + new Date(data.generated_at).toLocaleString("pt-BR") + ".";
       } catch (err) {
         if (err.message === "forbidden") {
