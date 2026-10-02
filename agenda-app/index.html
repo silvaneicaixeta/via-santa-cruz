@@ -32,6 +32,7 @@
       </a>
       <div id="agenda-app-user" class="agenda-app-user" hidden>
         <span id="agenda-user-label">Conta autorizada</span>
+        <button id="agenda-admin-open" type="button" hidden>Administração</button>
         <button id="agenda-logout" type="button">Sair</button>
       </div>
     </div>
@@ -113,7 +114,7 @@
     </section>
 
     <div id="agenda-protected-content" hidden>
-    <section class="agenda-app-main">
+    <section id="agenda-main-view" class="agenda-app-main">
       <div class="container">
         <div class="agenda-app-intro">
           <div>
@@ -178,6 +179,78 @@
           <div id="agenda-print-list"></div>
           <p id="agenda-print-foot" class="agenda-print-foot">Programação sujeita a alterações.</p>
         </section>
+      </div>
+    </section>
+
+    <section id="agenda-admin-view" class="agenda-app-main" hidden>
+      <div class="container">
+        <div class="agenda-admin-head">
+          <div>
+            <p class="section-kicker">Agenda Diocesana</p>
+            <h1>Administração</h1>
+            <p>Gestão de acessos, solicitações, sincronização e auditoria da Agenda.</p>
+          </div>
+          <button id="agenda-admin-close" class="agenda-action-button" type="button">Voltar à Agenda</button>
+        </div>
+
+        <div class="agenda-admin-metrics">
+          <article class="agenda-admin-card"><strong id="admin-sources">—</strong><span>Fontes sincronizadas</span></article>
+          <article class="agenda-admin-card"><strong id="admin-events">—</strong><span>Eventos futuros</span></article>
+          <article class="agenda-admin-card"><strong id="admin-date-requests">—</strong><span>Solicitações de datas</span></article>
+          <article class="agenda-admin-card"><strong id="admin-access-requests">—</strong><span>Acessos pendentes</span></article>
+        </div>
+
+        <section class="agenda-admin-panel">
+          <p class="section-kicker">Sincronização</p>
+          <h2>Saúde das fontes</h2>
+          <p id="admin-health-message" class="agenda-admin-note">Carregando…</p>
+        </section>
+
+        <section class="agenda-admin-panel">
+          <p class="section-kicker">Solicitações de acesso</p>
+          <h2>Pendentes</h2>
+          <div class="agenda-admin-table-wrap">
+            <table class="agenda-admin-table">
+              <thead><tr><th>Data</th><th>Nome</th><th>Perfil</th><th>Instituição</th><th>Ação</th></tr></thead>
+              <tbody id="admin-access-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="agenda-admin-panel">
+          <p class="section-kicker">Usuários</p>
+          <h2>Acessos autorizados</h2>
+          <div class="agenda-admin-table-wrap">
+            <table class="agenda-admin-table">
+              <thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Último login</th><th>Situação</th><th>Ação</th></tr></thead>
+              <tbody id="admin-users-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="agenda-admin-panel">
+          <p class="section-kicker">Solicitações de datas</p>
+          <h2>Mais recentes</h2>
+          <div class="agenda-admin-table-wrap">
+            <table class="agenda-admin-table">
+              <thead><tr><th>Recebida</th><th>Paróquia</th><th>Data pedida</th><th>Tipo</th><th>Situação</th></tr></thead>
+              <tbody id="admin-date-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="agenda-admin-panel">
+          <p class="section-kicker">Auditoria</p>
+          <h2>Acessos e alterações recentes</h2>
+          <div class="agenda-admin-table-wrap">
+            <table class="agenda-admin-table">
+              <thead><tr><th>Data</th><th>Usuário</th><th>Ação</th><th>Detalhes</th></tr></thead>
+              <tbody id="admin-audit-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <p id="agenda-admin-message" class="agenda-admin-note" role="status"></p>
       </div>
     </section>
     </div>
@@ -253,5 +326,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
   <script src="./app.js"></script>
+  <script src="./admin.js"></script>
 </body>
 </html>
