@@ -1,0 +1,15 @@
+{
+  "name": "Agenda Diocesana",
+  "short_name": "Agenda",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f8f4ea",
+  "theme_color": "#123C2E",
+  "icons": [
+    {
+      "src": "https://viasantacruz.com.br/assets/vsc-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
