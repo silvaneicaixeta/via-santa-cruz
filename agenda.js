@@ -33,7 +33,8 @@
     clearFilters: document.getElementById("agenda-clear-filters"),
     printButton: document.getElementById("agenda-print-button"),
     printList: document.getElementById("agenda-print-list"),
-    printSummary: document.getElementById("agenda-print-summary")
+    printSummary: document.getElementById("agenda-print-summary"),
+    syncFooter: document.getElementById("agenda-sync-footer")
   };
 
   const fmtDay = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", timeZone: TZ });
@@ -51,6 +52,7 @@
   let liturgyEvents = [];
   let currentEvents = [];
   let calendarCursor = startOfMonth(new Date());
+  let lastSyncReference = null;
 
   const filters = {
     period: "upcoming",
@@ -222,7 +224,7 @@
     const start = new Date(ev.start), end = new Date(ev.end);
     if (!ev.all_day) return fmtTime.format(start);
     const effectiveEnd = new Date(end.getTime() - 1);
-    return dateKey(start) === dateKey(effectiveEnd) ? "Dia inteiro" : fmtLongDate.format(start) + " a " + fmtLongDate.format(effectiveEnd);
+    return dateKey(start) === dateKey(effectiveEnd) ? "" : fmtLongDate.format(start) + " a " + fmtLongDate.format(effectiveEnd);
   }
 
   function buildGoogleCalendarUrl(ev) {
@@ -467,14 +469,14 @@
 
       const row = document.createElement("div");
       row.className = "agenda-print-row";
-      const time = ev.all_day ? (ev.source === "liturgico" ? "" : "Dia inteiro") : fmtTime.format(d);
+      const time = ev.all_day ? "" : fmtTime.format(d);
       row.innerHTML = '<strong>' + esc(pdfDayLabel(ev)) + '</strong><span>' + esc(time) + '</span><div>' +
         esc(ev.title) + (ev.cancelled ? " — CANCELADO" : "") + "</div>";
       els.printList.appendChild(row);
     });
 
     const foot = document.getElementById("agenda-print-foot");
-    if (foot) foot.textContent = "viasantacruz.com.br · Gerado em " + generatedStamp() + " · Programação sujeita a alterações a qualquer momento.";
+    if (foot) foot.textContent = "viasantacruz.com.br · " + (lastSyncReference ? "Dados sincronizados até " + fmtUpdated.format(lastSyncReference) + " · " : "") + "Gerado em " + generatedStamp() + " · Programação sujeita a alterações.";
   }
 
   function pdfSafeText(value) {
@@ -567,6 +569,7 @@
       const month = fmtMonthYear.format(d);
 
       if (month !== lastMonth) {
+        if (lastMonth) y += 3.2;
         ensure(12);
         doc.setFont("times", "bold");
         doc.setFontSize(13);
@@ -578,7 +581,7 @@
       const date = pdfSafeText(pdfDayLabel(ev));
       let time = "";
       if (!(ev.source === "liturgico" && ev.all_day)) {
-        if (ev.all_day) time = "Dia inteiro";
+        if (ev.all_day) time = "";
         else time = pdfSafeText(fmtTime.format(d));
       }
 
@@ -588,10 +591,10 @@
       const timeWidth = 22;
       const titleX = marginX + dateWidth + timeWidth;
       const titleLines = doc.splitTextToSize(titleText, pageWidth - marginX - titleX);
-      const rowHeight = Math.max(5.8, titleLines.length * 4.2 + 0.8);
-      ensure(rowHeight + 4);
+      const rowHeight = Math.max(5.1, titleLines.length * 4.0 + 0.3);
+      ensure(rowHeight + 3.3);
 
-      y += 1.8;
+      y += 1.4;
 
       doc.setFont("helvetica", "bold");
       doc.setFontSize(9);
@@ -611,7 +614,7 @@
       y += rowHeight;
       doc.setDrawColor(225);
       doc.line(marginX, y, pageWidth - marginX, y);
-      y += 1.8;
+      y += 1.2;
     });
 
     const stamp = generatedStamp();
@@ -623,8 +626,9 @@
       doc.setFont("helvetica", "normal");
       doc.setFontSize(7.2);
       doc.setTextColor(90);
-      doc.text("viasantacruz.com.br · Gerado em " + stamp, marginX, pageHeight - 8);
-      doc.text("Programação sujeita a alterações a qualquer momento.", pageWidth - marginX, pageHeight - 8, { align: "right" });
+      const syncText = lastSyncReference ? "Dados sincronizados até " + fmtUpdated.format(lastSyncReference) + "." : "Sincronização não informada.";
+      doc.text(syncText + " Programação sujeita a alterações.", marginX, pageHeight - 9);
+      doc.text("viasantacruz.com.br · PDF gerado em " + stamp, marginX, pageHeight - 5.5);
       doc.setTextColor(0);
     }
 
@@ -724,7 +728,9 @@
       const ref = dates.length ? new Date(Math.min(...dates.map((d) => d.getTime()))) : generated;
 
       if (!Number.isNaN(ref.getTime())) {
+        lastSyncReference = ref;
         els.updated.textContent = "Dados sincronizados até " + fmtUpdated.format(ref) + ". Alterações posteriores podem ainda não aparecer aqui.";
+        if (els.syncFooter) els.syncFooter.textContent = "Sincronização: " + fmtUpdated.format(ref) + " · programação sujeita a alterações.";
       }
     } catch {
       els.status.textContent = "Não foi possível carregar a agenda agora. Tente novamente em alguns instantes.";
