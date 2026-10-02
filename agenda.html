@@ -53,9 +53,15 @@
           <p>Esta agenda reúne calendários públicos previamente autorizados da Diocese de Janaúba. Para a composição da agenda pastoral do ano seguinte, as paróquias encaminham, no mês de novembro, por meio de formulário próprio, as solicitações de datas para celebrações e demais compromissos com o Bispo Diocesano. As propostas são recebidas e organizadas pela Assessoria Episcopal e, após confirmação, passam a integrar a agenda.</p>
         </div>
 
-        <div class="agenda-toolbar" aria-label="Seções da agenda">
-          <button class="agenda-tab active" data-scope="main" type="button">Agenda Diocesana</button>
-          <button class="agenda-tab" data-scope="liturgico" type="button">Liturgia</button>
+        <div class="agenda-source-bar">
+          <div>
+            <span class="agenda-field-label">Fontes exibidas</span>
+            <label class="agenda-source-toggle">
+              <input id="agenda-include-liturgy" type="checkbox" checked>
+              <span>Incluir calendário litúrgico</span>
+            </label>
+          </div>
+          <a class="agenda-request-link" href="/solicitar-data.html">Solicitar uma data <span aria-hidden="true">→</span></a>
         </div>
 
         <div class="agenda-actions">
