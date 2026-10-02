@@ -52,8 +52,45 @@
             <button class="button button-primary" type="submit">Entrar</button>
           </form>
 
-          <button id="agenda-forgot-password" class="agenda-auth-text-button" type="button">Esqueci minha senha</button>
+          <div class="agenda-auth-links">
+            <button id="agenda-forgot-password" class="agenda-auth-text-button" type="button">Esqueci minha senha</button>
+            <button id="agenda-request-access-button" class="agenda-auth-text-button" type="button">Solicitar acesso</button>
+          </div>
           <p id="agenda-auth-message" class="agenda-auth-message" role="status"></p>
+
+          <form id="agenda-access-request-form" class="agenda-auth-form" hidden>
+            <div class="agenda-password-notice">
+              <strong>Solicitação de acesso</strong>
+              <span>Preencha seus dados. A solicitação será analisada pela Assessoria Episcopal.</span>
+            </div>
+            <label>Nome completo
+              <input id="agenda-request-name" type="text" maxlength="180" autocomplete="name" required>
+            </label>
+            <label>E-mail
+              <input id="agenda-request-email" type="email" maxlength="180" autocomplete="email" required>
+            </label>
+            <label>Vínculo
+              <select id="agenda-request-role" required>
+                <option value="">Selecione</option>
+                <option value="clergy">Clero</option>
+                <option value="parish">Paróquia / Secretaria paroquial</option>
+                <option value="curia">Cúria</option>
+                <option value="collaborator">Colaborador</option>
+              </select>
+            </label>
+            <label>Paróquia / instituição
+              <input id="agenda-request-institution" type="text" maxlength="180">
+            </label>
+            <label>Função / serviço
+              <input id="agenda-request-ministry" type="text" maxlength="160" placeholder="Ex.: pároco, secretária paroquial, coordenador">
+            </label>
+            <label>Observação
+              <textarea id="agenda-request-notes" rows="3" maxlength="1000"></textarea>
+            </label>
+            <input id="agenda-request-website" class="agenda-request-honeypot" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <button class="button button-primary" type="submit">Enviar solicitação</button>
+            <button id="agenda-request-cancel" class="agenda-auth-text-button" type="button">Voltar ao acesso</button>
+          </form>
 
           <form id="agenda-password-form" class="agenda-auth-form" hidden>
             <div class="agenda-password-notice">
