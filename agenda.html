@@ -10,7 +10,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://viasantacruz.com.br/agenda.html">
   <link rel="canonical" href="https://viasantacruz.com.br/agenda.html">
-  <meta name="robots" content="index,follow">
+  <meta name="robots" content="noindex,nofollow,noarchive">
   <title>Agenda — Via Santa Cruz</title>
   <link rel="icon" type="image/svg+xml" href="/assets/vsc-favicon-crop.svg">
   <link rel="apple-touch-icon" href="/assets/vsc-icon.png">
@@ -35,6 +35,44 @@
   </header>
 
   <main id="conteudo">
+    <section id="agenda-auth-view" class="agenda-auth-section section">
+      <div class="container agenda-auth-shell">
+        <div class="agenda-auth-card">
+          <p class="section-kicker">Agenda Diocesana</p>
+          <h1>Acesso institucional</h1>
+          <p>Entre com a conta autorizada pela Assessoria Episcopal para consultar a Agenda Diocesana.</p>
+
+          <form id="agenda-login-form" class="agenda-auth-form">
+            <label>E-mail
+              <input id="agenda-login-email" type="email" autocomplete="username" required>
+            </label>
+            <label>Senha
+              <input id="agenda-login-password" type="password" autocomplete="current-password" required>
+            </label>
+            <button class="button button-primary" type="submit">Entrar</button>
+          </form>
+
+          <button id="agenda-forgot-password" class="agenda-auth-text-button" type="button">Esqueci minha senha</button>
+          <p id="agenda-auth-message" class="agenda-auth-message" role="status"></p>
+
+          <form id="agenda-password-form" class="agenda-auth-form" hidden>
+            <div class="agenda-password-notice">
+              <strong>Defina sua senha de acesso.</strong>
+              <span>Por segurança, escolha uma senha pessoal que não seja usada por outras pessoas.</span>
+            </div>
+            <label>Nova senha
+              <input id="agenda-new-password" type="password" autocomplete="new-password" minlength="10" required>
+            </label>
+            <label>Confirmar nova senha
+              <input id="agenda-new-password-confirm" type="password" autocomplete="new-password" minlength="10" required>
+            </label>
+            <button class="button button-primary" type="submit">Salvar nova senha</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <div id="agenda-protected-content" hidden>
     <section class="page-hero agenda-hero">
       <div class="container page-hero-inner">
         <p class="section-kicker">Agenda</p>
@@ -51,6 +89,11 @@
             <h2>A Igreja também se encontra no tempo.</h2>
           </div>
           <p>Esta agenda reúne calendários públicos previamente autorizados da Diocese de Janaúba. Para a composição da agenda pastoral do ano seguinte, as paróquias encaminham, no mês de novembro, por meio de formulário próprio, as solicitações de datas para celebrações e demais compromissos com o Bispo Diocesano. As propostas são recebidas e organizadas pela Assessoria Episcopal e, após confirmação, passam a integrar a agenda.</p>
+        </div>
+
+        <div class="agenda-access-bar">
+          <span id="agenda-user-label">Conta autorizada</span>
+          <button id="agenda-logout" type="button">Sair</button>
         </div>
 
         <div class="agenda-source-bar">
@@ -110,6 +153,7 @@
         </section>
       </div>
     </section>
+    </div>
   </main>
 
   <div id="agenda-filter-modal" class="agenda-filter-modal" hidden>
@@ -181,6 +225,7 @@
   </footer>
 
   <script src="/script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
   <script src="/agenda.js"></script>
   <script src="/analytics.js"></script>
