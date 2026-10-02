@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123C2E">
+  <meta name="description" content="Solicitação de data para celebrações e compromissos com o Bispo Diocesano de Janaúba.">
+  <meta name="robots" content="index,follow">
+  <title>Solicitar uma data — Via Santa Cruz</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/vsc-favicon-crop.svg">
+  <link rel="apple-touch-icon" href="/assets/vsc-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="/" aria-label="Via Santa Cruz — início">
+        <img src="/assets/vsc-mark.svg" alt="Via Santa Cruz" width="78" height="54">
+        <span class="brand-copy"><strong>Via Santa Cruz</strong><small>Projetos que nascem para servir.</small></span>
+      </a>
+      <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+      <nav class="main-nav" id="main-nav" aria-label="Navegação principal"><a href="/">Início</a><a href="/projetos.html">Projetos</a><a href="/sobre.html">Sobre</a></nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <section class="page-hero">
+      <div class="container page-hero-inner">
+        <p class="section-kicker">Agenda Diocesana</p>
+        <h1>Solicitar uma data.</h1>
+        <p>Encaminhe uma proposta de data à Assessoria Episcopal para análise.</p>
+      </div>
+    </section>
+
+    <section class="section request-section">
+      <div class="container request-shell">
+        <div class="request-warning">
+          <strong>A solicitação não confirma o agendamento.</strong>
+          <p>Mesmo que a data pareça livre na agenda consultada, podem existir compromissos ainda não publicados, deslocamentos, reservas ou outras solicitações em análise. A data somente será considerada agendada após confirmação expressa da Assessoria Episcopal.</p>
+        </div>
+
+        <form id="date-request-form" class="request-form">
+          <div class="request-grid">
+            <label>Paróquia <input name="parish_name" required maxlength="180" autocomplete="organization"></label>
+            <label>Cidade <input name="city" required maxlength="120" autocomplete="address-level2"></label>
+            <label>Nome do solicitante <input name="requester_name" required maxlength="160" autocomplete="name"></label>
+            <label>Função / serviço <input name="requester_role" maxlength="120" placeholder="Ex.: Pároco, secretária paroquial"></label>
+            <label>E-mail <input name="email" type="email" required maxlength="180" autocomplete="email"></label>
+            <label>Telefone <input name="phone" maxlength="60" autocomplete="tel"></label>
+            <label>Tipo de celebração ou compromisso <input name="event_type" required maxlength="160" placeholder="Ex.: Crisma, festa patronal, visita pastoral"></label>
+            <label>Comunidade <input name="community" maxlength="160" placeholder="Se houver"></label>
+            <label>Data desejada <input name="requested_date" type="date" required></label>
+            <label>Horário desejado <input name="requested_time" type="time"></label>
+            <label>Data alternativa <input name="alternate_date" type="date"></label>
+            <label>Horário alternativo <input name="alternate_time" type="time"></label>
+          </div>
+          <label>Observações
+            <textarea name="notes" rows="5" maxlength="1500" placeholder="Informações pastorais ou práticas que ajudem na análise da solicitação."></textarea>
+          </label>
+          <label class="request-honeypot" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off"></label>
+          <label class="request-confirm"><input name="ack" type="checkbox" required> <span>Estou ciente de que o envio deste formulário não representa confirmação da data.</span></label>
+          <div class="request-actions">
+            <button id="request-submit" class="button button-primary" type="submit">Enviar solicitação</button>
+            <a class="button button-secondary" href="/agenda-diocesana.html">Voltar</a>
+          </div>
+          <p id="request-status" class="request-status" role="status"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <a class="footer-brand" href="/"><span>Via Santa Cruz</span></a>
+      <p>© <span id="year"></span> Via Santa Cruz<br><a class="idealizer-link" href="/idealizador.html">Idealização: Pe. Silvanei Caixeta</a></p>
+      <nav aria-label="Navegação do rodapé"><a href="/">Início</a><a href="/projetos.html">Projetos</a><a href="/sobre.html">Sobre</a></nav>
+      <a class="domain" href="https://viasantacruz.com.br">viasantacruz.com.br</a>
+    </div>
+  </footer>
+
+  <script src="/script.js"></script>
+  <script>
+    (() => {
+      const form = document.getElementById("date-request-form");
+      const status = document.getElementById("request-status");
+      const submit = document.getElementById("request-submit");
+      const API = "https://vgpivbxykeobgjzqlqcl.supabase.co/functions/v1/vsc-date-request";
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        status.textContent = "Enviando solicitação…";
+        submit.disabled = true;
+
+        const data = Object.fromEntries(new FormData(form).entries());
+        delete data.ack;
+
+        try {
+          const response = await fetch(API, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+          });
+          const result = await response.json().catch(() => ({}));
+
+          if (!response.ok) {
+            const messages = {
+              required_fields: "Preencha todos os campos obrigatórios.",
+              invalid_email: "Informe um e-mail válido.",
+              past_date: "A data solicitada deve ser futura.",
+              rate_limit: "Foram enviadas várias solicitações com este e-mail nas últimas 24 horas. Tente novamente mais tarde."
+            };
+            throw new Error(messages[result.error] || "Não foi possível enviar a solicitação agora.");
+          }
+
+          form.reset();
+          status.innerHTML = "<strong>Solicitação recebida.</strong> Ela será analisada pela Assessoria Episcopal. O envio não representa confirmação do agendamento.";
+        } catch (error) {
+          status.textContent = error.message || "Não foi possível enviar a solicitação agora.";
+        } finally {
+          submit.disabled = false;
+        }
+      });
+    })();
+  </script>
+  <script src="/analytics.js"></script>
+</body>
+</html>
