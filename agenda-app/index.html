@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123C2E">
+  <meta name="description" content="Agenda Diocesana — acesso institucional da Diocese de Janaúba.">
+  <meta property="og:title" content="Agenda Diocesana — Via Santa Cruz">
+  <meta property="og:description" content="Acesso institucional à Agenda Diocesana.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://agenda.viasantacruz.com.br/">
+  <link rel="canonical" href="https://agenda.viasantacruz.com.br/">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Agenda Diocesana — Via Santa Cruz</title>
+  <link rel="icon" type="image/svg+xml" href="https://viasantacruz.com.br/assets/vsc-favicon-crop.svg">
+  <link rel="apple-touch-icon" href="https://viasantacruz.com.br/assets/vsc-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <header class="agenda-app-header">
+    <div class="agenda-app-header-inner">
+      <a class="agenda-app-brand" href="https://viasantacruz.com.br" aria-label="Via Santa Cruz">
+        <img src="https://viasantacruz.com.br/assets/vsc-mark.svg" alt="" width="58" height="40">
+        <span>
+          <strong>Agenda Diocesana</strong>
+          <small>Via Santa Cruz · Diocese de Janaúba</small>
+        </span>
+      </a>
+      <div id="agenda-app-user" class="agenda-app-user" hidden>
+        <span id="agenda-user-label">Conta autorizada</span>
+        <button id="agenda-logout" type="button">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <section id="agenda-auth-view" class="agenda-auth-section section">
+      <div class="container agenda-auth-shell">
+        <div class="agenda-auth-card">
+          <p class="section-kicker">Agenda Diocesana</p>
+          <h1>Acesso institucional</h1>
+          <p>Entre com a conta autorizada pela Assessoria Episcopal para consultar a Agenda Diocesana.</p>
+
+          <form id="agenda-login-form" class="agenda-auth-form">
+            <label>E-mail
+              <input id="agenda-login-email" type="email" autocomplete="username" required>
+            </label>
+            <label>Senha
+              <input id="agenda-login-password" type="password" autocomplete="current-password" required>
+            </label>
+            <button class="button button-primary" type="submit">Entrar</button>
+          </form>
+
+          <div class="agenda-auth-links">
+            <button id="agenda-forgot-password" class="agenda-auth-text-button" type="button">Esqueci minha senha</button>
+            <button id="agenda-request-access-button" class="agenda-auth-text-button" type="button">Solicitar acesso</button>
+          </div>
+          <p id="agenda-auth-message" class="agenda-auth-message" role="status"></p>
+
+          <form id="agenda-access-request-form" class="agenda-auth-form" hidden>
+            <div class="agenda-password-notice">
+              <strong>Solicitação de acesso</strong>
+              <span>Preencha seus dados. A solicitação será analisada pela Assessoria Episcopal.</span>
+            </div>
+            <label>Nome completo
+              <input id="agenda-request-name" type="text" maxlength="180" autocomplete="name" required>
+            </label>
+            <label>E-mail
+              <input id="agenda-request-email" type="email" maxlength="180" autocomplete="email" required>
+            </label>
+            <label>Vínculo
+              <select id="agenda-request-role" required>
+                <option value="">Selecione</option>
+                <option value="clergy">Clero</option>
+                <option value="parish">Paróquia / Secretaria paroquial</option>
+                <option value="curia">Cúria</option>
+                <option value="collaborator">Colaborador</option>
+              </select>
+            </label>
+            <label>Paróquia / instituição
+              <input id="agenda-request-institution" type="text" maxlength="180">
+            </label>
+            <label>Função / serviço
+              <input id="agenda-request-ministry" type="text" maxlength="160" placeholder="Ex.: pároco, secretária paroquial, coordenador">
+            </label>
+            <label>Observação
+              <textarea id="agenda-request-notes" rows="3" maxlength="1000"></textarea>
+            </label>
+            <input id="agenda-request-website" class="agenda-request-honeypot" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <button class="button button-primary" type="submit">Enviar solicitação</button>
+            <button id="agenda-request-cancel" class="agenda-auth-text-button" type="button">Voltar ao acesso</button>
+          </form>
+
+          <form id="agenda-password-form" class="agenda-auth-form" hidden>
+            <div class="agenda-password-notice">
+              <strong>Defina sua senha de acesso.</strong>
+              <span>Por segurança, escolha uma senha pessoal que não seja usada por outras pessoas.</span>
+            </div>
+            <label>Nova senha
+              <input id="agenda-new-password" type="password" autocomplete="new-password" minlength="10" required>
+            </label>
+            <label>Confirmar nova senha
+              <input id="agenda-new-password-confirm" type="password" autocomplete="new-password" minlength="10" required>
+            </label>
+            <button class="button button-primary" type="submit">Salvar nova senha</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <div id="agenda-protected-content" hidden>
+    <section class="agenda-app-main">
+      <div class="container">
+        <div class="agenda-app-intro">
+          <div>
+            <p class="section-kicker">Agenda Diocesana</p>
+            <h1>Os acontecimentos que marcam o caminho.</h1>
+          </div>
+          <p>Consulta institucional dos compromissos, celebrações e datas da vida diocesana.</p>
+        </div>
+
+        <div class="agenda-source-bar">
+          <div>
+            <span class="agenda-field-label">Fontes exibidas</span>
+            <label class="agenda-source-toggle">
+              <input id="agenda-include-liturgy" type="checkbox" checked>
+              <span>Incluir calendário litúrgico</span>
+            </label>
+          </div>
+          <a class="agenda-request-link" href="https://viasantacruz.com.br/solicitar-data.html">Solicitar uma data <span aria-hidden="true">→</span></a>
+        </div>
+
+        <div class="agenda-actions">
+          <label class="agenda-search">
+            <span class="sr-only">Buscar na agenda</span>
+            <input id="agenda-search" type="search" placeholder="Buscar acontecimento, paróquia, cidade…" autocomplete="off">
+          </label>
+          <button id="agenda-filter-button" class="agenda-action-button" type="button">Filtros <span id="agenda-filter-count" class="agenda-action-count" hidden>0</span></button>
+          <div class="agenda-view-toggle" role="group" aria-label="Visualização da agenda">
+            <button class="agenda-view-button active" data-view="list" type="button">Lista</button>
+            <button class="agenda-view-button" data-view="month" type="button">Mês</button>
+          </div>
+          <button id="agenda-print-button" class="agenda-action-button agenda-print-button" type="button">Gerar PDF / Imprimir</button>
+        </div>
+
+        <div id="agenda-active-filters" class="agenda-active-filters" aria-live="polite"></div>
+
+        <div id="agenda-calendar" class="agenda-calendar" hidden>
+          <div class="agenda-calendar-head">
+            <button id="agenda-prev-month" class="agenda-month-nav" type="button" aria-label="Mês anterior">←</button>
+            <h2 id="agenda-calendar-title"></h2>
+            <button id="agenda-next-month" class="agenda-month-nav" type="button" aria-label="Próximo mês">→</button>
+          </div>
+          <div class="agenda-weekdays" aria-hidden="true">
+            <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+          </div>
+          <div id="agenda-calendar-grid" class="agenda-calendar-grid"></div>
+          <div id="agenda-day-events" class="agenda-day-events"></div>
+        </div>
+
+        <div class="agenda-result-line">
+          <div id="agenda-status" class="agenda-status" role="status">Carregando agenda…</div>
+          <div id="agenda-updated" class="agenda-updated" aria-live="polite"></div>
+        </div>
+        <div id="agenda-list" class="agenda-list" aria-live="polite"></div>
+        <p id="agenda-sync-footer" class="agenda-sync-footer">Sincronização: aguardando dados…</p>
+
+        <section id="agenda-print-sheet" class="agenda-print-sheet" aria-hidden="true">
+          <div class="agenda-print-head">
+            <p>DIOCESE DE JANAÚBA</p>
+            <h1>Agenda Diocesana — seleção</h1>
+            <div id="agenda-print-summary"></div>
+          </div>
+          <div id="agenda-print-list"></div>
+          <p id="agenda-print-foot" class="agenda-print-foot">Programação sujeita a alterações.</p>
+        </section>
+      </div>
+    </section>
+    </div>
+  </main>
+
+  <div id="agenda-filter-modal" class="agenda-filter-modal" hidden>
+    <div class="agenda-filter-backdrop" data-close-filter></div>
+    <section class="agenda-filter-panel" role="dialog" aria-modal="true" aria-labelledby="agenda-filter-title">
+      <header class="agenda-filter-head">
+        <div><span>Agenda Diocesana</span><h2 id="agenda-filter-title">Filtros de pesquisa</h2></div>
+        <button type="button" class="agenda-filter-close" aria-label="Fechar filtros" data-close-filter>×</button>
+      </header>
+      <div class="agenda-filter-body">
+        <details open>
+          <summary>Período</summary>
+          <div class="agenda-filter-section">
+            <label class="agenda-radio"><input type="radio" name="filter-period" value="next30"> Próximos 30 dias</label>
+            <label class="agenda-radio"><input type="radio" name="filter-period" value="upcoming" checked> Próximos 90 dias</label>
+            <label class="agenda-radio"><input type="radio" name="filter-period" value="month"> Mês atual — completo, incluindo datas passadas</label>
+            <label class="agenda-radio"><input type="radio" name="filter-period" value="past30"> Últimos 30 dias</label>
+            <label class="agenda-radio"><input type="radio" name="filter-period" value="year"> Ano específico — completo</label>
+            <select id="filter-year" class="agenda-filter-select" aria-label="Ano"></select>
+            <label class="agenda-radio"><input type="radio" name="filter-period" value="custom"> Intervalo personalizado</label>
+            <div class="agenda-date-range"><input id="filter-start" type="date" aria-label="Data inicial"><input id="filter-end" type="date" aria-label="Data final"></div>
+            <label class="agenda-radio"><input type="radio" name="filter-period" value="all"> Todo o período disponível</label>
+          </div>
+        </details>
+
+        <details open>
+          <summary>Tipo de acontecimento</summary>
+          <div id="filter-types" class="agenda-check-grid"></div>
+        </details>
+
+        <details>
+          <summary>Âmbito</summary>
+          <div id="filter-scopes" class="agenda-check-grid"></div>
+        </details>
+
+        <details>
+          <summary>Paróquia</summary>
+          <div class="agenda-filter-search-wrap"><input id="filter-parish-search" type="search" placeholder="Buscar paróquia…"></div>
+          <div id="filter-parishes" class="agenda-check-grid agenda-check-grid-scroll"></div>
+        </details>
+
+        <details>
+          <summary>Cidade</summary>
+          <div id="filter-cities" class="agenda-check-grid agenda-check-grid-scroll"></div>
+        </details>
+
+        <details>
+          <summary>Situação</summary>
+          <div class="agenda-check-grid">
+            <label><input id="filter-confirmed" type="checkbox" checked> Confirmados</label>
+            <label><input id="filter-cancelled" type="checkbox" checked> Cancelados</label>
+          </div>
+        </details>
+      </div>
+      <footer class="agenda-filter-footer">
+        <button id="agenda-clear-filters" type="button" class="agenda-filter-secondary">Limpar</button>
+        <button id="agenda-apply-filters" type="button" class="agenda-filter-primary">Aplicar filtros</button>
+      </footer>
+    </section>
+  </div>
+
+  <footer class="agenda-app-footer">
+    <span>Via Santa Cruz · Agenda Diocesana</span>
+    <a href="https://viasantacruz.com.br">viasantacruz.com.br</a>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
