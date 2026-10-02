@@ -118,6 +118,29 @@
         </div>
 
         <section class="admin-card panel recent">
+          <p class="section-kicker">Agenda</p>
+          <h2>Saúde da sincronização</h2>
+          <div class="metric-grid" style="margin-top:1rem">
+            <div class="metric"><strong id="agenda-sources">—</strong><span>Fontes sincronizadas</span></div>
+            <div class="metric"><strong id="agenda-events">—</strong><span>Eventos futuros</span></div>
+            <div class="metric"><strong id="agenda-sync">—</strong><span>Sincronização mais antiga</span></div>
+            <div class="metric"><strong id="agenda-requests">—</strong><span>Solicitações recebidas</span></div>
+          </div>
+          <div id="agenda-health-message" class="privacy-note"></div>
+        </section>
+
+        <section class="admin-card panel recent">
+          <p class="section-kicker">Solicitações de datas</p>
+          <h2>Mais recentes</h2>
+          <div style="overflow-x:auto">
+            <table class="recent-table">
+              <thead><tr><th>Recebida</th><th>Paróquia</th><th>Data pedida</th><th>Tipo</th><th>Situação</th></tr></thead>
+              <tbody id="requests-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="admin-card panel recent">
           <p class="section-kicker">Registros recentes</p>
           <h2>Últimas visualizações</h2>
           <div style="overflow-x:auto">
@@ -223,6 +246,38 @@
 
         renderBars(document.getElementById("pages"), data.pages, "Ainda não há visualizações neste período.");
         renderBars(document.getElementById("referrers"), data.referrers, "Nenhuma referência externa registrada neste período.");
+
+        const agendaHealth = data.agenda_health || {};
+        document.getElementById("agenda-sources").textContent = (agendaHealth.sources_ok ?? 0) + "/" + (agendaHealth.sources_total ?? 0);
+        document.getElementById("agenda-events").textContent = agendaHealth.future_events ?? 0;
+        document.getElementById("agenda-requests").textContent = data.date_requests?.total ?? 0;
+        document.getElementById("agenda-sync").textContent = agendaHealth.oldest_sync_at
+          ? new Date(agendaHealth.oldest_sync_at).toLocaleString("pt-BR", { day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit" })
+          : "—";
+
+        const failedSources = (agendaHealth.sources || []).filter(source => source.enabled && source.last_status !== 200);
+        document.getElementById("agenda-health-message").textContent = failedSources.length
+          ? "Atenção: " + failedSources.map(source => source.label || source.source_key).join(", ") + " com falha na última sincronização."
+          : "Todas as fontes ativas da Agenda responderam corretamente na última sincronização registrada.";
+
+        const requestsBody = document.getElementById("requests-body");
+        requestsBody.innerHTML = "";
+        (data.date_requests?.recent || []).forEach(row => {
+          const tr = document.createElement("tr");
+          const values = [
+            new Date(row.created_at).toLocaleString("pt-BR"),
+            row.parish_name + (row.city ? " — " + row.city : ""),
+            new Date(row.requested_date + "T12:00:00").toLocaleDateString("pt-BR"),
+            row.event_type,
+            row.status.replaceAll("_"," ")
+          ];
+          values.forEach(value => {
+            const td = document.createElement("td");
+            td.textContent = value;
+            tr.appendChild(td);
+          });
+          requestsBody.appendChild(tr);
+        });
 
         const recentBody = document.getElementById("recent-body");
         recentBody.innerHTML = "";
