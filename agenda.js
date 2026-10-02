@@ -7,7 +7,7 @@
     status: document.getElementById("agenda-status"),
     updated: document.getElementById("agenda-updated"),
     search: document.getElementById("agenda-search"),
-    tabs: Array.from(document.querySelectorAll(".agenda-tab")),
+    includeLiturgy: document.getElementById("agenda-include-liturgy"),
     viewButtons: Array.from(document.querySelectorAll(".agenda-view-button")),
     calendar: document.getElementById("agenda-calendar"),
     calendarTitle: document.getElementById("agenda-calendar-title"),
@@ -47,6 +47,8 @@
 
   let currentScope = "main";
   let currentView = "list";
+  let agendaEvents = [];
+  let liturgyEvents = [];
   let currentEvents = [];
   let calendarCursor = startOfMonth(new Date());
 
@@ -128,6 +130,7 @@
   }
 
   function canonicalType(title, source) {
+    if (source === "liturgico") return "Liturgia";
     const t = normalize(title);
     if (source === "crisma" || /^crisma\b/.test(t)) return "Crisma";
     if (source === "padroeiros" || /\bpadroeir[oa]\b/.test(t)) return "Padroeiro";
@@ -249,7 +252,8 @@
   }
 
   function populateFilterChoices(events) {
-    const meta = events.map((ev) => ({ ev, p: parseEvent(ev) }));
+    const structuralEvents = events.filter((ev) => ev.source !== "liturgico");
+    const meta = structuralEvents.map((ev) => ({ ev, p: parseEvent(ev) }));
     const unique = (items) => Array.from(new Map(items.filter((x) => x.key && x.label).map((x) => [x.key, x])).values())
       .sort((a, b) => a.label.localeCompare(b.label, "pt-BR"));
 
@@ -307,6 +311,10 @@
     return currentEvents.filter((ev) => {
       const p = parseEvent(ev);
       if (!inPeriod(ev)) return false;
+
+      const structuralFilterActive = filters.types.size || filters.scopes.size || filters.parishes.size || filters.cities.size;
+      if (ev.source === "liturgico" && structuralFilterActive) return false;
+
       if (filters.types.size && !filters.types.has(normalize(p.type))) return false;
       if (filters.scopes.size && !filters.scopes.has(normalize(p.scope))) return false;
       if (filters.parishes.size && !filters.parishes.has(p.parishKey)) return false;
@@ -325,9 +333,9 @@
 
     const badges = [];
     if (ev.cancelled) badges.push('<span class="agenda-badge cancelled">Cancelado</span>');
-    if (currentScope !== "liturgico") badges.push('<span class="agenda-badge">' + esc(p.type || ev.category) + "</span>");
+    if (ev.source !== "liturgico") badges.push('<span class="agenda-badge">' + esc(p.type || ev.category) + "</span>");
 
-    const timeLabel = currentScope === "liturgico" && ev.all_day ? "" : formatRange(ev);
+    const timeLabel = ev.source === "liturgico" && ev.all_day ? "" : formatRange(ev);
     const meta = [timeLabel, p.city || ev.location].filter(Boolean).join(" · ");
     card.innerHTML =
       '<div class="agenda-date"><strong class="agenda-day">' + esc(fmtDay.format(date)) + '</strong><span class="agenda-month-short">' +
@@ -424,6 +432,7 @@
     if (filters.cities.size) labels.push(filters.cities.size + " cidade(s)");
     if (!filters.cancelled) labels.push("somente confirmados");
     if (!filters.confirmed) labels.push("somente cancelados");
+    if (els.includeLiturgy && els.includeLiturgy.checked) labels.push("com calendário litúrgico");
     return labels;
   }
 
@@ -458,7 +467,7 @@
 
       const row = document.createElement("div");
       row.className = "agenda-print-row";
-      const time = ev.all_day ? (currentScope === "liturgico" ? "" : "Dia inteiro") : fmtTime.format(d);
+      const time = ev.all_day ? (ev.source === "liturgico" ? "" : "Dia inteiro") : fmtTime.format(d);
       row.innerHTML = '<strong>' + esc(pdfDayLabel(ev)) + '</strong><span>' + esc(time) + '</span><div>' +
         esc(ev.title) + (ev.cancelled ? " — CANCELADO" : "") + "</div>";
       els.printList.appendChild(row);
@@ -568,7 +577,7 @@
 
       const date = pdfSafeText(pdfDayLabel(ev));
       let time = "";
-      if (!(currentScope === "liturgico" && ev.all_day)) {
+      if (!(ev.source === "liturgico" && ev.all_day)) {
         if (ev.all_day) time = "Dia inteiro";
         else time = pdfSafeText(fmtTime.format(d));
       }
@@ -668,30 +677,52 @@
     closeFilters(); apply();
   }
 
-  async function load(scope) {
-    currentScope = scope;
+  function refreshCombinedEvents() {
+    currentEvents = els.includeLiturgy?.checked
+      ? [...agendaEvents, ...liturgyEvents].sort((a, b) => new Date(a.start) - new Date(b.start))
+      : [...agendaEvents];
+
+    populateFilterChoices(currentEvents);
+    apply();
+  }
+
+  async function load() {
+    currentScope = "main";
     els.status.textContent = "Carregando agenda…";
     els.updated.textContent = "";
-    els.tabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.scope === scope));
-    els.filterButton.hidden = scope !== "main";
+    els.filterButton.hidden = false;
     els.printButton.hidden = false;
 
     try {
-      const response = await fetch(API + "?scope=" + encodeURIComponent(scope) + "&days=730", { cache: "no-store" });
-      if (!response.ok) throw new Error("http");
-      const data = await response.json();
-      currentEvents = data.events || [];
+      const [agendaResponse, liturgyResponse] = await Promise.all([
+        fetch(API + "?scope=main&days=730", { cache: "no-store" }),
+        fetch(API + "?scope=liturgico&days=730", { cache: "no-store" })
+      ]);
+      if (!agendaResponse.ok || !liturgyResponse.ok) throw new Error("http");
+
+      const [agendaData, liturgyData] = await Promise.all([
+        agendaResponse.json(),
+        liturgyResponse.json()
+      ]);
+
+      agendaEvents = agendaData.events || [];
+      liturgyEvents = liturgyData.events || [];
+      refreshCombinedEvents();
 
       const future = currentEvents.find((ev) => new Date(ev.start) >= new Date());
       calendarCursor = future ? startOfMonth(new Date(future.start)) : startOfMonth(new Date());
-      populateFilterChoices(currentEvents);
-      apply();
 
-      const dates = (data.sources || [])
+      const allSources = [
+        ...(agendaData.sources || []),
+        ...(els.includeLiturgy?.checked ? (liturgyData.sources || []) : [])
+      ];
+      const dates = allSources
         .filter((s) => s.available && s.last_synced_at)
         .map((s) => new Date(s.last_synced_at))
         .filter((d) => !Number.isNaN(d.getTime()));
-      const ref = dates.length ? new Date(Math.min(...dates.map((d) => d.getTime()))) : new Date(data.generated_at);
+      const generated = new Date(agendaData.generated_at || liturgyData.generated_at);
+      const ref = dates.length ? new Date(Math.min(...dates.map((d) => d.getTime()))) : generated;
+
       if (!Number.isNaN(ref.getTime())) {
         els.updated.textContent = "Dados sincronizados até " + fmtUpdated.format(ref) + ". Alterações posteriores podem ainda não aparecer aqui.";
       }
@@ -724,7 +755,14 @@
   els.viewButtons.forEach((button) => button.addEventListener("click", () => setView(button.dataset.view || "list")));
   els.prevMonth.addEventListener("click", () => { calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() - 1, 1, 12); apply(); });
   els.nextMonth.addEventListener("click", () => { calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() + 1, 1, 12); apply(); });
-  els.tabs.forEach((tab) => tab.addEventListener("click", () => load(tab.dataset.scope || "main")));
+  if (els.includeLiturgy) {
+    els.includeLiturgy.addEventListener("change", () => {
+      refreshCombinedEvents();
+      const visible = els.includeLiturgy.checked ? "incluído" : "ocultado";
+      els.status.textContent = "Calendário litúrgico " + visible + ".";
+      setTimeout(() => apply(), 650);
+    });
+  }
   els.printButton.addEventListener("click", () => {
     const events = filteredEvents();
     if (!events.length) {
@@ -736,5 +774,5 @@
   });
   document.addEventListener("keydown", (event) => { if (event.key === "Escape" && !els.filterModal.hidden) closeFilters(); });
 
-  load("main");
+  load();
 })();
