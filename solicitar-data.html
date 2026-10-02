@@ -117,7 +117,7 @@
           }
 
           form.reset();
-          status.innerHTML = "<strong>Solicitação recebida.</strong> Ela será analisada pela Assessoria Episcopal. O envio não representa confirmação do agendamento.";
+          const protocol = result.request_id ? "VSC-" + String(result.request_id).slice(0, 8).toUpperCase() : ""; status.innerHTML = "<strong>Solicitação recebida.</strong> Ela será analisada pela Assessoria Episcopal. O envio não representa confirmação do agendamento." + (protocol ? "<br>Protocolo: <strong>" + protocol + "</strong>" : "");
         } catch (error) {
           status.textContent = error.message || "Não foi possível enviar a solicitação agora.";
         } finally {
