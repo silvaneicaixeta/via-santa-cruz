@@ -1324,3 +1324,11 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .agenda-access-bar{display:flex;justify-content:flex-end;align-items:center;gap:.8rem;margin-bottom:.7rem;color:#727c77;font-size:.82rem}
 .agenda-access-bar button{border:0;background:transparent;color:var(--green);font:inherit;font-weight:900;cursor:pointer}
 @media(max-width:680px){.agenda-auth-section{min-height:calc(100vh - 72px)}.agenda-auth-card{padding:1.25rem}}
+
+
+/* Agenda — solicitação de acesso */
+.agenda-auth-links{display:flex;gap:1rem;flex-wrap:wrap;justify-content:space-between;margin-top:.9rem}
+.agenda-auth-form select,.agenda-auth-form textarea{width:100%;border:1px solid rgba(18,60,46,.2);border-radius:11px;padding:.75rem .9rem;font:inherit;background:#fff;color:var(--text)}
+.agenda-auth-form select{min-height:48px}
+.agenda-auth-form textarea{resize:vertical}
+.agenda-request-honeypot{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}
