@@ -518,3 +518,50 @@ button, a { -webkit-tap-highlight-color: transparent; }
 @media (max-width: 860px) {
   .project-grid-pages { grid-template-columns: 1fr; }
 }
+
+
+/* Refinamento tipográfico global — títulos mais proporcionais */
+.hero h1 {
+  font-size: clamp(2.85rem, 5.4vw, 5.25rem);
+  max-width: 650px;
+}
+.page-hero h1 {
+  font-size: clamp(2.55rem, 4.8vw, 4.65rem);
+  max-width: 820px;
+}
+.section h2 {
+  font-size: clamp(2.15rem, 3.4vw, 3.35rem);
+}
+.project-grid-pages .project-card h2 {
+  font-size: clamp(2.15rem, 3.2vw, 3.25rem);
+}
+@media (max-width: 680px) {
+  .hero-content { padding: 48px 0 44px; }
+  .hero h1 {
+    font-size: clamp(2.25rem, 10.5vw, 3.15rem);
+    line-height: 1.02;
+  }
+  .hero-lead {
+    font-size: 1rem;
+    line-height: 1.42;
+    margin-top: 1rem;
+  }
+  .page-hero {
+    padding: 48px 0 42px;
+  }
+  .page-hero h1 {
+    font-size: clamp(2.05rem, 9vw, 2.85rem);
+    line-height: 1.04;
+  }
+  .page-hero p:last-child {
+    font-size: 1rem;
+    line-height: 1.42;
+    margin-top: .85rem;
+  }
+  .section h2 {
+    font-size: clamp(1.9rem, 8.2vw, 2.55rem);
+  }
+  .project-grid-pages .project-card h2 {
+    font-size: clamp(1.95rem, 8vw, 2.5rem);
+  }
+}
