@@ -796,7 +796,7 @@
         showPasswordSetup("Antes de continuar, defina uma senha pessoal para esta conta.");
         return;
       }
-      showAgenda(access.display_name || "Conta autorizada", access.role || "");
+      showAgenda(access.display_name || "Conta autorizada", access.can_manage_users ? "admin" : (access.role || ""));
 
       agendaEvents = agendaData.events || [];
       liturgyEvents = liturgyData.events || [];
