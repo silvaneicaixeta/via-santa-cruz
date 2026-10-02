@@ -585,3 +585,31 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .request-status{margin:0;color:#52605a}.request-status strong{color:var(--green)}
 .request-honeypot{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}
 @media(max-width:760px){.agenda-public-grid,.request-grid{grid-template-columns:1fr}.agenda-public-card,.request-form{padding:1.2rem}}
+
+
+/* Apresentação pública dos projetos */
+.project-presentation-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1.2rem;
+}
+.project-presentation-card{
+  padding:1.6rem;
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:#fff;
+  box-shadow:0 10px 28px rgba(18,60,46,.045);
+}
+.project-presentation-card h2{
+  margin:.35rem 0 .8rem;
+}
+.project-presentation-card-accent{
+  background:linear-gradient(145deg,#fffdf8,#f6efe0);
+}
+.project-entry-button{
+  margin-top:.45rem;
+}
+@media(max-width:760px){
+  .project-presentation-grid{grid-template-columns:1fr}
+  .project-presentation-card{padding:1.2rem}
+}
