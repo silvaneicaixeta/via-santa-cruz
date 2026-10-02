@@ -1,8 +1,25 @@
 (() => {
-  const API = "https://vgpivbxykeobgjzqlqcl.supabase.co/functions/v1/vsc-agenda";
+  const SUPABASE_URL = "https://vgpivbxykeobgjzqlqcl.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_CplQkGKykMUsHso_vRki-g_gIsZJDgh";
+  const API = SUPABASE_URL + "/functions/v1/vsc-agenda";
   const TZ = "America/Sao_Paulo";
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+  });
 
   const els = {
+    authView: document.getElementById("agenda-auth-view"),
+    protectedContent: document.getElementById("agenda-protected-content"),
+    loginForm: document.getElementById("agenda-login-form"),
+    loginEmail: document.getElementById("agenda-login-email"),
+    loginPassword: document.getElementById("agenda-login-password"),
+    forgotPassword: document.getElementById("agenda-forgot-password"),
+    authMessage: document.getElementById("agenda-auth-message"),
+    passwordForm: document.getElementById("agenda-password-form"),
+    newPassword: document.getElementById("agenda-new-password"),
+    newPasswordConfirm: document.getElementById("agenda-new-password-confirm"),
+    userLabel: document.getElementById("agenda-user-label"),
+    logout: document.getElementById("agenda-logout"),
     list: document.getElementById("agenda-list"),
     status: document.getElementById("agenda-status"),
     updated: document.getElementById("agenda-updated"),
@@ -36,6 +53,50 @@
     printSummary: document.getElementById("agenda-print-summary"),
     syncFooter: document.getElementById("agenda-sync-footer")
   };
+
+  async function getSession() {
+    const { data: { session } } = await supabase.auth.getSession();
+    return session || null;
+  }
+
+  function showLogin(message = "") {
+    els.authView.hidden = false;
+    els.protectedContent.hidden = true;
+    els.passwordForm.hidden = true;
+    els.loginForm.hidden = false;
+    els.forgotPassword.hidden = false;
+    els.authMessage.textContent = message;
+  }
+
+  function showPasswordSetup(message = "") {
+    els.authView.hidden = false;
+    els.protectedContent.hidden = true;
+    els.loginForm.hidden = true;
+    els.forgotPassword.hidden = true;
+    els.passwordForm.hidden = false;
+    els.authMessage.textContent = message;
+  }
+
+  function showAgenda(displayName) {
+    els.authView.hidden = true;
+    els.protectedContent.hidden = false;
+    if (els.userLabel) els.userLabel.textContent = displayName || "Conta autorizada";
+  }
+
+  async function authorizedFetch(url) {
+    const session = await getSession();
+    if (!session?.access_token) throw new Error("unauthorized");
+    const response = await fetch(url, {
+      cache: "no-store",
+      headers: {
+        Authorization: "Bearer " + session.access_token,
+        apikey: SUPABASE_KEY
+      }
+    });
+    if (response.status === 401) throw new Error("unauthorized");
+    if (response.status === 403) throw new Error("forbidden");
+    return response;
+  }
 
   const fmtDay = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", timeZone: TZ });
   const fmtMonthShort = new Intl.DateTimeFormat("pt-BR", { month: "short", timeZone: TZ });
@@ -699,8 +760,8 @@
 
     try {
       const [agendaResponse, liturgyResponse] = await Promise.all([
-        fetch(API + "?scope=main&days=730", { cache: "no-store" }),
-        fetch(API + "?scope=liturgico&days=730", { cache: "no-store" })
+        authorizedFetch(API + "?scope=main&days=730"),
+        authorizedFetch(API + "?scope=liturgico&days=730")
       ]);
       if (!agendaResponse.ok || !liturgyResponse.ok) throw new Error("http");
 
@@ -708,6 +769,13 @@
         agendaResponse.json(),
         liturgyResponse.json()
       ]);
+
+      const access = agendaData.access || {};
+      if (access.must_change_password) {
+        showPasswordSetup("Antes de continuar, defina uma senha pessoal para esta conta.");
+        return;
+      }
+      showAgenda(access.display_name || "Conta autorizada");
 
       agendaEvents = agendaData.events || [];
       liturgyEvents = liturgyData.events || [];
@@ -732,7 +800,17 @@
         els.updated.textContent = "Dados sincronizados até " + fmtUpdated.format(ref) + ". Alterações posteriores podem ainda não aparecer aqui.";
         if (els.syncFooter) els.syncFooter.textContent = "Sincronização: " + fmtUpdated.format(ref) + " · programação sujeita a alterações.";
       }
-    } catch {
+    } catch (error) {
+      if (error?.message === "unauthorized") {
+        await supabase.auth.signOut();
+        showLogin("Sua sessão expirou. Entre novamente.");
+        return;
+      }
+      if (error?.message === "forbidden") {
+        await supabase.auth.signOut();
+        showLogin("Esta conta não possui acesso ativo à Agenda Diocesana.");
+        return;
+      }
       els.status.textContent = "Não foi possível carregar a agenda agora. Tente novamente em alguns instantes.";
     }
   }
@@ -780,5 +858,72 @@
   });
   document.addEventListener("keydown", (event) => { if (event.key === "Escape" && !els.filterModal.hidden) closeFilters(); });
 
-  load();
+  els.loginForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    els.authMessage.textContent = "Entrando…";
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: els.loginEmail.value.trim(),
+      password: els.loginPassword.value
+    });
+    if (error || !data.session) {
+      els.authMessage.textContent = "E-mail ou senha inválidos.";
+      return;
+    }
+    els.authMessage.textContent = "";
+    await load();
+  });
+
+  els.forgotPassword.addEventListener("click", async () => {
+    const email = els.loginEmail.value.trim();
+    if (!email) {
+      els.authMessage.textContent = "Informe seu e-mail para receber a recuperação de senha.";
+      els.loginEmail.focus();
+      return;
+    }
+    els.authMessage.textContent = "Enviando instruções…";
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: "https://viasantacruz.com.br/agenda.html"
+    });
+    els.authMessage.textContent = error
+      ? "Não foi possível enviar a recuperação agora."
+      : "Se este e-mail estiver autorizado, enviaremos as instruções de recuperação.";
+  });
+
+  els.passwordForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const password = els.newPassword.value;
+    if (password.length < 10) {
+      els.authMessage.textContent = "Use uma senha com pelo menos 10 caracteres.";
+      return;
+    }
+    if (password !== els.newPasswordConfirm.value) {
+      els.authMessage.textContent = "As duas senhas não coincidem.";
+      return;
+    }
+    els.authMessage.textContent = "Salvando nova senha…";
+    const { error } = await supabase.auth.updateUser({ password });
+    if (error) {
+      els.authMessage.textContent = "Não foi possível alterar a senha agora.";
+      return;
+    }
+    els.passwordForm.hidden = true;
+    els.authMessage.textContent = "Senha definida. Carregando a Agenda…";
+    await load();
+  });
+
+  els.logout.addEventListener("click", async () => {
+    await supabase.auth.signOut();
+    els.loginForm.reset();
+    showLogin("");
+  });
+
+  supabase.auth.onAuthStateChange(async (event, session) => {
+    if (event === "PASSWORD_RECOVERY" && session) {
+      showPasswordSetup("Defina uma nova senha para continuar.");
+    }
+  });
+
+  const session = await getSession();
+  if (session) await load();
+  else showLogin("");
 })();
