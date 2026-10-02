@@ -32,6 +32,7 @@
     userLabel: document.getElementById("agenda-user-label"),
     appUser: document.getElementById("agenda-app-user"),
     logout: document.getElementById("agenda-logout"),
+    adminOpen: document.getElementById("agenda-admin-open"),
     list: document.getElementById("agenda-list"),
     status: document.getElementById("agenda-status"),
     updated: document.getElementById("agenda-updated"),
@@ -95,11 +96,12 @@
     els.authMessage.textContent = message;
   }
 
-  function showAgenda(displayName) {
+  function showAgenda(displayName, role) {
     els.authView.hidden = true;
     els.protectedContent.hidden = false;
     if (els.appUser) els.appUser.hidden = false;
     if (els.userLabel) els.userLabel.textContent = displayName || "Conta autorizada";
+    if (els.adminOpen) els.adminOpen.hidden = role !== "admin";
   }
 
   async function authorizedFetch(url) {
@@ -794,7 +796,7 @@
         showPasswordSetup("Antes de continuar, defina uma senha pessoal para esta conta.");
         return;
       }
-      showAgenda(access.display_name || "Conta autorizada");
+      showAgenda(access.display_name || "Conta autorizada", access.role || "");
 
       agendaEvents = agendaData.events || [];
       liturgyEvents = liturgyData.events || [];
