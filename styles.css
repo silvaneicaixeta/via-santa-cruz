@@ -1296,3 +1296,15 @@ button, a { -webkit-tap-highlight-color: transparent; }
 @media(max-width:680px){
   .agenda-source-bar{align-items:flex-start;flex-direction:column}
 }
+
+
+/* Agenda — rodapé de sincronização */
+.agenda-sync-footer{
+  margin:1.2rem 0 0;
+  padding-top:.8rem;
+  border-top:1px solid rgba(159,119,47,.14);
+  color:#7a847f;
+  font-size:.78rem;
+  text-align:center;
+}
+@media print{.agenda-sync-footer{display:none!important}}
