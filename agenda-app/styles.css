@@ -1432,3 +1432,26 @@ body{background:#f8f4ea}
 .agenda-vsc-signature:hover{
   color:var(--gold-dark)!important;
 }
+
+
+/* Administração própria da Agenda */
+.agenda-admin-head{display:flex;justify-content:space-between;gap:1.5rem;align-items:flex-end;margin-bottom:1.5rem}
+.agenda-admin-head h1{margin:.2rem 0 .45rem;font-family:"Playfair Display",Georgia,serif;color:var(--green);font-size:clamp(2.2rem,4vw,3.4rem)}
+.agenda-admin-head p:last-child{margin:0;color:#65706a}
+.agenda-admin-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.2rem}
+.agenda-admin-card,.agenda-admin-panel{background:#fffdf8;border:1px solid rgba(18,60,46,.12);border-radius:18px;box-shadow:0 8px 24px rgba(18,60,46,.045)}
+.agenda-admin-card{padding:1.15rem}
+.agenda-admin-card strong{display:block;font-family:"Playfair Display",Georgia,serif;color:var(--green);font-size:2.1rem;line-height:1}
+.agenda-admin-card span{display:block;margin-top:.45rem;color:#6c7671;font-size:.84rem}
+.agenda-admin-panel{padding:1.35rem;margin-top:1rem}
+.agenda-admin-panel h2{margin:.2rem 0 1rem;font-size:1.55rem}
+.agenda-admin-table-wrap{overflow-x:auto}
+.agenda-admin-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.agenda-admin-table th,.agenda-admin-table td{text-align:left;padding:.72rem .55rem;border-bottom:1px solid rgba(159,119,47,.14);vertical-align:top}
+.agenda-admin-table th{color:var(--gold-dark);font-size:.7rem;text-transform:uppercase;letter-spacing:.07em}
+.agenda-admin-table select{min-height:36px;border:1px solid rgba(18,60,46,.16);border-radius:8px;background:#fff;padding:.4rem .5rem;font:inherit}
+.agenda-admin-small-button{border:1px solid rgba(18,60,46,.16);border-radius:8px;background:#fff;color:var(--green);font:inherit;font-size:.78rem;font-weight:900;padding:.4rem .55rem;cursor:pointer}
+.agenda-admin-small-button.danger{color:#7d362d}
+.agenda-admin-note{color:#68736d;font-size:.86rem}
+@media(max-width:820px){.agenda-admin-metrics{grid-template-columns:1fr 1fr}.agenda-admin-head{align-items:flex-start;flex-direction:column}}
+@media(max-width:520px){.agenda-admin-metrics{grid-template-columns:1fr}.agenda-admin-panel{padding:1rem}}
