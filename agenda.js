@@ -493,9 +493,9 @@
     const startWeek = pdfWeekday(start);
     const endWeek = pdfWeekday(effectiveEnd);
 
-    if (dateKey(start) === dateKey(effectiveEnd)) return startWeek + " " + startDay;
-    if (monthKey(start) === monthKey(effectiveEnd)) return startWeek + "–" + endWeek + " " + startDay + "–" + endDay;
-    return startWeek + " " + startDay + " " + startMonth + "–" + endWeek + " " + endDay + " " + endMonth;
+    if (dateKey(start) === dateKey(effectiveEnd)) return startDay + " " + startWeek;
+    if (monthKey(start) === monthKey(effectiveEnd)) return startDay + " " + startWeek + "–" + endDay + " " + endWeek;
+    return startDay + " " + startWeek + " " + startMonth + "–" + endDay + " " + endWeek + " " + endMonth;
   }
 
   function generatedStamp() {
@@ -573,30 +573,36 @@
         else time = pdfSafeText(fmtTime.format(d));
       }
 
-      const title = pdfSafeText(ev.title) + (ev.cancelled ? " - CANCELADO" : "");
+      const cleanTitle = pdfSafeText(ev.title);
+      const titleText = ev.cancelled ? "CANCELADO — " + cleanTitle : cleanTitle;
       const dateWidth = 36;
       const timeWidth = 22;
       const titleX = marginX + dateWidth + timeWidth;
-      const titleLines = doc.splitTextToSize(title, pageWidth - marginX - titleX);
-      const rowHeight = Math.max(7.5, titleLines.length * 4.2 + 1.5);
-      ensure(rowHeight + 3);
+      const titleLines = doc.splitTextToSize(titleText, pageWidth - marginX - titleX);
+      const rowHeight = Math.max(8.5, titleLines.length * 4.2 + 2.5);
+      ensure(rowHeight + 5);
+
+      y += 2.2;
 
       doc.setFont("helvetica", "bold");
       doc.setFontSize(9);
+      doc.setTextColor(0);
       doc.text(date, marginX, y);
 
       doc.setFont("helvetica", "normal");
       doc.setFontSize(8.5);
       if (time) doc.text(time, marginX + dateWidth, y);
 
-      doc.setFont("helvetica", "normal");
+      doc.setFont("helvetica", ev.cancelled ? "bold" : "normal");
       doc.setFontSize(9);
+      if (ev.cancelled) doc.setTextColor(145, 55, 45);
       doc.text(titleLines, titleX, y);
+      doc.setTextColor(0);
 
       y += rowHeight;
       doc.setDrawColor(225);
       doc.line(marginX, y, pageWidth - marginX, y);
-      y += 3;
+      y += 2.5;
     });
 
     const stamp = generatedStamp();
