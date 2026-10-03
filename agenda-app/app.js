@@ -57,7 +57,6 @@
     year: document.getElementById("filter-year"),
     start: document.getElementById("filter-start"),
     end: document.getElementById("filter-end"),
-    confirmed: document.getElementById("filter-confirmed"),
     cancelled: document.getElementById("filter-cancelled"),
     applyFilters: document.getElementById("agenda-apply-filters"),
     clearFilters: document.getElementById("agenda-clear-filters"),
@@ -145,7 +144,6 @@
     scopes: new Set(),
     parishes: new Set(),
     cities: new Set(),
-    confirmed: true,
     cancelled: true
   };
 
@@ -285,7 +283,16 @@
     } else {
       parish = displayParishName(parish);
       city = displayCity(city);
-      if (!city && ev.location && !/[0-9]/.test(ev.location)) city = displayCity(ev.location);
+      if (!city && ev.location && !/[0-9]/.test(ev.location)) {
+        const loc = displayCity(ev.location);
+        const knownCityAliases = new Set([
+          "Janaúba","Nova Porteirinha","Porteirinha","Riacho dos Machados","Pai Pedro","Serranópolis",
+          "Rio Pardo de Minas","São João do Paraíso","Indaiabira","Vargem Grande","Montezuma","Ninheira",
+          "Santo Antônio do Retiro","Espinosa","Mamonas","Monte Azul","Mato Verde","Gameleiras","Catuti",
+          "Varzelândia","Ibiracatu","Jaíba","Matias Cardoso","Verdelândia"
+        ].map(cityKey));
+        if (knownCityAliases.has(cityKey(loc))) city = loc;
+      }
     }
 
     const sourceScope = {
@@ -353,7 +360,19 @@
     optionList(els.filterTypes, unique(meta.map(({p}) => ({ key: normalize(p.type), label: p.type }))), filters.types, "types");
     optionList(els.filterScopes, unique(meta.map(({p}) => ({ key: normalize(p.scope), label: p.scope }))), filters.scopes, "scopes");
     optionList(els.filterParishes, unique(meta.map(({p}) => ({ key: p.parishKey, label: p.parishLabel }))), filters.parishes, "parishes");
-    optionList(els.filterCities, unique(meta.map(({p}) => ({ key: p.cityKey, label: p.city }))), filters.cities, "cities");
+    optionList(
+      els.filterCities,
+      unique(meta
+        .filter(({p}) => p.city && p.cityKey && (p.parishId || [
+          "janauba","nova porteirinha","porteirinha","riacho dos machados","pai pedro","serranopolis",
+          "rio pardo de minas","sao joao do paraiso","indaiabira","vargem grande","montezuma","ninheira",
+          "santo antonio do retiro","espinosa","mamonas","monte azul","mato verde","gameleiras","catuti",
+          "varzelandia","ibiracatu","jaiba","matias cardoso","verdelandia"
+        ].includes(p.cityKey)))
+        .map(({p}) => ({ key: p.cityKey, label: p.city }))),
+      filters.cities,
+      "cities"
+    );
 
     const years = Array.from(new Set(events.map((ev) => new Date(ev.start).getFullYear()))).sort();
     els.year.innerHTML = "";
@@ -413,7 +432,6 @@
       if (filters.parishes.size && !filters.parishes.has(p.parishKey)) return false;
       if (filters.cities.size && !filters.cities.has(p.cityKey)) return false;
       if (ev.cancelled && !filters.cancelled) return false;
-      if (!ev.cancelled && !filters.confirmed) return false;
       if (!term) return true;
       return normalize([ev.title, ev.location, ev.description, p.type, p.scope, p.parishLabel, p.city].filter(Boolean).join(" ")).includes(term);
     });
@@ -529,7 +547,6 @@
   function filterSummaryLabels() {
     const labels = coreFilterSummaryLabels();
     if (els.includeLiturgy && !els.includeLiturgy.checked) labels.push("sem calendário litúrgico");
-    if (!filters.confirmed) labels.push("sem compromissos confirmados");
     if (!filters.cancelled) labels.push("sem compromissos cancelados");
     return labels;
   }
@@ -685,23 +702,28 @@
 
       const cleanTitle = pdfSafeText(ev.title);
       const titleText = ev.cancelled ? "CANCELADO — " + cleanTitle : cleanTitle;
-      const dateWidth = 26;
-      const timeWidth = 18;
+      const dateWidth = 25;
+      const timeWidth = 17;
       const titleX = marginX + dateWidth + timeWidth;
       const titleLines = doc.splitTextToSize(titleText, pageWidth - marginX - titleX);
-      const rowHeight = Math.max(5.1, titleLines.length * 4.0 + 0.3);
-      ensure(rowHeight + 3.3);
+      const lineHeight = 3.55;
+      const textHeight = Math.max(lineHeight, titleLines.length * lineHeight);
+      const rowPaddingTop = 1.5;
+      const rowPaddingBottom = 1.5;
+      const rowHeight = textHeight + rowPaddingTop + rowPaddingBottom;
+      ensure(rowHeight + 1.1);
 
-      y += 1.4;
+      y += rowPaddingTop;
 
       doc.setFont("helvetica", "bold");
       doc.setFontSize(9);
       doc.setTextColor(0);
-      doc.text(date, marginX, y);
+      const baselineY = y + (titleLines.length > 1 ? 0.4 : 0);
+      doc.text(date, marginX, baselineY);
 
       doc.setFont("helvetica", "normal");
       doc.setFontSize(8.5);
-      if (time) doc.text(time, marginX + dateWidth, y);
+      if (time) doc.text(time, marginX + dateWidth, baselineY);
 
       doc.setFont("helvetica", ev.cancelled ? "bold" : "normal");
       doc.setFontSize(9);
@@ -709,10 +731,10 @@
       doc.text(titleLines, titleX, y);
       doc.setTextColor(0);
 
-      y += rowHeight;
+      y += textHeight + rowPaddingBottom;
       doc.setDrawColor(225);
       doc.line(marginX, y, pageWidth - marginX, y);
-      y += 1.2;
+      y += 0.8;
     });
 
     const stamp = generatedStamp();
@@ -762,7 +784,6 @@
     els.year.value = filters.year;
     els.start.value = filters.start;
     els.end.value = filters.end;
-    els.confirmed.checked = filters.confirmed;
     els.cancelled.checked = filters.cancelled;
     els.filterModal.hidden = false;
     document.body.classList.add("filter-open");
@@ -775,7 +796,7 @@
 
   function clearFilters() {
     filters.period = "upcoming"; filters.types.clear(); filters.scopes.clear(); filters.parishes.clear(); filters.cities.clear();
-    filters.confirmed = true; filters.cancelled = true; filters.start = ""; filters.end = "";
+    filters.cancelled = true; filters.start = ""; filters.end = "";
     closeFilters(); apply();
   }
 
@@ -880,12 +901,6 @@
       const visible = els.includeLiturgy.checked ? "incluído" : "ocultado";
       els.status.textContent = "Calendário litúrgico " + visible + ".";
       setTimeout(() => apply(), 350);
-    });
-  }
-  if (els.confirmed) {
-    els.confirmed.addEventListener("change", () => {
-      filters.confirmed = els.confirmed.checked;
-      apply();
     });
   }
   if (els.cancelled) {
