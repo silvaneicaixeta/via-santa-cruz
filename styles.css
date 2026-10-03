@@ -1239,3 +1239,455 @@ button, a { -webkit-tap-highlight-color: transparent; }
     opacity: .02;
   }
 }
+
+
+/* =========================================================
+   PREVIEW VISUAL V2 — DIREÇÃO DE ARTE MAIS MARCANTE
+   Mantém a estrutura existente; altera somente a apresentação.
+   ========================================================= */
+
+/* HERO — contraste editorial evidente */
+.hero {
+  min-height: 680px;
+  background: #0d2e23;
+  border-bottom: 0;
+}
+.hero-media {
+  left: 43%;
+  width: 57%;
+  background-size: cover;
+  background-position: 62% center;
+  filter: saturate(.92) contrast(1.06);
+  transform: none;
+}
+.hero-shade {
+  background:
+    linear-gradient(90deg,
+      #0d2e23 0%,
+      #0d2e23 38%,
+      rgba(13,46,35,.97) 44%,
+      rgba(13,46,35,.72) 54%,
+      rgba(13,46,35,.16) 76%,
+      rgba(13,46,35,.04) 100%),
+    linear-gradient(180deg, rgba(0,0,0,.04), rgba(0,0,0,.16));
+}
+.hero::before {
+  background:
+    radial-gradient(circle at 75% 28%, rgba(255,228,164,.28), transparent 18%),
+    linear-gradient(180deg, transparent 76%, rgba(0,0,0,.16));
+}
+.hero-content {
+  padding-block: 112px;
+}
+.hero-content::before {
+  width: 84px;
+  height: 2px;
+  background: linear-gradient(90deg, #c8a15a, transparent);
+}
+.hero .eyebrow {
+  color: #e3c27f;
+}
+.hero .eyebrow span {
+  color: rgba(255,255,255,.58);
+}
+.hero h1 {
+  max-width: 620px;
+  color: #fbf6eb;
+  text-shadow: 0 2px 18px rgba(0,0,0,.18);
+}
+.hero h1 em {
+  color: #d5aa57;
+}
+.hero-lead {
+  max-width: 560px;
+  color: rgba(255,255,255,.82);
+}
+.hero::after {
+  opacity: .78;
+  background: linear-gradient(90deg, #c8a15a 0%, rgba(200,161,90,.56) 34%, transparent 72%);
+}
+
+/* HOME — seção introdutória como abertura editorial */
+.intro {
+  padding-top: 108px;
+  padding-bottom: 108px;
+  background:
+    linear-gradient(180deg, #fbf7ef 0%, #f0e5d4 100%);
+}
+.intro-grid > div:first-child {
+  position: relative;
+  padding-right: 1rem;
+}
+.intro-grid > div:first-child::before {
+  content: "VSC";
+  display: block;
+  margin-bottom: .75rem;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: .76rem;
+  letter-spacing: .42em;
+  color: rgba(159,119,47,.72);
+}
+.intro .section h2,
+.intro h2 {
+  max-width: 470px;
+}
+.intro .section-lead {
+  max-width: 500px;
+  font-size: 1.16rem;
+}
+.pillars {
+  gap: 1.25rem;
+}
+.pillar-card {
+  min-height: 315px;
+  padding: 2.35rem 1.55rem 2.1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: rgba(255,253,248,.82);
+  border-radius: 8px;
+  box-shadow: 0 18px 55px rgba(18,60,46,.07);
+  text-align: left;
+}
+.pillar-card::before {
+  left: 0;
+  right: auto;
+  top: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #b8892d 0 34%, rgba(184,137,45,.10) 34%);
+}
+.pillar-card::after {
+  content: "01";
+  right: 18px;
+  top: 6px;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: none;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 3.8rem;
+  line-height: 1;
+  color: rgba(18,60,46,.045);
+}
+.pillar-card:nth-child(2)::after { content: "02"; }
+.pillar-card:nth-child(3)::after { content: "03"; }
+.pillar-icon {
+  margin: 0 0 1.25rem;
+  border-radius: 4px;
+  width: 48px;
+  height: 48px;
+  background: rgba(200,161,90,.08);
+  border-color: rgba(184,137,45,.34);
+}
+.pillar-card h3 {
+  font-size: 1.9rem;
+  margin-bottom: .8rem;
+}
+.pillar-card p {
+  max-width: 240px;
+}
+
+/* HOME — Projetos como faixa de contraste */
+.home-projects {
+  background:
+    radial-gradient(circle at 82% 18%, rgba(200,161,90,.12), transparent 18%),
+    linear-gradient(120deg, #0b2d21 0%, #123c2e 62%, #173f31 100%);
+  border-top: 1px solid rgba(200,161,90,.38);
+  border-bottom: 1px solid rgba(200,161,90,.38);
+}
+.home-projects::before {
+  width: min(32vw, 390px);
+  opacity: .075;
+  filter: brightness(2.6) sepia(.6);
+}
+.home-projects .section-kicker {
+  color: #d7b56b;
+}
+.home-projects .section-kicker::after {
+  background: rgba(215,181,107,.72);
+}
+.home-projects h2 {
+  color: #fff8eb;
+}
+.home-projects-inner p:not(.section-kicker) {
+  color: rgba(255,255,255,.76);
+}
+.home-projects .button-primary {
+  background: #c49a4b;
+  color: #0d2e23;
+  box-shadow: 0 14px 36px rgba(0,0,0,.18);
+}
+.home-projects .button-primary:hover {
+  background: #d3ad64;
+}
+
+/* PÁGINAS INTERNAS — hero de identidade mais forte */
+.page-hero {
+  padding-top: 126px;
+  padding-bottom: 106px;
+  background:
+    radial-gradient(circle at 78% 24%, rgba(200,161,90,.20), transparent 16%),
+    linear-gradient(112deg, #0d2e23 0%, #123c2e 56%, #173f31 100%);
+  border-bottom: 1px solid rgba(200,161,90,.42);
+}
+.page-hero::before {
+  right: 4%;
+  top: 50%;
+  width: 360px;
+  height: 210px;
+  transform: translateY(-50%);
+  opacity: .10;
+  filter: brightness(2.7) sepia(.6);
+}
+.page-hero::after {
+  background: linear-gradient(90deg, #c8a15a 0%, rgba(200,161,90,.34) 38%, transparent 76%);
+  opacity: .75;
+}
+.page-hero .section-kicker {
+  color: #d9b86e;
+}
+.page-hero .section-kicker::after {
+  background: rgba(217,184,110,.65);
+}
+.page-hero h1 {
+  max-width: 850px;
+  color: #fff8eb;
+}
+.page-hero p:last-child {
+  color: rgba(255,255,255,.76);
+  max-width: 700px;
+}
+
+/* PROJETOS — cartões com atmosfera muito mais presente */
+.projects {
+  background:
+    radial-gradient(circle at 7% 0%, rgba(200,161,90,.10), transparent 24%),
+    linear-gradient(180deg, #f7efe2 0%, #efe2cf 100%);
+}
+.project-grid-pages {
+  gap: 1.8rem;
+}
+.project-grid-pages .project-card {
+  min-height: 465px;
+  border-radius: 12px;
+  border: 1px solid rgba(184,137,45,.32);
+  box-shadow: 0 28px 70px rgba(18,60,46,.12);
+  background: #fffaf0;
+}
+.project-grid-pages .project-card::before {
+  inset: 0;
+  background-size: cover;
+  background-position: 58% center;
+  opacity: .58;
+}
+.project-grid-pages #diretorio::before {
+  background-position: 62% center;
+  opacity: .62;
+}
+.project-grid-pages #diante-de-deus::before {
+  background-position: 62% center;
+  opacity: .62;
+}
+.project-grid-pages #agenda::before {
+  background-position: 68% center;
+  opacity: .55;
+}
+.project-grid-pages .project-card::after {
+  background:
+    linear-gradient(90deg,
+      #fffaf1 0%,
+      rgba(255,250,241,.995) 42%,
+      rgba(255,250,241,.92) 55%,
+      rgba(255,250,241,.28) 76%,
+      rgba(13,46,35,.10) 100%);
+}
+.project-grid-pages .project-card .project-copy {
+  max-width: 66%;
+  padding: 3rem 2.65rem;
+}
+.project-grid-pages .project-card .project-copy::before {
+  width: 64px;
+  height: 2px;
+  margin-bottom: 1.35rem;
+}
+.project-grid-pages .project-label {
+  color: #8f6421;
+}
+.project-grid-pages .project-card h2 {
+  font-size: clamp(2.5rem, 3.6vw, 3.7rem);
+}
+.project-grid-pages .project-card p {
+  color: #33463e;
+}
+.project-grid-pages .project-detail {
+  color: #526159 !important;
+}
+.project-grid-pages .button-primary {
+  background: #123c2e;
+  border-radius: 6px;
+  padding-inline: 1.35rem;
+}
+
+/* SOBRE — mais editorial sem mudar colunas */
+.about-body {
+  padding-top: 110px;
+  padding-bottom: 110px;
+  background:
+    linear-gradient(180deg, #fffdf8 0%, #f6efe4 100%);
+}
+.about-grid > div:first-child {
+  position: sticky;
+  top: 120px;
+}
+.about-grid > div:first-child::after {
+  content: "";
+  display: block;
+  width: 74px;
+  height: 2px;
+  margin-top: 1.45rem;
+  background: #c8a15a;
+}
+.about-copy {
+  padding-left: 2.4rem;
+  border-left: 1px solid rgba(184,137,45,.32);
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.22rem;
+  line-height: 1.88;
+  color: #40514a;
+}
+.about-copy::before {
+  display: none;
+}
+.about-copy p:first-child::first-letter {
+  font-size: 4.5rem;
+  line-height: .73;
+  margin-right: .5rem;
+}
+.about-pillars {
+  background:
+    radial-gradient(circle at 84% 14%, rgba(200,161,90,.11), transparent 18%),
+    linear-gradient(180deg, #efe5d5 0%, #f7f1e7 100%);
+}
+.idealizer-teaser {
+  background:
+    linear-gradient(110deg, #0d2e23 0%, #123c2e 100%);
+  border-top-color: rgba(200,161,90,.38);
+}
+.idealizer-teaser .section-kicker {
+  color: #d8b66c;
+}
+.idealizer-teaser h2 {
+  color: #fff8eb;
+}
+.idealizer-teaser p:not(.section-kicker) {
+  color: rgba(255,255,255,.74);
+}
+.idealizer-teaser .text-link {
+  color: #e4c57f;
+  border-color: rgba(228,197,127,.42);
+}
+.idealizer-teaser::after {
+  opacity: .08;
+  filter: brightness(2.8) sepia(.7);
+}
+
+/* DETALHES DE RITMO */
+.section {
+  position: relative;
+}
+.section + .section {
+  border-top: 1px solid rgba(159,119,47,.09);
+}
+.button {
+  border-radius: 6px;
+}
+.text-link {
+  letter-spacing: .015em;
+}
+
+/* RESPONSIVIDADE DA DIREÇÃO V2 */
+@media (max-width: 960px) {
+  .hero-media {
+    left: 34%;
+    width: 66%;
+  }
+  .hero-shade {
+    background:
+      linear-gradient(90deg,
+        #0d2e23 0%,
+        #0d2e23 46%,
+        rgba(13,46,35,.90) 59%,
+        rgba(13,46,35,.28) 82%,
+        rgba(13,46,35,.05) 100%);
+  }
+  .project-grid-pages .project-card .project-copy {
+    max-width: 74%;
+  }
+  .about-grid > div:first-child {
+    position: static;
+  }
+}
+
+@media (max-width: 680px) {
+  .hero {
+    min-height: 610px;
+  }
+  .hero-media {
+    left: 0;
+    width: 100%;
+    opacity: .54;
+    background-position: 70% center;
+  }
+  .hero-shade {
+    background:
+      linear-gradient(180deg,
+        rgba(13,46,35,.96) 0%,
+        rgba(13,46,35,.92) 56%,
+        rgba(13,46,35,.74) 100%);
+  }
+  .hero-content {
+    padding: 72px 0 66px;
+  }
+  .intro {
+    padding-top: 76px;
+    padding-bottom: 76px;
+  }
+  .pillar-card {
+    min-height: 0;
+    text-align: left;
+  }
+  .page-hero {
+    padding: 72px 0 64px;
+  }
+  .page-hero::before {
+    width: 230px;
+    opacity: .07;
+  }
+  .project-grid-pages .project-card {
+    min-height: 420px;
+  }
+  .project-grid-pages .project-card::before {
+    opacity: .42;
+    background-position: 70% center;
+  }
+  .project-grid-pages .project-card::after {
+    background:
+      linear-gradient(180deg,
+        rgba(255,250,241,.94) 0%,
+        rgba(255,250,241,.93) 54%,
+        rgba(255,250,241,.72) 100%);
+  }
+  .project-grid-pages .project-card .project-copy {
+    max-width: 100%;
+    padding: 2.25rem 1.6rem 2.35rem;
+  }
+  .about-body {
+    padding-top: 76px;
+    padding-bottom: 76px;
+  }
+  .about-copy {
+    padding-left: 1.25rem;
+    font-size: 1.08rem;
+  }
+}
