@@ -181,7 +181,7 @@
 
   function displayParishName(value) {
     return String(value || "")
-      .replace(/^Paróquia\s+/i, "")
+      .replace(/^(?:Paróquia|Quase-Paróquia)\s+/i, "")
       .replace(/\bN\.?\s*Sra\.?\b/gi, "Nossa Senhora")
       .replace(/\bSto\.?\b/gi, "Santo")
       .replace(/\bSta\.?\b/gi, "Santa")
@@ -279,10 +279,14 @@
       else if (embeddedComma) { parish = embeddedComma[1].trim(); city = embeddedComma[2].trim(); }
     }
 
-    parish = displayParishName(parish);
-    city = displayCity(city);
-
-    if (!city && ev.location && !/[0-9]/.test(ev.location)) city = displayCity(ev.location);
+    if (ev.parish_name) {
+      parish = displayParishName(ev.parish_name);
+      city = displayCity(ev.parish_city || "");
+    } else {
+      parish = displayParishName(parish);
+      city = displayCity(city);
+      if (!city && ev.location && !/[0-9]/.test(ev.location)) city = displayCity(ev.location);
+    }
 
     const sourceScope = {
       "leste-ii": "Leste II",
@@ -297,9 +301,14 @@
     type = canonicalType(title, ev.source);
 
     const parishLabel = parish ? parish + (city ? " — " + city : "") : "";
-    const parishKey = parish ? normalizeParishName(parish) + "|" + cityKey(city) : "";
+    const parishKey = ev.parish_id
+      ? "id:" + ev.parish_id
+      : (parish ? normalizeParishName(parish) + "|" + cityKey(city) : "");
 
-    return { type, community, parish, city, cityKey: cityKey(city), parishLabel, parishKey, scope };
+    return {
+      type, community, parish, city, cityKey: cityKey(city), parishLabel, parishKey, scope,
+      parishId: ev.parish_id || "", forania: ev.forania || "", entityType: ev.entity_type || ""
+    };
   }
 
   function formatRange(ev) {
@@ -502,7 +511,7 @@
     els.status.textContent = monthMatches.length === 1 ? "1 acontecimento neste mês." : monthMatches.length + " acontecimentos neste mês.";
   }
 
-  function filterSummaryLabels() {
+  function coreFilterSummaryLabels() {
     const labels = [];
     if (filters.period === "next30") labels.push("Próximos 30 dias");
     if (filters.period === "upcoming") labels.push("Próximos 90 dias");
@@ -514,19 +523,25 @@
     if (filters.scopes.size) labels.push(...Array.from(filters.scopes));
     if (filters.parishes.size) labels.push(filters.parishes.size + " paróquia(s)");
     if (filters.cities.size) labels.push(filters.cities.size + " cidade(s)");
-    if (!filters.cancelled) labels.push("somente confirmados");
-    if (!filters.confirmed) labels.push("somente cancelados");
-    if (els.includeLiturgy && els.includeLiturgy.checked) labels.push("com calendário litúrgico");
+    return labels;
+  }
+
+  function filterSummaryLabels() {
+    const labels = coreFilterSummaryLabels();
+    if (els.includeLiturgy && !els.includeLiturgy.checked) labels.push("sem calendário litúrgico");
+    if (!filters.confirmed) labels.push("sem compromissos confirmados");
+    if (!filters.cancelled) labels.push("sem compromissos cancelados");
     return labels;
   }
 
   function renderActiveFilters() {
     els.activeFilters.innerHTML = "";
-    const labels = filterSummaryLabels();
+    const labels = coreFilterSummaryLabels();
     const count = Math.max(0, labels.length - (filters.period === "upcoming" ? 1 : 0));
     els.filterCount.hidden = !count;
     els.filterCount.textContent = String(count);
-    labels.forEach((label) => {
+    filterSummaryLabels().forEach((label) => {
+      if (label === "Próximos 90 dias" && filters.period === "upcoming") return;
       const span = document.createElement("span");
       span.textContent = label;
       els.activeFilters.appendChild(span);
@@ -552,8 +567,9 @@
       const row = document.createElement("div");
       row.className = "agenda-print-row";
       const time = ev.all_day ? "" : fmtTime.format(d);
-      row.innerHTML = '<strong>' + esc(pdfDayLabel(ev)) + '</strong><span>' + esc(time) + '</span><div>' +
-        esc(ev.title) + (ev.cancelled ? " — CANCELADO" : "") + "</div>";
+      row.innerHTML = '<strong>' + esc(pdfDayLabel(ev)) + '</strong><span>' + esc(time) + '</span><div class="' +
+        (ev.cancelled ? "is-cancelled" : "") + '">' +
+        esc(ev.cancelled ? "CANCELADO — " + ev.title : ev.title) + "</div>";
       els.printList.appendChild(row);
     });
 
@@ -669,8 +685,8 @@
 
       const cleanTitle = pdfSafeText(ev.title);
       const titleText = ev.cancelled ? "CANCELADO — " + cleanTitle : cleanTitle;
-      const dateWidth = 36;
-      const timeWidth = 22;
+      const dateWidth = 26;
+      const timeWidth = 18;
       const titleX = marginX + dateWidth + timeWidth;
       const titleLines = doc.splitTextToSize(titleText, pageWidth - marginX - titleX);
       const rowHeight = Math.max(5.1, titleLines.length * 4.0 + 0.3);
@@ -849,8 +865,6 @@
     filters.scopes = selectedCheckboxes("scopes");
     filters.parishes = selectedCheckboxes("parishes");
     filters.cities = selectedCheckboxes("cities");
-    filters.confirmed = els.confirmed.checked;
-    filters.cancelled = els.cancelled.checked;
     closeFilters(); apply();
   });
   els.parishSearch.addEventListener("input", () => {
@@ -865,7 +879,19 @@
       refreshCombinedEvents();
       const visible = els.includeLiturgy.checked ? "incluído" : "ocultado";
       els.status.textContent = "Calendário litúrgico " + visible + ".";
-      setTimeout(() => apply(), 650);
+      setTimeout(() => apply(), 350);
+    });
+  }
+  if (els.confirmed) {
+    els.confirmed.addEventListener("change", () => {
+      filters.confirmed = els.confirmed.checked;
+      apply();
+    });
+  }
+  if (els.cancelled) {
+    els.cancelled.addEventListener("change", () => {
+      filters.cancelled = els.cancelled.checked;
+      apply();
     });
   }
   els.printButton.addEventListener("click", () => {
