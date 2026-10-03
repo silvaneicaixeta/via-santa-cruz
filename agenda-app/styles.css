@@ -1470,3 +1470,141 @@ body{background:#f8f4ea}
   .agenda-print-row > div.is-cancelled{font-weight:900;color:#91372d}
   .agenda-print-month{margin:5.5mm 0 1.5mm}
 }
+
+
+/* Agenda — impressão canônica (fonte única de layout) */
+@media print {
+  @page { size: A4 portrait; margin: 12mm 12mm 16mm; }
+
+  html, body {
+    background: #fff !important;
+    color: #111 !important;
+    width: auto !important;
+    min-height: 0 !important;
+  }
+
+  .skip-link,
+  .agenda-app-header,
+  .agenda-app-footer,
+  #agenda-auth-view,
+  #agenda-admin-view,
+  .agenda-app-intro,
+  .agenda-source-bar,
+  .agenda-actions,
+  .agenda-active-filters,
+  .agenda-calendar,
+  .agenda-result-line,
+  .agenda-list,
+  .agenda-sync-footer,
+  .agenda-filter-modal {
+    display: none !important;
+  }
+
+  #agenda-protected-content,
+  #agenda-main-view,
+  #agenda-main-view > .container,
+  .agenda-print-sheet {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    background: #fff !important;
+  }
+
+  .agenda-print-sheet {
+    color: #111 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .agenda-print-head {
+    margin: 0 0 3.5mm !important;
+    padding: 0 0 3.5mm !important;
+    border-bottom: .35mm solid #aaa !important;
+  }
+
+  .agenda-print-head p {
+    margin: 0 0 1.2mm !important;
+    font: 700 8.5pt "Lato", Arial, sans-serif !important;
+    letter-spacing: .06em !important;
+  }
+
+  .agenda-print-head h1 {
+    margin: 0 0 1.2mm !important;
+    font: 600 17pt "Playfair Display", Georgia, serif !important;
+    line-height: 1.05 !important;
+  }
+
+  .agenda-print-head div {
+    margin: 0 !important;
+    font: 400 8pt "Lato", Arial, sans-serif !important;
+    line-height: 1.2 !important;
+    color: #555 !important;
+  }
+
+  .agenda-print-month {
+    margin: 4.5mm 0 1.2mm !important;
+    font: 700 12pt "Playfair Display", Georgia, serif !important;
+    line-height: 1.05 !important;
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  .agenda-print-row {
+    display: grid !important;
+    grid-template-columns: 25mm 17mm minmax(0, 1fr) !important;
+    column-gap: 2.4mm !important;
+    align-items: center !important;
+    min-height: 5.3mm !important;
+    padding: 1.05mm 0 !important;
+    margin: 0 !important;
+    border-bottom: .2mm solid #ddd !important;
+    font: 400 9pt "Lato", Arial, sans-serif !important;
+    line-height: 1.16 !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .agenda-print-row strong,
+  .agenda-print-row span,
+  .agenda-print-row > div {
+    align-self: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .agenda-print-row strong {
+    font-weight: 900 !important;
+    white-space: nowrap !important;
+  }
+
+  .agenda-print-row span {
+    color: #222 !important;
+    white-space: nowrap !important;
+  }
+
+  .agenda-print-row > div {
+    min-width: 0 !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .agenda-print-row > div.is-cancelled {
+    color: #91372d !important;
+    font-weight: 900 !important;
+  }
+
+  .agenda-print-foot {
+    position: fixed !important;
+    left: 12mm !important;
+    right: 12mm !important;
+    bottom: 5mm !important;
+    margin: 0 !important;
+    padding-top: 1.5mm !important;
+    border-top: .2mm solid #ccc !important;
+    background: #fff !important;
+    color: #666 !important;
+    font: 400 7pt "Lato", Arial, sans-serif !important;
+    line-height: 1.2 !important;
+  }
+}
