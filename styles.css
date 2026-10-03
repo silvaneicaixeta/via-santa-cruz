@@ -1039,3 +1039,81 @@ button, a { -webkit-tap-highlight-color: transparent; }
       rgba(255,247,235,.47) 100%);
   }
 }
+
+
+/* ===== Leitura mobile e linguagem editorial — 2026-10 ===== */
+
+.project-glimpse-list{
+  list-style:none;
+  margin:1.25rem 0 0;
+  padding:0;
+  display:grid;
+  gap:.7rem;
+  max-width:760px;
+}
+.project-glimpse-list li{
+  position:relative;
+  display:grid;
+  grid-template-columns:minmax(155px,auto) 1fr;
+  gap:.75rem;
+  align-items:baseline;
+  padding-left:1rem;
+}
+.project-glimpse-list li::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:.72em;
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:var(--vsc-visual-gold);
+}
+.project-glimpse-list strong{
+  color:var(--vsc-visual-green);
+  font-family:"Playfair Display",Georgia,serif;
+  font-weight:600;
+}
+.project-glimpse-list span{color:#42524b}
+
+@media(max-width:680px){
+  .page-hero-idealizer{
+    background:
+      linear-gradient(180deg,
+        rgba(251,247,239,.98) 0%,
+        rgba(251,247,239,.96) 58%,
+        rgba(251,247,239,.82) 100%),
+      url("assets/vsc-hero-interno-hq.svg") 72% center/cover no-repeat;
+  }
+  .page-hero-idealizer .page-hero-inner{
+    text-shadow:0 1px 0 rgba(255,255,255,.45);
+  }
+
+  .hero-media{
+    background-position:63% center;
+    filter:saturate(1.06) contrast(1.06) brightness(.98);
+  }
+  .hero-shade{
+    background:
+      linear-gradient(90deg,
+        rgba(251,247,239,.93) 0%,
+        rgba(251,247,239,.84) 48%,
+        rgba(251,247,239,.50) 76%,
+        rgba(251,247,239,.20) 100%),
+      linear-gradient(180deg,
+        rgba(251,247,239,.08) 0%,
+        rgba(251,247,239,.12) 62%,
+        rgba(251,247,239,.05) 100%);
+  }
+  .hero-content{
+    text-shadow:0 1px 0 rgba(255,255,255,.42);
+  }
+
+  .project-glimpse-list{gap:.85rem}
+  .project-glimpse-list li{
+    grid-template-columns:1fr;
+    gap:.12rem;
+    padding-left:1rem;
+  }
+  .project-glimpse-list li::before{top:.78em}
+}
