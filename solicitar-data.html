@@ -52,6 +52,10 @@
             <label>E-mail <input name="email" type="email" required maxlength="180" autocomplete="email"></label>
             <label>Confirmar e-mail <input name="email_confirm" type="email" required maxlength="180" autocomplete="email"></label>
             <label>Telefone <input name="phone" type="tel" required maxlength="60" autocomplete="tel" placeholder="Preferencialmente WhatsApp"></label>
+            <div class="request-contact-note">
+              <strong>Atenção aos dados de contato</strong>
+              <span>Informe um e-mail e um telefone válidos e de uso frequente. As comunicações sobre esta solicitação serão enviadas pelos dados informados neste formulário. A Assessoria Episcopal não se responsabiliza por mensagens não recebidas em razão de informações incorretas, desatualizadas ou inacessíveis.</span>
+            </div>
             <label>Tipo de celebração ou compromisso <input name="event_type" required maxlength="160" placeholder="Ex.: Crisma, festa patronal, visita pastoral"></label>
             <label>Comunidade <input name="community" maxlength="160" placeholder="Se houver"></label>
             <label>Data desejada <input name="requested_date" type="date" required></label>
@@ -64,6 +68,7 @@
           </label>
           <label class="request-honeypot" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off"></label>
           <label class="request-confirm"><input name="ack" type="checkbox" required> <span>Estou ciente de que o envio deste formulário não representa confirmação da data.</span></label>
+          <label class="request-confirm"><input name="contact_ack" type="checkbox" required> <span>Declaro que os dados de contato informados estão corretos e compreendo que eventuais erros podem impedir o recebimento das comunicações sobre esta solicitação.</span></label>
           <div class="request-actions">
             <button id="request-submit" class="button button-primary" type="submit">Enviar solicitação</button>
             <a class="button button-secondary" href="/agenda-diocesana.html">Voltar</a>
@@ -98,6 +103,7 @@
 
         const data = Object.fromEntries(new FormData(form).entries());
         delete data.ack;
+        delete data.contact_ack;
 
         try {
           const response = await fetch(API, {
