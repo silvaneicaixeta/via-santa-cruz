@@ -1,6 +1,6 @@
 (() => {
-  const SUPABASE_URL = "https://vgpivbxykeobgjzqlqcl.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_CplQkGKykMUsHso_vRki-g_gIsZJDgh";
+  const SUPABASE_URL = "https://hkujbdfqhbkejpbsfode.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_KIsDfvNnPTlnFUAvFN74YA_ufMJcAGH";
   const USERS_API = SUPABASE_URL + "/functions/v1/vsc-agenda-admin-users";
   const DASH_API = SUPABASE_URL + "/functions/v1/vsc-agenda-admin-dashboard";
 
