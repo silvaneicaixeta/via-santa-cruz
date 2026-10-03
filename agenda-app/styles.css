@@ -1702,3 +1702,80 @@ body{background:#f8f4ea}
 @media(max-width:560px){
   .agenda-admin-request-detail{grid-template-columns:1fr}
 }
+
+
+/* Agenda — impressão paginada com rodapé repetido */
+@media print {
+  @page { size:A4 portrait; margin:12mm 12mm 14mm; }
+
+  .agenda-print-table{
+    display:table!important;
+    width:100%!important;
+    border-collapse:collapse!important;
+    table-layout:fixed!important;
+  }
+  .agenda-print-table tbody{display:table-row-group!important}
+  .agenda-print-table tfoot{display:table-footer-group!important}
+  .agenda-print-table tfoot td{padding:0!important;border:0!important}
+
+  .agenda-print-month-row{
+    break-after:avoid!important;
+    page-break-after:avoid!important;
+  }
+  .agenda-print-month-row td{
+    padding:4.5mm 0 1.2mm!important;
+    border:0!important;
+    font:700 12pt "Playfair Display",Georgia,serif!important;
+    line-height:1.05!important;
+  }
+
+  .agenda-print-row{
+    display:table-row!important;
+    min-height:0!important;
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+  .agenda-print-row th,
+  .agenda-print-row td{
+    padding:1.05mm 0!important;
+    border-bottom:.2mm solid #ddd!important;
+    font:400 9pt "Lato",Arial,sans-serif!important;
+    line-height:1.16!important;
+    vertical-align:middle!important;
+  }
+  .agenda-print-row th{
+    width:25mm!important;
+    padding-right:2.4mm!important;
+    font-weight:900!important;
+    text-align:left!important;
+    white-space:nowrap!important;
+  }
+  .agenda-print-row td:nth-child(2){
+    width:17mm!important;
+    padding-right:2.4mm!important;
+    white-space:nowrap!important;
+    color:#222!important;
+  }
+  .agenda-print-row td:nth-child(3){
+    overflow-wrap:anywhere!important;
+  }
+  .agenda-print-row td.is-cancelled{
+    color:#91372d!important;
+    font-weight:900!important;
+  }
+
+  .agenda-print-foot{
+    position:static!important;
+    left:auto!important;
+    right:auto!important;
+    bottom:auto!important;
+    margin:3mm 0 0!important;
+    padding-top:1.5mm!important;
+    border-top:.2mm solid #ccc!important;
+    background:#fff!important;
+    color:#666!important;
+    font:400 7pt "Lato",Arial,sans-serif!important;
+    line-height:1.2!important;
+    white-space:normal!important;
+  }
+}
