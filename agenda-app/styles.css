@@ -1617,3 +1617,12 @@ body{background:#f8f4ea}
   font-size:.76rem;
   line-height:1.35;
 }
+
+
+/* Agenda — reserva segura para o rodapé impresso */
+@media print {
+  @page { size:A4 portrait; margin:12mm 12mm 25mm; }
+  .agenda-print-foot {
+    bottom: 11mm !important;
+  }
+}
