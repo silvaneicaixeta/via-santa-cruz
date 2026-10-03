@@ -613,3 +613,629 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .project-presentation-grid{grid-template-columns:1fr}
   .project-presentation-card{padding:1.2rem}
 }
+
+
+/* =========================================================
+   PREVIEW VISUAL V1 — VIA SANTA CRUZ
+   Revisão exclusivamente estética.
+   Não altera arquitetura, URLs, navegação ou funcionamento.
+   ========================================================= */
+
+:root {
+  --preview-paper: #fbf8f1;
+  --preview-paper-2: #f4ecdf;
+  --preview-gold-line: rgba(184, 137, 45, .34);
+  --preview-green-glow: rgba(18, 60, 46, .08);
+  --preview-soft-shadow: 0 26px 80px rgba(18, 60, 46, .09);
+}
+
+/* Cabeçalho: mesma estrutura, presença mais editorial */
+.site-header {
+  background:
+    linear-gradient(180deg, rgba(251,248,241,.97), rgba(247,243,234,.93));
+  border-bottom-color: rgba(159,119,47,.13);
+  box-shadow: 0 8px 30px rgba(18,60,46,.035);
+}
+.header-inner {
+  min-height: 88px;
+}
+.brand img {
+  filter: drop-shadow(0 5px 14px rgba(18,60,46,.08));
+}
+.brand-copy strong {
+  letter-spacing: -.012em;
+}
+.main-nav {
+  gap: 1.75rem;
+}
+.main-nav a:not(.nav-cta) {
+  position: relative;
+}
+.main-nav a:not(.nav-cta)::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -.48rem;
+  width: 0;
+  height: 1px;
+  background: var(--gold);
+  transition: width .2s ease;
+}
+.main-nav a:not(.nav-cta):hover::before {
+  width: 100%;
+}
+.main-nav a.active::before {
+  width: 100%;
+}
+.main-nav a.active::after {
+  display: none;
+}
+.nav-cta {
+  background:
+    linear-gradient(135deg, #a87825, #c49a4b);
+  box-shadow: 0 12px 28px rgba(159,119,47,.18);
+  border: 1px solid rgba(255,255,255,.18);
+}
+
+/* Hero: mantém texto e composição funcional; imagem vira atmosfera */
+.hero {
+  min-height: 660px;
+  isolation: isolate;
+  background: var(--preview-paper);
+  border-bottom: 1px solid rgba(159,119,47,.16);
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 76% 28%, rgba(255,232,177,.30), transparent 18%),
+    linear-gradient(180deg, transparent 72%, rgba(13,46,35,.05));
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  z-index: 3;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: .46;
+}
+.hero-media {
+  background-position: 58% center;
+  transform: scale(1.025);
+  filter: saturate(.88) contrast(1.02);
+}
+.hero-shade {
+  z-index: 1;
+  background:
+    linear-gradient(90deg,
+      rgba(250,247,239,.995) 0%,
+      rgba(250,247,239,.975) 31%,
+      rgba(250,247,239,.86) 43%,
+      rgba(250,247,239,.38) 60%,
+      rgba(18,60,46,.06) 100%),
+    linear-gradient(180deg, rgba(255,255,255,.08), rgba(13,46,35,.10));
+}
+.hero-content {
+  z-index: 2;
+  padding-block: 104px;
+}
+.hero-content::before {
+  content: "";
+  display: block;
+  width: 68px;
+  height: 1px;
+  margin-bottom: 1.45rem;
+  background: linear-gradient(90deg, var(--gold-dark), rgba(200,161,90,.12));
+}
+.eyebrow {
+  margin-bottom: 1.15rem;
+}
+.hero h1 {
+  max-width: 660px;
+  font-size: clamp(3rem, 5.7vw, 5.55rem);
+  text-wrap: balance;
+  text-shadow: 0 1px 0 rgba(255,255,255,.35);
+}
+.hero h1 em {
+  color: #9c6d20;
+}
+.hero-lead {
+  max-width: 590px;
+  color: #46534e;
+  line-height: 1.52;
+}
+
+/* Home: abertura editorial */
+.intro {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 90% 8%, rgba(200,161,90,.10), transparent 24%),
+    linear-gradient(180deg, #fffdf8 0%, #f7f1e6 100%);
+}
+.intro::after {
+  content: "";
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  right: -260px;
+  bottom: -300px;
+  border: 1px solid rgba(184,137,45,.11);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 42px rgba(184,137,45,.025),
+    0 0 0 86px rgba(18,60,46,.018);
+  pointer-events: none;
+}
+.intro-grid {
+  position: relative;
+  z-index: 1;
+  gap: clamp(3rem, 6vw, 5.5rem);
+}
+.section-kicker {
+  position: relative;
+  display: inline-block;
+  padding-right: 2.8rem;
+}
+.section-kicker::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 2rem;
+  height: 1px;
+  background: var(--gold);
+  opacity: .72;
+}
+.section h2 {
+  color: #153229;
+  text-wrap: balance;
+}
+.section-lead {
+  color: #4d5b55;
+  line-height: 1.72;
+}
+
+/* Caminho · Serviço · Espiritualidade: mesmos três blocos, acabamento editorial */
+.pillars {
+  gap: 1.15rem;
+}
+.pillar-card {
+  position: relative;
+  overflow: hidden;
+  padding: 2.2rem 1.45rem 2.05rem;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.78), rgba(250,247,239,.68));
+  border: 1px solid rgba(184,137,45,.22);
+  box-shadow: 0 18px 48px rgba(18,60,46,.055);
+}
+.pillar-card::before {
+  content: "";
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.pillar-card::after {
+  content: "";
+  position: absolute;
+  right: -45px;
+  top: -55px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,161,90,.10), transparent 68%);
+}
+.pillar-icon {
+  width: 52px;
+  height: 52px;
+  background: transparent;
+  border: 1px solid rgba(184,137,45,.30);
+  box-shadow: inset 0 0 0 5px rgba(200,161,90,.045);
+}
+.pillar-card h3 {
+  font-size: 1.72rem;
+  letter-spacing: -.012em;
+}
+.pillar-card p {
+  color: #53605a;
+  line-height: 1.58;
+}
+
+/* Home: seção Projetos — mesma disposição, maior presença */
+.home-projects {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(110deg, #fffdf8 0%, #f7f0e3 76%, #efe3cf 100%);
+  border-top: 1px solid rgba(159,119,47,.13);
+  border-bottom: 1px solid rgba(159,119,47,.09);
+}
+.home-projects::before {
+  content: "";
+  position: absolute;
+  right: 4%;
+  top: 50%;
+  width: min(28vw, 340px);
+  aspect-ratio: 240 / 130;
+  transform: translateY(-50%);
+  background: url("/assets/vsc-mark.svg") center / contain no-repeat;
+  opacity: .035;
+  pointer-events: none;
+}
+.home-projects::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(184,137,45,.48), transparent);
+}
+.home-projects-inner {
+  position: relative;
+  z-index: 1;
+}
+.home-projects-inner p:not(.section-kicker) {
+  color: #52605a;
+  line-height: 1.72;
+}
+
+/* Hero das páginas internas: mantém toda a estrutura */
+.page-hero {
+  position: relative;
+  overflow: hidden;
+  padding-top: 116px;
+  padding-bottom: 94px;
+  background:
+    radial-gradient(circle at 82% 14%, rgba(200,161,90,.18), transparent 19%),
+    radial-gradient(circle at 68% 80%, rgba(18,60,46,.055), transparent 28%),
+    linear-gradient(135deg, #fffdf8 0%, #f5ede0 100%);
+}
+.page-hero::before {
+  content: "";
+  position: absolute;
+  right: -70px;
+  top: -55px;
+  width: 370px;
+  height: 200px;
+  background: url("/assets/vsc-mark.svg") center / contain no-repeat;
+  opacity: .026;
+  transform: rotate(-4deg);
+  pointer-events: none;
+}
+.page-hero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(184,137,45,.54), transparent);
+}
+.page-hero-inner {
+  position: relative;
+  z-index: 1;
+}
+.page-hero h1 {
+  color: #143128;
+  text-wrap: balance;
+}
+.page-hero p:last-child {
+  line-height: 1.55;
+}
+
+/* Página Projetos: mesma grade atual; personalidade acrescentada por background */
+.projects {
+  position: relative;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(232,221,200,.84), transparent 23%),
+    radial-gradient(circle at 94% 82%, rgba(200,161,90,.10), transparent 25%),
+    linear-gradient(180deg, #f8f3e9, #f4ede0);
+}
+.project-grid-pages {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.65rem;
+}
+.project-grid-pages .project-card {
+  min-height: 440px;
+  border-radius: 26px;
+  border-color: rgba(159,119,47,.23);
+  box-shadow: var(--preview-soft-shadow);
+  isolation: isolate;
+  background-color: #fffdf9;
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+.project-grid-pages .project-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 30px 86px rgba(18,60,46,.12);
+  border-color: rgba(159,119,47,.38);
+}
+.project-grid-pages .project-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-position: right center;
+  background-repeat: no-repeat;
+  background-size: auto 100%;
+  opacity: .28;
+}
+.project-grid-pages .project-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg,
+      rgba(255,253,248,.995) 0%,
+      rgba(255,253,248,.98) 48%,
+      rgba(255,253,248,.84) 68%,
+      rgba(255,253,248,.38) 100%),
+    linear-gradient(180deg, transparent 60%, rgba(18,60,46,.035));
+}
+.project-grid-pages #diretorio::before {
+  background-image: url("/assets/projeto-diretorio.svg");
+  background-position: 72% center;
+}
+.project-grid-pages #diante-de-deus::before {
+  background-image: url("/assets/projeto-diante.svg");
+  background-position: 76% center;
+}
+.project-grid-pages #agenda::before {
+  background-image: url("/assets/hero.svg");
+  background-position: 72% center;
+  opacity: .22;
+}
+.project-grid-pages .project-card .project-copy {
+  position: relative;
+  z-index: 1;
+  padding: 2.7rem 2.5rem;
+  max-width: 78%;
+}
+.project-grid-pages .project-card .project-copy::before {
+  content: "";
+  width: 46px;
+  height: 1px;
+  margin-bottom: 1.2rem;
+  background: var(--gold);
+  opacity: .78;
+}
+.project-grid-pages .project-label {
+  letter-spacing: .17em;
+  color: #9a6f28;
+}
+.project-grid-pages .project-card h2 {
+  color: #113328;
+  letter-spacing: -.028em;
+}
+.project-grid-pages .project-card p {
+  line-height: 1.66;
+}
+.project-grid-pages .project-detail {
+  color: #53635c;
+}
+.project-grid-pages .button-primary {
+  background: linear-gradient(135deg, #123c2e, #0d2e23);
+  box-shadow: 0 12px 28px rgba(18,60,46,.15);
+}
+
+/* Sobre: mesma grade e blocos, leitura mais editorial */
+.about-body {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, #fffdf8 0%, #fbf7ef 100%);
+}
+.about-body::before {
+  content: "";
+  position: absolute;
+  left: -170px;
+  top: 90px;
+  width: 370px;
+  height: 370px;
+  border: 1px solid rgba(184,137,45,.08);
+  border-radius: 50%;
+  box-shadow: 0 0 0 44px rgba(18,60,46,.018);
+}
+.about-grid {
+  position: relative;
+  z-index: 1;
+}
+.about-copy {
+  position: relative;
+  padding-left: 2rem;
+  color: #4d5b55;
+  line-height: 1.8;
+}
+.about-copy::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .35rem;
+  bottom: .35rem;
+  width: 1px;
+  background: linear-gradient(180deg, var(--gold), rgba(200,161,90,.08));
+}
+.about-copy p {
+  max-width: 690px;
+}
+.about-copy p:first-child::first-letter {
+  font-family: "Playfair Display", Georgia, serif;
+  float: left;
+  font-size: 3.45rem;
+  line-height: .78;
+  margin: .14rem .38rem 0 0;
+  color: var(--gold-dark);
+}
+.about-pillars {
+  background:
+    radial-gradient(circle at 92% 10%, rgba(200,161,90,.09), transparent 22%),
+    var(--ivory);
+}
+.idealizer-teaser {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(110deg, #fffdf8 0%, #f4eadb 100%);
+}
+.idealizer-teaser::after {
+  content: "";
+  position: absolute;
+  width: 250px;
+  height: 135px;
+  right: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+  background: url("/assets/vsc-mark.svg") center / contain no-repeat;
+  opacity: .03;
+  pointer-events: none;
+}
+
+/* Rodapé: mesma informação, acabamento mais solene */
+.site-footer {
+  position: relative;
+  background:
+    radial-gradient(circle at 82% -10%, rgba(200,161,90,.12), transparent 28%),
+    linear-gradient(135deg, #0a2b20, #0d3427 64%, #0a2a20);
+  border-top: 1px solid rgba(200,161,90,.28);
+}
+.site-footer::before {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200,161,90,.60), transparent);
+}
+
+/* Botões e links: refinamento, sem alterar destino nem função */
+.button,
+.nav-cta {
+  letter-spacing: .01em;
+}
+.button-primary {
+  border-color: rgba(255,255,255,.08);
+}
+.text-link {
+  border-bottom-color: rgba(159,119,47,.28);
+}
+.text-link span {
+  transition: transform .2s ease;
+}
+.text-link:hover span {
+  transform: translateX(3px);
+}
+
+/* Responsividade: preserva disposições já existentes */
+@media (max-width: 960px) {
+  .header-inner {
+    min-height: 76px;
+  }
+  .main-nav a:not(.nav-cta)::before {
+    display: none;
+  }
+  .hero {
+    min-height: 600px;
+  }
+  .hero-content {
+    padding-block: 78px;
+  }
+  .hero-shade {
+    background:
+      linear-gradient(90deg,
+        rgba(250,247,239,.99) 0%,
+        rgba(250,247,239,.95) 48%,
+        rgba(250,247,239,.60) 74%,
+        rgba(18,60,46,.08) 100%);
+  }
+}
+
+@media (max-width: 860px) {
+  .project-grid-pages {
+    grid-template-columns: 1fr;
+  }
+  .project-grid-pages .project-card {
+    min-height: 390px;
+  }
+  .project-grid-pages .project-card .project-copy {
+    max-width: 78%;
+  }
+}
+
+@media (max-width: 680px) {
+  .site-header {
+    background: rgba(250,247,239,.96);
+  }
+  .hero {
+    min-height: 0;
+  }
+  .hero-media {
+    background-position: 70% center;
+    filter: saturate(.80);
+  }
+  .hero-shade {
+    background:
+      linear-gradient(90deg,
+        rgba(250,247,239,.99) 0%,
+        rgba(250,247,239,.96) 50%,
+        rgba(250,247,239,.72) 78%,
+        rgba(250,247,239,.42) 100%);
+  }
+  .hero-content {
+    padding: 56px 0 52px;
+  }
+  .hero-content::before {
+    width: 48px;
+    margin-bottom: 1.05rem;
+  }
+  .hero h1 {
+    font-size: clamp(2.3rem, 10.5vw, 3.2rem);
+  }
+  .pillar-card {
+    padding: 1.8rem 1.35rem;
+  }
+  .page-hero {
+    padding: 54px 0 46px;
+  }
+  .page-hero::before {
+    right: -150px;
+    width: 290px;
+    opacity: .022;
+  }
+  .project-grid-pages .project-card {
+    min-height: 0;
+  }
+  .project-grid-pages .project-card::before {
+    opacity: .16;
+    background-position: 84% center;
+  }
+  .project-grid-pages .project-card::after {
+    background:
+      linear-gradient(90deg,
+        rgba(255,253,248,.99) 0%,
+        rgba(255,253,248,.97) 68%,
+        rgba(255,253,248,.78) 100%);
+  }
+  .project-grid-pages .project-card .project-copy {
+    max-width: 100%;
+    padding: 2rem 1.55rem 2.1rem;
+  }
+  .about-copy {
+    padding-left: 1.25rem;
+  }
+  .about-copy p:first-child::first-letter {
+    font-size: 3rem;
+  }
+  .home-projects::before,
+  .idealizer-teaser::after {
+    opacity: .02;
+  }
+}
