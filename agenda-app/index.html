@@ -127,10 +127,20 @@
         <div class="agenda-source-bar">
           <div>
             <span class="agenda-field-label">Fontes exibidas</span>
-            <label class="agenda-source-toggle">
-              <input id="agenda-include-liturgy" type="checkbox" checked>
-              <span>Incluir calendário litúrgico</span>
-            </label>
+            <div class="agenda-source-options">
+              <label class="agenda-source-toggle">
+                <input id="agenda-include-liturgy" type="checkbox" checked>
+                <span>Calendário litúrgico</span>
+              </label>
+              <label class="agenda-source-toggle">
+                <input id="filter-confirmed" type="checkbox" checked>
+                <span>Compromissos confirmados</span>
+              </label>
+              <label class="agenda-source-toggle">
+                <input id="filter-cancelled" type="checkbox" checked>
+                <span>Compromissos cancelados</span>
+              </label>
+            </div>
           </div>
           <a class="agenda-request-link" href="https://viasantacruz.com.br/solicitar-data.html">Solicitar uma data <span aria-hidden="true">→</span></a>
         </div>
@@ -300,13 +310,6 @@
           <div id="filter-cities" class="agenda-check-grid agenda-check-grid-scroll"></div>
         </details>
 
-        <details>
-          <summary>Situação</summary>
-          <div class="agenda-check-grid">
-            <label><input id="filter-confirmed" type="checkbox" checked> Confirmados</label>
-            <label><input id="filter-cancelled" type="checkbox" checked> Cancelados</label>
-          </div>
-        </details>
       </div>
       <footer class="agenda-filter-footer">
         <button id="agenda-clear-filters" type="button" class="agenda-filter-secondary">Limpar</button>
