@@ -266,12 +266,12 @@
         select.addEventListener("change", async () => {
           const old = row.status;
           try {
-            await api(DASH_API, {
+            const result = await api(DASH_API, {
               method: "POST",
               body: { action: "date_request_status", request_id: row.id, status: select.value }
             });
-            els.message.textContent = "Situação da solicitação atualizada.";
             await loadAll();
+            els.message.textContent = result.message || "Situação da solicitação atualizada.";
           } catch (err) {
             select.value = old;
             els.message.textContent = "Não foi possível atualizar a solicitação: " + err.message;

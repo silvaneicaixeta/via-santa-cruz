@@ -1640,3 +1640,21 @@ body{background:#f8f4ea}
   color:var(--ink);
   line-height:1.5;
 }
+
+
+/* Agenda — impressão final: rodapé no fluxo, sem sobreposição */
+@media print {
+  @page { size:A4 portrait; margin:12mm 12mm 16mm; }
+  .agenda-print-foot {
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    margin: 7mm 0 0 !important;
+    padding-top: 1.5mm !important;
+    border-top: .2mm solid #ccc !important;
+    background: #fff !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+}
