@@ -1658,3 +1658,47 @@ body{background:#f8f4ea}
     page-break-inside: avoid !important;
   }
 }
+
+
+/* Agenda — detalhes das solicitações de datas */
+.agenda-admin-detail-row td{
+  padding:.25rem .55rem 1rem!important;
+  background:rgba(18,60,46,.025);
+}
+.agenda-admin-request-detail{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:.8rem 1rem;
+  padding:1rem;
+  border:1px solid rgba(18,60,46,.10);
+  border-radius:12px;
+  background:#fff;
+}
+.agenda-admin-request-detail>div{
+  display:grid;
+  gap:.22rem;
+  min-width:0;
+}
+.agenda-admin-request-detail strong{
+  color:var(--gold-dark);
+  font-size:.68rem;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+.agenda-admin-request-detail span{
+  color:var(--ink);
+  overflow-wrap:anywhere;
+}
+.agenda-admin-request-notes{
+  grid-column:1/-1;
+}
+.agenda-admin-request-notes span{
+  white-space:pre-wrap;
+  line-height:1.45;
+}
+@media(max-width:900px){
+  .agenda-admin-request-detail{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+  .agenda-admin-request-detail{grid-template-columns:1fr}
+}
