@@ -588,20 +588,36 @@
     events.forEach((ev) => {
       const d = new Date(ev.start);
       const month = fmtMonthYear.format(d);
+
       if (month !== lastMonth) {
-        const heading = document.createElement("h2");
-        heading.className = "agenda-print-month";
-        heading.textContent = month.charAt(0).toUpperCase() + month.slice(1);
-        els.printList.appendChild(heading);
+        const monthRow = document.createElement("tr");
+        monthRow.className = "agenda-print-month-row";
+        const monthCell = document.createElement("td");
+        monthCell.colSpan = 3;
+        monthCell.textContent = month.charAt(0).toUpperCase() + month.slice(1);
+        monthRow.appendChild(monthCell);
+        els.printList.appendChild(monthRow);
         lastMonth = month;
       }
 
-      const row = document.createElement("div");
+      const row = document.createElement("tr");
       row.className = "agenda-print-row";
       const time = ev.all_day ? "" : fmtTime.format(d);
-      row.innerHTML = '<strong>' + esc(pdfDayLabel(ev)) + '</strong><span>' + esc(time) + '</span><div class="' +
-        (ev.cancelled ? "is-cancelled" : "") + '">' +
-        esc(ev.cancelled ? "CANCELADO — " + cleanPrintTitle(ev.title) : cleanPrintTitle(ev.title)) + "</div>";
+
+      const dayCell = document.createElement("th");
+      dayCell.scope = "row";
+      dayCell.textContent = pdfDayLabel(ev);
+
+      const timeCell = document.createElement("td");
+      timeCell.textContent = time;
+
+      const titleCell = document.createElement("td");
+      if (ev.cancelled) titleCell.className = "is-cancelled";
+      titleCell.textContent = ev.cancelled
+        ? "CANCELADO — " + cleanPrintTitle(ev.title)
+        : cleanPrintTitle(ev.title);
+
+      row.append(dayCell, timeCell, titleCell);
       els.printList.appendChild(row);
     });
 
