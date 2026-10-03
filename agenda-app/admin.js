@@ -102,7 +102,7 @@
     if (!pending.length) {
       const tr = document.createElement("tr");
       const cell = td("Nenhuma solicitação pendente.");
-      cell.colSpan = 5;
+      cell.colSpan = 6;
       tr.appendChild(cell);
       els.accessBody.appendChild(tr);
     } else {
