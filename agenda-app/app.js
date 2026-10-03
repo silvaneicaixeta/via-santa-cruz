@@ -312,8 +312,12 @@
       ? "id:" + ev.parish_id
       : (parish ? normalizeParishName(parish) + "|" + cityKey(city) : "");
 
+    const parishFilterLabel = ev.parish_abbreviation
+      ? String(ev.parish_abbreviation).trim() + (city ? " — " + city : "")
+      : parishLabel;
+
     return {
-      type, community, parish, city, cityKey: cityKey(city), parishLabel, parishKey, scope,
+      type, community, parish, city, cityKey: cityKey(city), parishLabel, parishFilterLabel, parishKey, scope,
       parishId: ev.parish_id || "", forania: ev.forania || "", entityType: ev.entity_type || ""
     };
   }
@@ -359,7 +363,7 @@
 
     optionList(els.filterTypes, unique(meta.map(({p}) => ({ key: normalize(p.type), label: p.type }))), filters.types, "types");
     optionList(els.filterScopes, unique(meta.map(({p}) => ({ key: normalize(p.scope), label: p.scope }))), filters.scopes, "scopes");
-    optionList(els.filterParishes, unique(meta.map(({p}) => ({ key: p.parishKey, label: p.parishLabel }))), filters.parishes, "parishes");
+    optionList(els.filterParishes, unique(meta.map(({p}) => ({ key: p.parishKey, label: p.parishFilterLabel || p.parishLabel }))), filters.parishes, "parishes");
     optionList(
       els.filterCities,
       unique(meta
