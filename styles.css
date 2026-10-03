@@ -1219,3 +1219,53 @@ button, a { -webkit-tap-highlight-color: transparent; }
     background-position:67% center;
   }
 }
+
+
+/* ===== Equalização final dos cards + imagem exata do Idealizador ===== */
+
+/* A separação permanece editorial; o card espiritual volta à mesma largura dos demais. */
+.project-grid-spiritual{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+.project-grid-institutional .project-card,
+.project-grid-spiritual .project-card{
+  min-height:430px;
+}
+
+/* Diretório: ampliar e deslocar o fundo para eliminar as faixas claras embutidas no asset. */
+.project-grid-pages #diretorio::before{
+  background-position:58% 76%;
+  transform:translateX(5%) translateY(-1%) scale(1.43);
+  transform-origin:center;
+}
+
+/* Diante de Deus: sem zoom extra, preservando melhor a figura de Nossa Senhora. */
+.project-grid-pages #diante-de-deus::before{
+  background-position:59% center;
+  transform:translateX(2.5%) scale(1.01);
+  transform-origin:center;
+}
+
+/* Encerramento do Idealizador: usar exatamente a imagem reenviada pelo usuário. */
+.idealizer-visual-summary-image{
+  background:
+    url("assets/vsc-idealizador-final.webp") center/cover no-repeat;
+}
+
+@media(max-width:860px){
+  .project-grid-spiritual{grid-template-columns:1fr}
+}
+
+@media(max-width:680px){
+  .project-grid-pages #diretorio::before{
+    background-position:56% 76%;
+    transform:translateX(5%) translateY(-1%) scale(1.43);
+  }
+  .project-grid-pages #diante-de-deus::before{
+    background-position:58% center;
+    transform:translateX(2%) scale(1);
+  }
+  .idealizer-visual-summary-image{
+    background-position:66% center;
+  }
+}
