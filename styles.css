@@ -867,7 +867,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   width: min(28vw, 340px);
   aspect-ratio: 240 / 130;
   transform: translateY(-50%);
-  background: url("/assets/vsc-mark.svg") center / contain no-repeat;
+  background: url("assets/vsc-mark.svg") center / contain no-repeat;
   opacity: .035;
   pointer-events: none;
 }
@@ -905,7 +905,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   top: -55px;
   width: 370px;
   height: 200px;
-  background: url("/assets/vsc-mark.svg") center / contain no-repeat;
+  background: url("assets/vsc-mark.svg") center / contain no-repeat;
   opacity: .026;
   transform: rotate(-4deg);
   pointer-events: none;
@@ -981,15 +981,15 @@ button, a { -webkit-tap-highlight-color: transparent; }
     linear-gradient(180deg, transparent 60%, rgba(18,60,46,.035));
 }
 .project-grid-pages #diretorio::before {
-  background-image: url("/assets/projeto-diretorio.svg");
+  background-image: url("assets/projeto-diretorio.svg");
   background-position: 72% center;
 }
 .project-grid-pages #diante-de-deus::before {
-  background-image: url("/assets/projeto-diante.svg");
+  background-image: url("assets/projeto-diante.svg");
   background-position: 76% center;
 }
 .project-grid-pages #agenda::before {
-  background-image: url("/assets/hero.svg");
+  background-image: url("assets/hero.svg");
   background-position: 72% center;
   opacity: .22;
 }
@@ -1093,7 +1093,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   right: 5%;
   top: 50%;
   transform: translateY(-50%);
-  background: url("/assets/vsc-mark.svg") center / contain no-repeat;
+  background: url("assets/vsc-mark.svg") center / contain no-repeat;
   opacity: .03;
   pointer-events: none;
 }
