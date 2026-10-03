@@ -877,3 +877,83 @@ button, a { -webkit-tap-highlight-color: transparent; }
       rgba(255,252,245,.73) 100%)
   }
 }
+
+
+/* ===== Refinamento final de identidade e apresentação ===== */
+
+/* Cabeçalho: usar o símbolo real + tipografia existente.
+   Cruz dourada, caminho verde; sem lockup embutido. */
+.brand>img,
+.brand>.brand-copy{display:initial}
+.brand>img{
+  display:block;
+  width:70px;
+  height:58px;
+  object-fit:contain;
+}
+.brand>.brand-copy{display:grid}
+.brand::before{content:none!important}
+.brand-copy strong{font-size:1.48rem}
+.brand-copy small{display:block}
+
+/* Retirar ícones dos cartões agora que as imagens têm presença própria. */
+.pillar-icon{display:none!important}
+.pillar-card{
+  justify-content:center;
+  padding-top:2.15rem;
+}
+
+/* Página Projetos: imagens mais presentes, sem sacrificar a leitura. */
+.project-grid-pages .project-card::before{
+  opacity:.88;
+  filter:saturate(1.03) contrast(1.05) brightness(.86);
+}
+.project-grid-pages .project-card::after{
+  background:linear-gradient(90deg,
+    rgba(255,252,245,.97) 0%,
+    rgba(255,252,245,.90) 39%,
+    rgba(255,252,245,.56) 61%,
+    rgba(255,252,245,.08) 100%);
+}
+
+/* Diante de Deus: separação editorial sutil, sem quebrar a grade. */
+.project-grid-pages .project-card-spiritual{
+  border-color:rgba(184,137,45,.42);
+  box-shadow:
+    0 22px 58px rgba(18,60,46,.095),
+    inset 0 3px 0 rgba(184,137,45,.32);
+}
+.project-grid-pages .project-card-spiritual .project-label{
+  color:#98681d;
+}
+.project-grid-pages .project-card-spiritual::after{
+  background:linear-gradient(90deg,
+    rgba(255,250,241,.97) 0%,
+    rgba(255,250,241,.90) 39%,
+    rgba(255,247,235,.53) 61%,
+    rgba(255,247,235,.07) 100%);
+}
+
+/* Mobile: manter contraste do texto, mas sem apagar a fotografia. */
+@media(max-width:680px){
+  .brand>img{width:60px;height:48px}
+  .brand-copy strong{font-size:1.24rem}
+  .brand-copy small{font-size:.56rem;letter-spacing:.14em}
+
+  .project-grid-pages .project-card::before{
+    opacity:.80;
+    filter:saturate(1.02) contrast(1.04) brightness(.80);
+  }
+  .project-grid-pages .project-card::after{
+    background:linear-gradient(180deg,
+      rgba(255,252,245,.91) 0%,
+      rgba(255,252,245,.82) 56%,
+      rgba(255,252,245,.58) 100%);
+  }
+  .project-grid-pages .project-card-spiritual::after{
+    background:linear-gradient(180deg,
+      rgba(255,250,241,.91) 0%,
+      rgba(255,250,241,.82) 56%,
+      rgba(255,247,235,.56) 100%);
+  }
+}
