@@ -71,7 +71,7 @@
     return session || null;
   }
 
-  function showLogin(message = "") {
+  function showLogin(message = "", messageType = "") {
     els.authView.hidden = false;
     els.protectedContent.hidden = true;
     if (els.appUser) els.appUser.hidden = true;
@@ -81,6 +81,7 @@
     els.forgotPassword.hidden = false;
     els.requestAccessButton.hidden = false;
     els.authMessage.textContent = message;
+    els.authMessage.classList.toggle("is-success", messageType === "success");
   }
 
   function showPasswordSetup(message = "") {
@@ -103,15 +104,18 @@
     if (els.adminOpen) els.adminOpen.hidden = !canManageUsers;
   }
 
-  async function authorizedFetch(url) {
+  async function authorizedFetch(url, options = {}) {
     const session = await getSession();
     if (!session?.access_token) throw new Error("unauthorized");
     const response = await fetch(url, {
+      method: options.method || "GET",
       cache: "no-store",
       headers: {
         Authorization: "Bearer " + session.access_token,
-        apikey: SUPABASE_KEY
-      }
+        apikey: SUPABASE_KEY,
+        ...(options.body ? { "Content-Type": "application/json" } : {})
+      },
+      body: options.body ? JSON.stringify(options.body) : undefined
     });
     if (response.status === 401) throw new Error("unauthorized");
     if (response.status === 403) throw new Error("forbidden");
@@ -823,6 +827,7 @@
   document.addEventListener("keydown", (event) => { if (event.key === "Escape" && !els.filterModal.hidden) closeFilters(); });
 
   els.requestAccessButton.addEventListener("click", () => {
+    els.authMessage.classList.remove("is-success");
     els.loginForm.hidden = true;
     els.passwordForm.hidden = true;
     els.accessRequestForm.hidden = false;
@@ -862,7 +867,10 @@
       if (!response.ok) throw new Error("request_failed");
 
       els.accessRequestForm.reset();
-      showLogin("Solicitação recebida. Após a análise, se o acesso for aprovado, você receberá um e-mail com as instruções para entrar.");
+      showLogin(
+        "Solicitação recebida com sucesso.\n\nApós a análise, se o acesso for aprovado, você receberá um e-mail com as instruções para entrar na Agenda. Se não localizar a mensagem na caixa de entrada, confira também as pastas Spam, Lixo eletrônico e Promoções.",
+        "success"
+      );
     } catch {
       els.authMessage.textContent = "Não foi possível enviar a solicitação agora. Tente novamente em alguns instantes.";
     }
@@ -870,6 +878,7 @@
 
   els.loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
+    els.authMessage.classList.remove("is-success");
     els.authMessage.textContent = "Entrando…";
     const { data, error } = await supabase.auth.signInWithPassword({
       email: els.loginEmail.value.trim(),
@@ -916,8 +925,25 @@
       els.authMessage.textContent = "Não foi possível alterar a senha agora.";
       return;
     }
+
+    try {
+      const response = await authorizedFetch(API, {
+        method: "POST",
+        body: { action: "complete_password_setup" }
+      });
+      if (!response.ok) throw new Error("password_setup_not_completed");
+    } catch {
+      els.authMessage.textContent = "A senha foi alterada, mas não foi possível concluir o primeiro acesso. Aguarde alguns instantes e tente novamente.";
+      return;
+    }
+
+    els.newPassword.value = "";
+    els.newPasswordConfirm.value = "";
     els.passwordForm.hidden = true;
-    els.authMessage.textContent = "Senha definida. Carregando a Agenda…";
+    els.authMessage.textContent = "Senha definida com sucesso. Carregando a Agenda…";
+    if (window.location.hash || window.location.search) {
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
     await load();
   });
 
