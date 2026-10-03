@@ -957,3 +957,85 @@ button, a { -webkit-tap-highlight-color: transparent; }
       rgba(255,247,235,.56) 100%);
   }
 }
+
+
+/* ===== Ajustes finos 2026-10: CTA, cards e enquadramento ===== */
+
+/* Faixa "Três caminhos": CTA junto do texto, deixando a imagem respirar. */
+.home-projects-inner{
+  grid-template-columns:1fr;
+  gap:1.25rem;
+  align-items:start;
+}
+.home-projects-cta{
+  margin-top:1rem;
+  width:max-content;
+  max-width:100%;
+}
+
+/* Cards de princípios: texto mais baixo e imagem mais evidente em cima. */
+.pillar-card{
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  min-height:305px;
+  padding:2rem 1.35rem 2.2rem;
+}
+.pillar-card::after{
+  background:linear-gradient(180deg,
+    rgba(255,252,244,.02) 0%,
+    rgba(255,252,244,.08) 26%,
+    rgba(255,252,244,.46) 57%,
+    rgba(255,252,244,.90) 100%);
+}
+.pillar-card h3{
+  margin-top:auto;
+  text-shadow:0 1px 0 rgba(255,255,255,.45);
+}
+.pillar-card:nth-child(1)::before{background-position:68% 42%}
+.pillar-card:nth-child(2)::before{background-position:53% 36%}
+.pillar-card:nth-child(3)::before{background-position:58% 38%}
+
+/* Página Projetos: crop pensado para mostrar melhor o elemento principal. */
+.project-grid-pages #diretorio::before{background-position:18% 58%}
+.project-grid-pages #diante-de-deus::before{background-position:68% 56%}
+.project-grid-pages #agenda::before{background-position:58% 54%}
+.project-grid-pages .project-card::after{
+  background:linear-gradient(90deg,
+    rgba(255,252,245,.94) 0%,
+    rgba(255,252,245,.84) 35%,
+    rgba(255,252,245,.45) 56%,
+    rgba(255,252,245,.05) 100%);
+}
+
+/* Diante de Deus: imagem mais presente e distinção ainda sutil. */
+.project-grid-pages .project-card-spiritual::after{
+  background:linear-gradient(90deg,
+    rgba(255,250,241,.93) 0%,
+    rgba(255,250,241,.81) 34%,
+    rgba(255,247,235,.42) 55%,
+    rgba(255,247,235,.04) 100%);
+}
+
+@media(max-width:680px){
+  .home-projects-cta{width:100%;margin-top:.85rem}
+  .pillar-card{
+    min-height:285px;
+    padding:1.7rem 1.2rem 1.9rem;
+  }
+  .project-grid-pages #diretorio::before{background-position:20% 62%}
+  .project-grid-pages #diante-de-deus::before{background-position:66% 58%}
+  .project-grid-pages #agenda::before{background-position:56% 58%}
+  .project-grid-pages .project-card::after{
+    background:linear-gradient(180deg,
+      rgba(255,252,245,.86) 0%,
+      rgba(255,252,245,.73) 52%,
+      rgba(255,252,245,.49) 100%);
+  }
+  .project-grid-pages .project-card-spiritual::after{
+    background:linear-gradient(180deg,
+      rgba(255,250,241,.85) 0%,
+      rgba(255,250,241,.72) 52%,
+      rgba(255,247,235,.47) 100%);
+  }
+}
