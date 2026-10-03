@@ -279,7 +279,61 @@
         });
         statusCell.appendChild(select);
         tr.appendChild(statusCell);
+
+        const detailsCell = document.createElement("td");
+        const detailsButton = smallButton("Ver detalhes", () => {
+          detailsRow.hidden = !detailsRow.hidden;
+          detailsButton.textContent = detailsRow.hidden ? "Ver detalhes" : "Ocultar detalhes";
+        });
+        detailsCell.appendChild(detailsButton);
+        tr.appendChild(detailsCell);
         els.dateBody.appendChild(tr);
+
+        const detailsRow = document.createElement("tr");
+        detailsRow.className = "agenda-admin-detail-row";
+        detailsRow.hidden = true;
+
+        const detailsWrap = document.createElement("td");
+        detailsWrap.colSpan = 6;
+
+        const detailBox = document.createElement("div");
+        detailBox.className = "agenda-admin-request-detail";
+
+        const addDetail = (label, value) => {
+          const item = document.createElement("div");
+          const labelEl = document.createElement("strong");
+          labelEl.textContent = label;
+          const valueEl = document.createElement("span");
+          valueEl.textContent = value || "—";
+          item.append(labelEl, valueEl);
+          detailBox.appendChild(item);
+        };
+
+        addDetail("Protocolo", "VSC-" + String(row.id || "").slice(0, 8).toUpperCase());
+        addDetail("Solicitante", row.requester_name || "—");
+        addDetail("Função / serviço", row.requester_role || "—");
+        addDetail("E-mail", row.email || "—");
+        addDetail("Telefone", row.phone || "—");
+        addDetail("Comunidade", row.community || "—");
+        addDetail("Horário pedido", row.requested_time || "—");
+
+        const alternate = row.alternate_date
+          ? new Date(row.alternate_date + "T12:00:00").toLocaleDateString("pt-BR") + (row.alternate_time ? " às " + row.alternate_time : "")
+          : "—";
+        addDetail("Data alternativa", alternate);
+
+        const notesItem = document.createElement("div");
+        notesItem.className = "agenda-admin-request-notes";
+        const notesLabel = document.createElement("strong");
+        notesLabel.textContent = "Observações";
+        const notesText = document.createElement("span");
+        notesText.textContent = row.notes || "Nenhuma observação informada.";
+        notesItem.append(notesLabel, notesText);
+        detailBox.appendChild(notesItem);
+
+        detailsWrap.appendChild(detailBox);
+        detailsRow.appendChild(detailsWrap);
+        els.dateBody.appendChild(detailsRow);
       });
     }
   }
