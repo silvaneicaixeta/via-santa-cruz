@@ -50,7 +50,8 @@
             <label>Nome do solicitante <input name="requester_name" required maxlength="160" autocomplete="name"></label>
             <label>Função / serviço <input name="requester_role" maxlength="120" placeholder="Ex.: Pároco, secretária paroquial"></label>
             <label>E-mail <input name="email" type="email" required maxlength="180" autocomplete="email"></label>
-            <label>Telefone <input name="phone" maxlength="60" autocomplete="tel"></label>
+            <label>Confirmar e-mail <input name="email_confirm" type="email" required maxlength="180" autocomplete="email"></label>
+            <label>Telefone <input name="phone" type="tel" required maxlength="60" autocomplete="tel" placeholder="Preferencialmente WhatsApp"></label>
             <label>Tipo de celebração ou compromisso <input name="event_type" required maxlength="160" placeholder="Ex.: Crisma, festa patronal, visita pastoral"></label>
             <label>Comunidade <input name="community" maxlength="160" placeholder="Se houver"></label>
             <label>Data desejada <input name="requested_date" type="date" required></label>
@@ -110,6 +111,8 @@
             const messages = {
               required_fields: "Preencha todos os campos obrigatórios.",
               invalid_email: "Informe um e-mail válido.",
+              email_mismatch: "Os dois campos de e-mail devem ser iguais.",
+              invalid_phone: "Informe um telefone para contato.",
               past_date: "A data solicitada deve ser futura.",
               rate_limit: "Foram enviadas várias solicitações com este e-mail nas últimas 24 horas. Tente novamente mais tarde."
             };
@@ -117,7 +120,11 @@
           }
 
           form.reset();
-          const protocol = result.request_id ? "VSC-" + String(result.request_id).slice(0, 8).toUpperCase() : ""; status.innerHTML = "<strong>Solicitação recebida.</strong> Ela será analisada pela Assessoria Episcopal. O envio não representa confirmação do agendamento." + (protocol ? "<br>Protocolo: <strong>" + protocol + "</strong>" : "");
+          const protocol = result.request_id ? "VSC-" + String(result.request_id).slice(0, 8).toUpperCase() : "";
+          const receipt = result.requester_notification_sent
+            ? "<br>Enviamos também um comprovante para o e-mail informado. Se não localizar a mensagem, confira Spam, Lixo eletrônico e Promoções."
+            : "<br><strong>Atenção:</strong> o comprovante por e-mail não pôde ser enviado. Guarde o protocolo e utilize o telefone informado caso precise entrar em contato.";
+          status.innerHTML = "<strong>Solicitação recebida.</strong> Ela será analisada pela Assessoria Episcopal. O envio não representa confirmação do agendamento." + (protocol ? "<br>Protocolo: <strong>" + protocol + "</strong>" : "") + receipt;
         } catch (error) {
           status.textContent = error.message || "Não foi possível enviar a solicitação agora.";
         } finally {
