@@ -363,7 +363,7 @@
 
     optionList(els.filterTypes, unique(meta.map(({p}) => ({ key: normalize(p.type), label: p.type }))), filters.types, "types");
     optionList(els.filterScopes, unique(meta.map(({p}) => ({ key: normalize(p.scope), label: p.scope }))), filters.scopes, "scopes");
-    optionList(els.filterParishes, unique(meta.map(({p}) => ({ key: p.parishKey, label: p.parishFilterLabel || p.parishLabel }))), filters.parishes, "parishes");
+    optionList(els.filterParishes, unique(meta.map(({p}) => ({ key: p.parishKey, label: p.parishLabel }))), filters.parishes, "parishes");
     optionList(
       els.filterCities,
       unique(meta
