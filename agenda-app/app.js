@@ -1,6 +1,6 @@
 (() => {
-  const SUPABASE_URL = "https://vgpivbxykeobgjzqlqcl.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_CplQkGKykMUsHso_vRki-g_gIsZJDgh";
+  const SUPABASE_URL = "https://hkujbdfqhbkejpbsfode.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_KIsDfvNnPTlnFUAvFN74YA_ufMJcAGH";
   const API = SUPABASE_URL + "/functions/v1/vsc-agenda";
   const ACCESS_REQUEST_API = SUPABASE_URL + "/functions/v1/vsc-agenda-access-request";
   const TZ = "America/Sao_Paulo";
