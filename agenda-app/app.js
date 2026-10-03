@@ -565,6 +565,13 @@
     });
   }
 
+  function cleanPrintTitle(value) {
+    return String(value || "")
+      .replace(/(?:[A-Za-zÀ-ÿ]\s){4,}[A-Za-zÀ-ÿ]/g, (match) => match.replace(/\s/g, ""))
+      .replace(/\s{2,}/g, " ")
+      .trim();
+  }
+
   function renderPrint(events) {
     els.printSummary.textContent = filterSummaryLabels().join(" · ");
     els.printList.innerHTML = "";
@@ -586,7 +593,7 @@
       const time = ev.all_day ? "" : fmtTime.format(d);
       row.innerHTML = '<strong>' + esc(pdfDayLabel(ev)) + '</strong><span>' + esc(time) + '</span><div class="' +
         (ev.cancelled ? "is-cancelled" : "") + '">' +
-        esc(ev.cancelled ? "CANCELADO — " + ev.title : ev.title) + "</div>";
+        esc(ev.cancelled ? "CANCELADO — " + cleanPrintTitle(ev.title) : cleanPrintTitle(ev.title)) + "</div>";
       els.printList.appendChild(row);
     });
 
@@ -632,134 +639,25 @@
   }
 
   function generatePdf(events) {
-    const api = window.jspdf && window.jspdf.jsPDF;
-    if (!api) {
-      renderPrint(events);
-      window.print();
-      return;
-    }
+    renderPrint(events);
 
-    const doc = new api({ unit: "mm", format: "a4", orientation: "portrait" });
-    const marginX = 15;
-    const pageWidth = 210;
-    const pageHeight = 297;
-    const usableWidth = pageWidth - marginX * 2;
-    let y = 18;
+    const originalTitle = document.title;
+    const stamp = new Date().toISOString().slice(0, 10);
+    document.title = "Agenda Diocesana - " + stamp;
 
-    const nextPage = () => {
-      doc.addPage();
-      y = 18;
+    const restoreTitle = () => {
+      document.title = originalTitle;
+      window.removeEventListener("afterprint", restoreTitle);
     };
 
-    const ensure = (height) => {
-      if (y + height > pageHeight - 18) nextPage();
-    };
-
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(9);
-    doc.text("DIOCESE DE JANAÚBA", marginX, y);
-    y += 6;
-
-    doc.setFont("times", "bold");
-    doc.setFontSize(18);
-    doc.text("Agenda Diocesana - seleção", marginX, y);
-    y += 8;
-
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(8.5);
-    const summary = pdfSafeText(filterSummaryLabels().join(" · "));
-    if (summary) {
-      const summaryLines = doc.splitTextToSize(summary, usableWidth);
-      doc.text(summaryLines, marginX, y);
-      y += summaryLines.length * 4 + 3;
-    }
-
-    doc.setDrawColor(190);
-    doc.line(marginX, y, pageWidth - marginX, y);
-    y += 6;
-
-    let lastMonth = "";
-    events.forEach((ev) => {
-      const d = new Date(ev.start);
-      const month = fmtMonthYear.format(d);
-
-      if (month !== lastMonth) {
-        if (lastMonth) y += 3.2;
-        ensure(12);
-        doc.setFont("times", "bold");
-        doc.setFontSize(13);
-        doc.text(month.charAt(0).toUpperCase() + month.slice(1), marginX, y);
-        y += 7;
-        lastMonth = month;
-      }
-
-      const date = pdfSafeText(pdfDayLabel(ev));
-      let time = "";
-      if (!(ev.source === "liturgico" && ev.all_day)) {
-        if (ev.all_day) time = "";
-        else time = pdfSafeText(fmtTime.format(d));
-      }
-
-      const cleanTitle = pdfSafeText(ev.title);
-      const titleText = ev.cancelled ? "CANCELADO — " + cleanTitle : cleanTitle;
-      const dateWidth = 25;
-      const timeWidth = 17;
-      const titleX = marginX + dateWidth + timeWidth;
-      const titleLines = doc.splitTextToSize(titleText, pageWidth - marginX - titleX);
-      const lineHeight = 3.55;
-      const textHeight = Math.max(lineHeight, titleLines.length * lineHeight);
-      const rowPaddingTop = 1.5;
-      const rowPaddingBottom = 1.5;
-      const rowHeight = textHeight + rowPaddingTop + rowPaddingBottom;
-      ensure(rowHeight + 1.1);
-
-      y += rowPaddingTop;
-
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(9);
-      doc.setTextColor(0);
-      const baselineY = y + (titleLines.length > 1 ? 0.4 : 0);
-      doc.text(date, marginX, baselineY);
-
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(8.5);
-      if (time) doc.text(time, marginX + dateWidth, baselineY);
-
-      doc.setFont("helvetica", ev.cancelled ? "bold" : "normal");
-      doc.setFontSize(9);
-      if (ev.cancelled) doc.setTextColor(145, 55, 45);
-      doc.text(titleLines, titleX, y);
-      doc.setTextColor(0);
-
-      y += textHeight + rowPaddingBottom;
-      doc.setDrawColor(225);
-      doc.line(marginX, y, pageWidth - marginX, y);
-      y += 0.8;
+    window.addEventListener("afterprint", restoreTitle);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => window.print());
     });
 
-    const stamp = generatedStamp();
-    const pages = doc.getNumberOfPages();
-    for (let page = 1; page <= pages; page++) {
-      doc.setPage(page);
-      doc.setDrawColor(210);
-      doc.line(marginX, pageHeight - 13, pageWidth - marginX, pageHeight - 13);
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(7.2);
-      doc.setTextColor(90);
-      const syncText = lastSyncReference ? "Dados sincronizados até " + fmtUpdated.format(lastSyncReference) + "." : "Sincronização não informada.";
-      doc.text(syncText + " Programação sujeita a alterações.", marginX, pageHeight - 9);
-      doc.text("viasantacruz.com.br · PDF gerado em " + stamp, marginX, pageHeight - 5.5);
-      doc.setTextColor(0);
-    }
-
-    const now = new Date();
-    const filename = "agenda-diocesana-" + now.toISOString().slice(0, 10) + ".pdf";
-    try {
-      doc.save(filename);
-    } catch {
-      const url = doc.output("bloburl");
-      window.open(url, "_blank", "noopener");
-    }
+    setTimeout(() => {
+      if (document.title !== originalTitle) restoreTitle();
+    }, 30000);
   }
 
   function apply() {
