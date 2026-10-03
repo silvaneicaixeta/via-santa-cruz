@@ -1608,3 +1608,12 @@ body{background:#f8f4ea}
     line-height: 1.2 !important;
   }
 }
+
+
+/* Agenda — orientação dos filtros */
+.agenda-filter-hint{
+  margin:.15rem 1.15rem .75rem;
+  color:#75807a;
+  font-size:.76rem;
+  line-height:1.35;
+}
