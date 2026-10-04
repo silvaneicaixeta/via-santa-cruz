@@ -1668,3 +1668,42 @@ body{background:#f8f4ea}
     line-height: 1.2 !important;
   }
 }
+
+
+/* Agenda — sincronização manual e alteração de participação episcopal */
+.agenda-sync-status{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:.65rem;
+  flex-wrap:wrap;
+}
+.agenda-sync-now{
+  border:0;
+  background:transparent;
+  color:var(--green);
+  font:inherit;
+  font-size:.78rem;
+  font-weight:900;
+  padding:.15rem 0;
+  cursor:pointer;
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+.agenda-sync-now:hover{color:var(--gold-dark)}
+.agenda-sync-now:disabled{opacity:.55;cursor:wait}
+.agenda-bishop-note{
+  margin:.18rem 0 0;
+  color:var(--gold-dark);
+  font-size:.82rem;
+  font-weight:900;
+}
+.agenda-event.bishop-absent:not(.is-cancelled){
+  border-left:3px solid rgba(159,119,47,.48);
+}
+@media(max-width:680px){
+  .agenda-sync-status{justify-content:flex-start}
+}
+@media print{
+  .agenda-sync-now{display:none!important}
+}
