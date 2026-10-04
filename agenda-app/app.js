@@ -401,16 +401,16 @@
   function inPeriod(ev) {
     if (currentScope !== "main" || filters.period === "all") return true;
     const date = new Date(ev.start), now = new Date();
+    const todayKey = dateKey(now);
+    const eventKey = dateKey(date);
 
     if (filters.period === "next30") {
-      const start = new Date(now.getTime() - 86400000);
       const end = new Date(now.getTime() + 30 * 86400000);
-      return date >= start && date <= end;
+      return eventKey >= todayKey && date <= end;
     }
     if (filters.period === "upcoming") {
-      const start = new Date(now.getTime() - 86400000);
       const end = new Date(now.getTime() + 90 * 86400000);
-      return date >= start && date <= end;
+      return eventKey >= todayKey && date <= end;
     }
     if (filters.period === "month") return monthKey(date) === monthKey(now);
     if (filters.period === "past30") {
@@ -650,8 +650,7 @@
     renderPrint(events);
 
     const originalTitle = document.title;
-    const stamp = new Date().toISOString().slice(0, 10);
-    document.title = "Agenda Diocesana - " + stamp;
+    document.title = "Agenda Diocesana";
 
     const restoreTitle = () => {
       document.title = originalTitle;
