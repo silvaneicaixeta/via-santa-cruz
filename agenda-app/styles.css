@@ -1161,20 +1161,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .agenda-filter-panel{width:100%;top:5vh;border-radius:22px 22px 0 0}
   .agenda-check-grid{grid-template-columns:1fr}
 }
-@media print{
-  @page{size:A4;margin:16mm 14mm}
-  .site-header,.page-hero,.agenda-intro,.agenda-toolbar,.agenda-actions,.agenda-active-filters,.agenda-calendar,.agenda-result-line,.agenda-list,.site-footer,.agenda-filter-modal{display:none!important}
-  body{background:#fff;color:#111}
-  .agenda-section{padding:0;background:#fff}
-  .agenda-print-sheet{display:block!important}
-  .agenda-print-head{padding-bottom:8mm;border-bottom:1px solid #bbb;margin-bottom:5mm}
-  .agenda-print-head p{margin:0 0 2mm;font:700 9pt "Lato",Arial,sans-serif;letter-spacing:.08em}
-  .agenda-print-head h1{margin:0 0 2mm;font:600 19pt "Playfair Display",Georgia,serif}
-  .agenda-print-head div{font:400 9pt "Lato",Arial,sans-serif;color:#555}
-  .agenda-print-row{display:grid;grid-template-columns:34mm 22mm 1fr;gap:4mm;padding:2.3mm 0;border-bottom:1px solid #ddd;font:400 9.5pt "Lato",Arial,sans-serif;break-inside:avoid}
-  .agenda-print-row strong{font-weight:900}.agenda-print-row span{color:#555}
-  .agenda-print-foot{margin-top:8mm;font:400 8pt "Lato",Arial,sans-serif;color:#666}
-}
+
 
 
 /* Refinamento global de ritmo e cabeçalhos */
@@ -1205,10 +1192,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 /* PDF e filtros — revisão 2 */
 .agenda-action-count[hidden]{display:none!important}
 .agenda-print-month{margin:7mm 0 2mm;font:700 13pt "Playfair Display",Georgia,serif}
-@media print{
-  .agenda-print-row{grid-template-columns:25mm 22mm 1fr}
-  .agenda-print-foot{position:fixed;left:14mm;right:14mm;bottom:5mm;margin:0;padding-top:2mm;border-top:1px solid #ccc;font-size:7.5pt;background:#fff}
-}
+
 
 
 /* Refinamento tipográfico global — títulos mais proporcionais */
@@ -1314,7 +1298,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   font-size:.78rem;
   text-align:center;
 }
-@media print{.agenda-sync-footer{display:none!important}}
+
 
 
 /* Agenda — acesso autenticado */
@@ -1413,9 +1397,7 @@ body{background:#f8f4ea}
   .agenda-app-intro h1{font-size:clamp(2rem,9vw,2.75rem)}
   .agenda-app-intro>p{font-size:.95rem}
 }
-@media print{
-  .agenda-app-header,.agenda-app-footer,.agenda-app-intro,.agenda-source-bar,.agenda-actions,.agenda-active-filters,.agenda-calendar,.agenda-result-line,.agenda-list,.agenda-sync-footer{display:none!important}
-}
+
 
 
 /* Assinatura de pertencimento — Via Santa Cruz */
@@ -1465,11 +1447,89 @@ body{background:#f8f4ea}
 
 
 /* Agenda — refinamento de impressão e fontes exibidas */
-@media print{
-  .agenda-print-row{align-items:center;padding:1.7mm 0;line-height:1.22}
-  .agenda-print-row > div.is-cancelled{font-weight:900;color:#91372d}
-  .agenda-print-month{margin:5.5mm 0 1.5mm}
+
+
+
+/* Agenda — impressão canônica (fonte única de layout) */
+
+
+
+/* Agenda — orientação dos filtros */
+.agenda-filter-hint{
+  margin:.15rem 1.15rem .75rem;
+  color:#75807a;
+  font-size:.76rem;
+  line-height:1.35;
 }
+
+
+/* Agenda — reserva segura para o rodapé impresso */
+
+
+
+/* Agenda — confirmação destacada após solicitação */
+.agenda-auth-message.is-success{
+  white-space:pre-line;
+  margin-top:1rem;
+  padding:1rem 1.05rem;
+  border:1px solid rgba(18,60,46,.16);
+  border-left:4px solid var(--green);
+  border-radius:12px;
+  background:rgba(18,60,46,.06);
+  color:var(--ink);
+  line-height:1.5;
+}
+
+
+/* Agenda — impressão final: rodapé no fluxo, sem sobreposição */
+
+
+
+/* Agenda — detalhes das solicitações de datas */
+.agenda-admin-detail-row td{
+  padding:.25rem .55rem 1rem!important;
+  background:rgba(18,60,46,.025);
+}
+.agenda-admin-request-detail{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:.8rem 1rem;
+  padding:1rem;
+  border:1px solid rgba(18,60,46,.10);
+  border-radius:12px;
+  background:#fff;
+}
+.agenda-admin-request-detail>div{
+  display:grid;
+  gap:.22rem;
+  min-width:0;
+}
+.agenda-admin-request-detail strong{
+  color:var(--gold-dark);
+  font-size:.68rem;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+.agenda-admin-request-detail span{
+  color:var(--ink);
+  overflow-wrap:anywhere;
+}
+.agenda-admin-request-notes{
+  grid-column:1/-1;
+}
+.agenda-admin-request-notes span{
+  white-space:pre-wrap;
+  line-height:1.45;
+}
+@media(max-width:900px){
+  .agenda-admin-request-detail{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+  .agenda-admin-request-detail{grid-template-columns:1fr}
+}
+
+
+/* Agenda — impressão paginada com rodapé repetido */
 
 
 /* Agenda — impressão canônica (fonte única de layout) */
@@ -1606,176 +1666,5 @@ body{background:#f8f4ea}
     color: #666 !important;
     font: 400 7pt "Lato", Arial, sans-serif !important;
     line-height: 1.2 !important;
-  }
-}
-
-
-/* Agenda — orientação dos filtros */
-.agenda-filter-hint{
-  margin:.15rem 1.15rem .75rem;
-  color:#75807a;
-  font-size:.76rem;
-  line-height:1.35;
-}
-
-
-/* Agenda — reserva segura para o rodapé impresso */
-@media print {
-  @page { size:A4 portrait; margin:12mm 12mm 25mm; }
-  .agenda-print-foot {
-    bottom: 11mm !important;
-  }
-}
-
-
-/* Agenda — confirmação destacada após solicitação */
-.agenda-auth-message.is-success{
-  white-space:pre-line;
-  margin-top:1rem;
-  padding:1rem 1.05rem;
-  border:1px solid rgba(18,60,46,.16);
-  border-left:4px solid var(--green);
-  border-radius:12px;
-  background:rgba(18,60,46,.06);
-  color:var(--ink);
-  line-height:1.5;
-}
-
-
-/* Agenda — impressão final: rodapé no fluxo, sem sobreposição */
-@media print {
-  @page { size:A4 portrait; margin:12mm 12mm 16mm; }
-  .agenda-print-foot {
-    position: static !important;
-    left: auto !important;
-    right: auto !important;
-    bottom: auto !important;
-    margin: 7mm 0 0 !important;
-    padding-top: 1.5mm !important;
-    border-top: .2mm solid #ccc !important;
-    background: #fff !important;
-    break-inside: avoid !important;
-    page-break-inside: avoid !important;
-  }
-}
-
-
-/* Agenda — detalhes das solicitações de datas */
-.agenda-admin-detail-row td{
-  padding:.25rem .55rem 1rem!important;
-  background:rgba(18,60,46,.025);
-}
-.agenda-admin-request-detail{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:.8rem 1rem;
-  padding:1rem;
-  border:1px solid rgba(18,60,46,.10);
-  border-radius:12px;
-  background:#fff;
-}
-.agenda-admin-request-detail>div{
-  display:grid;
-  gap:.22rem;
-  min-width:0;
-}
-.agenda-admin-request-detail strong{
-  color:var(--gold-dark);
-  font-size:.68rem;
-  text-transform:uppercase;
-  letter-spacing:.06em;
-}
-.agenda-admin-request-detail span{
-  color:var(--ink);
-  overflow-wrap:anywhere;
-}
-.agenda-admin-request-notes{
-  grid-column:1/-1;
-}
-.agenda-admin-request-notes span{
-  white-space:pre-wrap;
-  line-height:1.45;
-}
-@media(max-width:900px){
-  .agenda-admin-request-detail{grid-template-columns:1fr 1fr}
-}
-@media(max-width:560px){
-  .agenda-admin-request-detail{grid-template-columns:1fr}
-}
-
-
-/* Agenda — impressão paginada com rodapé repetido */
-@media print {
-  @page { size:A4 portrait; margin:12mm 12mm 14mm; }
-
-  .agenda-print-table{
-    display:table!important;
-    width:100%!important;
-    border-collapse:collapse!important;
-    table-layout:fixed!important;
-  }
-  .agenda-print-table tbody{display:table-row-group!important}
-  .agenda-print-table tfoot{display:table-footer-group!important}
-  .agenda-print-table tfoot td{padding:0!important;border:0!important}
-
-  .agenda-print-month-row{
-    break-after:avoid!important;
-    page-break-after:avoid!important;
-  }
-  .agenda-print-month-row td{
-    padding:4.5mm 0 1.2mm!important;
-    border:0!important;
-    font:700 12pt "Playfair Display",Georgia,serif!important;
-    line-height:1.05!important;
-  }
-
-  .agenda-print-row{
-    display:table-row!important;
-    min-height:0!important;
-    break-inside:avoid!important;
-    page-break-inside:avoid!important;
-  }
-  .agenda-print-row th,
-  .agenda-print-row td{
-    padding:1.05mm 0!important;
-    border-bottom:.2mm solid #ddd!important;
-    font:400 9pt "Lato",Arial,sans-serif!important;
-    line-height:1.16!important;
-    vertical-align:middle!important;
-  }
-  .agenda-print-row th{
-    width:25mm!important;
-    padding-right:2.4mm!important;
-    font-weight:900!important;
-    text-align:left!important;
-    white-space:nowrap!important;
-  }
-  .agenda-print-row td:nth-child(2){
-    width:17mm!important;
-    padding-right:2.4mm!important;
-    white-space:nowrap!important;
-    color:#222!important;
-  }
-  .agenda-print-row td:nth-child(3){
-    overflow-wrap:anywhere!important;
-  }
-  .agenda-print-row td.is-cancelled{
-    color:#91372d!important;
-    font-weight:900!important;
-  }
-
-  .agenda-print-foot{
-    position:static!important;
-    left:auto!important;
-    right:auto!important;
-    bottom:auto!important;
-    margin:3mm 0 0!important;
-    padding-top:1.5mm!important;
-    border-top:.2mm solid #ccc!important;
-    background:#fff!important;
-    color:#666!important;
-    font:400 7pt "Lato",Arial,sans-serif!important;
-    line-height:1.2!important;
-    white-space:normal!important;
   }
 }
