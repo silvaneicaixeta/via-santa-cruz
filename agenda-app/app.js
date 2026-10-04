@@ -662,24 +662,90 @@
     }).format(new Date());
   }
 
+  function printCssString(value) {
+    return String(value || "")
+      .replace(/\\/g, "\\\\")
+      .replace(/"/g, '\\"')
+      .replace(/[\r\n]+/g, " ")
+      .trim();
+  }
+
+  function installPrintPageMargins() {
+    const existing = document.getElementById("agenda-print-page-margins");
+    if (existing) existing.remove();
+
+    const generated = generatedStamp();
+    const syncText = lastSyncReference
+      ? "Dados sincronizados até " + fmtUpdated.format(lastSyncReference) + " · "
+      : "";
+    const footerText = syncText + "Gerado em " + generated + " · Programação sujeita a alterações.";
+
+    const style = document.createElement("style");
+    style.id = "agenda-print-page-margins";
+    style.textContent = `
+      @page {
+        size: A4 portrait;
+        margin: 18mm 12mm 18mm 12mm;
+
+        @top-left {
+          content: "agenda.viasantacruz.com.br";
+          font: 400 7pt Arial, sans-serif;
+          color: #555;
+        }
+
+        @top-center {
+          content: "Agenda Diocesana";
+          font: 600 7.5pt Arial, sans-serif;
+          color: #333;
+        }
+
+        @top-right {
+          content: "${printCssString(generated)}";
+          font: 400 7pt Arial, sans-serif;
+          color: #555;
+        }
+
+        @bottom-left {
+          content: "${printCssString(footerText)}";
+          font: 400 6.5pt Arial, sans-serif;
+          color: #666;
+          text-align: left;
+        }
+
+        @bottom-right {
+          content: counter(page) "/" counter(pages);
+          font: 400 7pt Arial, sans-serif;
+          color: #555;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function removePrintPageMargins() {
+    document.getElementById("agenda-print-page-margins")?.remove();
+  }
+
   function generatePdf(events) {
     renderPrint(events);
+    installPrintPageMargins();
 
     const originalTitle = document.title;
-    document.title = "Agenda Diocesana";
+    document.title = "";
 
-    const restoreTitle = () => {
+    const restorePrintState = () => {
       document.title = originalTitle;
-      window.removeEventListener("afterprint", restoreTitle);
+      removePrintPageMargins();
+      window.removeEventListener("afterprint", restorePrintState);
     };
 
-    window.addEventListener("afterprint", restoreTitle);
+    window.addEventListener("afterprint", restorePrintState);
     requestAnimationFrame(() => {
       requestAnimationFrame(() => window.print());
     });
 
     setTimeout(() => {
-      if (document.title !== originalTitle) restoreTitle();
+      if (document.getElementById("agenda-print-page-margins")) restorePrintState();
     }, 30000);
   }
 
