@@ -1177,23 +1177,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
   max-width:820px;
 }
 
-/* Idealizador: encerramento visual do site */
-.idealizer-visual-summary{
-  padding:0 0 72px;
-  background:#fffdf8;
-}
-.idealizer-visual-summary-image{
-  width:min(calc(100% - 40px),var(--container));
-  height:clamp(300px,34vw,470px);
-  margin-inline:auto;
-  border-radius:26px;
-  background:
-    linear-gradient(90deg,rgba(251,247,239,.08),rgba(251,247,239,0) 40%),
-    url("assets/vsc-hero-home-hq.svg") center/cover no-repeat;
-  box-shadow:0 22px 58px rgba(18,60,46,.10);
-  border:1px solid rgba(184,137,45,.18);
-}
-
 @media(max-width:860px){
   .project-grid-institutional{grid-template-columns:1fr}
 }
@@ -1208,15 +1191,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
   }
   .project-grid-pages #diante-de-deus::before{
     transform:translateX(4%) scale(1.10);
-  }
-  .idealizer-visual-summary{
-    padding-bottom:48px;
-  }
-  .idealizer-visual-summary-image{
-    width:min(calc(100% - 28px),var(--container));
-    height:235px;
-    border-radius:18px;
-    background-position:67% center;
   }
 }
 
@@ -1246,12 +1220,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
   transform-origin:center;
 }
 
-/* Encerramento do Idealizador: usar exatamente a imagem reenviada pelo usuário. */
-.idealizer-visual-summary-image{
-  background:
-    url("assets/vsc-idealizador-final.webp") center/cover no-repeat;
-}
-
 @media(max-width:860px){
   .project-grid-spiritual{grid-template-columns:1fr}
 }
@@ -1264,8 +1232,5 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .project-grid-pages #diante-de-deus::before{
     background-position:58% center;
     transform:translateX(2%) scale(1);
-  }
-  .idealizer-visual-summary-image{
-    background-position:66% center;
   }
 }
