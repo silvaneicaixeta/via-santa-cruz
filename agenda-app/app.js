@@ -3,6 +3,7 @@
   const SUPABASE_KEY = "sb_publishable_KIsDfvNnPTlnFUAvFN74YA_ufMJcAGH";
   const API = SUPABASE_URL + "/functions/v1/vsc-agenda";
   const ACCESS_REQUEST_API = SUPABASE_URL + "/functions/v1/vsc-agenda-access-request";
+  const ADMIN_DASH_API = SUPABASE_URL + "/functions/v1/vsc-agenda-admin-dashboard";
   const TZ = "America/Sao_Paulo";
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
     auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
@@ -63,7 +64,8 @@
     printButton: document.getElementById("agenda-print-button"),
     printList: document.getElementById("agenda-print-list"),
     printSummary: document.getElementById("agenda-print-summary"),
-    syncFooter: document.getElementById("agenda-sync-footer")
+    syncFooter: document.getElementById("agenda-sync-footer"),
+    syncNow: document.getElementById("agenda-sync-now")
   };
 
   async function getSession() {
@@ -102,6 +104,7 @@
     if (els.appUser) els.appUser.hidden = false;
     if (els.userLabel) els.userLabel.textContent = displayName || "Conta autorizada";
     if (els.adminOpen) els.adminOpen.hidden = !canManageUsers;
+    if (els.syncNow) els.syncNow.hidden = !canManageUsers;
   }
 
   async function authorizedFetch(url, options = {}) {
@@ -448,7 +451,7 @@
   function renderEventCard(ev) {
     const date = new Date(ev.start), p = parseEvent(ev);
     const card = document.createElement("article");
-    card.className = "agenda-event" + (ev.cancelled ? " is-cancelled" : "");
+    card.className = "agenda-event" + (ev.cancelled ? " is-cancelled" : "") + (ev.bishop_absent ? " bishop-absent" : "");
 
     const badges = [];
     if (ev.cancelled) badges.push('<span class="agenda-badge cancelled">Cancelado</span>');
@@ -456,10 +459,14 @@
 
     const timeLabel = ev.source === "liturgico" && ev.all_day ? "" : formatRange(ev);
     const meta = [timeLabel, p.city || ev.location].filter(Boolean).join(" · ");
+    const bishopNote = ev.bishop_absent
+      ? '<p class="agenda-bishop-note">Bispo não participará</p>'
+      : "";
     card.innerHTML =
       '<div class="agenda-date"><strong class="agenda-day">' + esc(fmtDay.format(date)) + '</strong><span class="agenda-month-short">' +
       esc(fmtMonthShort.format(date).replace(".", "").toUpperCase()) + '</span></div>' +
       '<div class="agenda-event-copy"><div class="agenda-badges">' + badges.join("") + '</div><h3>' + esc(ev.title) + '</h3>' +
+      bishopNote +
       '<div class="agenda-event-bottom"><p class="agenda-meta">' + esc(meta) + '</p>' +
       (ev.cancelled ? "" : '<a class="agenda-add" target="_blank" rel="noopener" href="' + esc(buildGoogleCalendarUrl(ev)) + '">+ Agenda</a>') +
       "</div></div>";
@@ -601,7 +608,11 @@
       const time = ev.all_day ? "" : fmtTime.format(d);
       row.innerHTML = '<strong>' + esc(pdfDayLabel(ev)) + '</strong><span>' + esc(time) + '</span><div class="' +
         (ev.cancelled ? "is-cancelled" : "") + '">' +
-        esc(ev.cancelled ? "CANCELADO — " + cleanPrintTitle(ev.title) : cleanPrintTitle(ev.title)) + "</div>";
+        esc(
+          ev.cancelled
+            ? "CANCELADO — " + cleanPrintTitle(ev.title)
+            : cleanPrintTitle(ev.title) + (ev.bishop_absent ? " — Bispo não participará" : "")
+        ) + "</div>";
       els.printList.appendChild(row);
     });
 
@@ -814,6 +825,30 @@
       apply();
     });
   }
+  if (els.syncNow) {
+    els.syncNow.addEventListener("click", async () => {
+      const original = els.syncNow.textContent;
+      els.syncNow.disabled = true;
+      els.syncNow.textContent = "Sincronizando…";
+      els.updated.textContent = "Atualizando dados do Google Calendar…";
+      try {
+        const response = await authorizedFetch(ADMIN_DASH_API, {
+          method: "POST",
+          body: { action: "sync_now" }
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.error || "sync_failed");
+        await load();
+        els.status.textContent = result.message || "Sincronização concluída.";
+      } catch {
+        els.updated.textContent = "Não foi possível sincronizar agora. Tente novamente em alguns instantes.";
+      } finally {
+        els.syncNow.disabled = false;
+        els.syncNow.textContent = original;
+      }
+    });
+  }
+
   els.printButton.addEventListener("click", () => {
     const events = filteredEvents();
     if (!events.length) {
