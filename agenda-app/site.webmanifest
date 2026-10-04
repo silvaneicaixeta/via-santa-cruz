@@ -7,7 +7,7 @@
   "theme_color": "#123C2E",
   "icons": [
   {
-    "src": "./vsc-favicon.png",
+    "src": "https://viasantacruz.com.br/assets/vsc-favicon-agenda.png",
     "sizes": "512x512",
     "type": "image/png",
     "purpose": "any"
