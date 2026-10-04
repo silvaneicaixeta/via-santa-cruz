@@ -1534,7 +1534,7 @@ body{background:#f8f4ea}
 
 /* Agenda — impressão canônica (fonte única de layout) */
 @media print {
-  @page { size: A4 portrait; margin: 12mm 12mm 16mm; }
+  @page { size: A4 portrait; margin: 12mm 12mm 24mm; }
 
   html, body {
     background: #fff !important;
@@ -1556,6 +1556,7 @@ body{background:#f8f4ea}
   .agenda-result-line,
   .agenda-list,
   .agenda-sync-footer,
+  .agenda-sync-now,
   .agenda-filter-modal {
     display: none !important;
   }
@@ -1654,11 +1655,21 @@ body{background:#f8f4ea}
     font-weight: 900 !important;
   }
 
+  .agenda-print-row > div.is-liturgical {
+    font-style: italic !important;
+  }
+
+  .agenda-print-bishop-note {
+    color: #8a6826 !important;
+    font-style: italic !important;
+    font-weight: 400 !important;
+  }
+
   .agenda-print-foot {
     position: fixed !important;
     left: 12mm !important;
     right: 12mm !important;
-    bottom: 5mm !important;
+    bottom: 7mm !important;
     margin: 0 !important;
     padding-top: 1.5mm !important;
     border-top: .2mm solid #ccc !important;
@@ -1696,14 +1707,12 @@ body{background:#f8f4ea}
   margin:.18rem 0 0;
   color:var(--gold-dark);
   font-size:.82rem;
-  font-weight:900;
+  font-style:italic;
+  font-weight:700;
 }
 .agenda-event.bishop-absent:not(.is-cancelled){
   border-left:3px solid rgba(159,119,47,.48);
 }
 @media(max-width:680px){
   .agenda-sync-status{justify-content:flex-start}
-}
-@media print{
-  .agenda-sync-now{display:none!important}
 }
