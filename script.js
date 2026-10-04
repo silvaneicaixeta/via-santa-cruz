@@ -18,23 +18,3 @@ if (toggle && nav) {
 }
 
 document.getElementById('year').textContent = new Date().getFullYear();
-
-(() => {
-  const SUPABASE_URL = 'https://vgpivbxykeobgjzqlqcl.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_CplQkGKykMUsHso_vRki-g_gIsZJDgh';
-  const path = window.location.pathname || '/';
-  let referrerHost = null;
-  try {
-    if (document.referrer) referrerHost = new URL(document.referrer).hostname;
-  } catch (_) {}
-  fetch(SUPABASE_URL + '/rest/v1/rpc/vsc_record_pageview', {
-    method: 'POST',
-    headers: {
-      'apikey': SUPABASE_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_KEY,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ p_path: path, p_referrer_host: referrerHost }),
-    keepalive: true
-  }).catch(() => {});
-})();
