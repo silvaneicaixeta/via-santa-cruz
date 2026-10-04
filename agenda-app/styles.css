@@ -1534,7 +1534,7 @@ body{background:#f8f4ea}
 
 /* Agenda — impressão canônica (fonte única de layout) */
 @media print {
-  @page { size: A4 portrait; margin: 12mm 12mm 24mm; }
+  @page { size: A4 portrait; margin: 18mm 12mm; }
 
   html, body {
     background: #fff !important;
@@ -1666,17 +1666,7 @@ body{background:#f8f4ea}
   }
 
   .agenda-print-foot {
-    position: fixed !important;
-    left: 12mm !important;
-    right: 12mm !important;
-    bottom: 7mm !important;
-    margin: 0 !important;
-    padding-top: 1.5mm !important;
-    border-top: .2mm solid #ccc !important;
-    background: #fff !important;
-    color: #666 !important;
-    font: 400 7pt "Lato", Arial, sans-serif !important;
-    line-height: 1.2 !important;
+    display: none !important;
   }
 }
 
