@@ -172,7 +172,10 @@
 
         <div class="agenda-result-line">
           <div id="agenda-status" class="agenda-status" role="status">Carregando agenda…</div>
-          <div id="agenda-updated" class="agenda-updated" aria-live="polite"></div>
+          <div class="agenda-sync-status">
+            <div id="agenda-updated" class="agenda-updated" aria-live="polite"></div>
+            <button id="agenda-sync-now" class="agenda-sync-now" type="button" hidden>Sincronizar agora</button>
+          </div>
         </div>
         <div id="agenda-list" class="agenda-list" aria-live="polite"></div>
         <p id="agenda-sync-footer" class="agenda-sync-footer">Sincronização: aguardando dados…</p>
