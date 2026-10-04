@@ -606,13 +606,18 @@
       const row = document.createElement("div");
       row.className = "agenda-print-row";
       const time = ev.all_day ? "" : fmtTime.format(d);
+      const titleClasses = [
+        ev.cancelled ? "is-cancelled" : "",
+        ev.source === "liturgico" ? "is-liturgical" : ""
+      ].filter(Boolean).join(" ");
+      const baseTitle = ev.cancelled
+        ? "CANCELADO — " + cleanPrintTitle(ev.title)
+        : cleanPrintTitle(ev.title);
+      const bishopNote = ev.bishop_absent && !ev.cancelled
+        ? '<span class="agenda-print-bishop-note"> — Bispo não participará</span>'
+        : "";
       row.innerHTML = '<strong>' + esc(pdfDayLabel(ev)) + '</strong><span>' + esc(time) + '</span><div class="' +
-        (ev.cancelled ? "is-cancelled" : "") + '">' +
-        esc(
-          ev.cancelled
-            ? "CANCELADO — " + cleanPrintTitle(ev.title)
-            : cleanPrintTitle(ev.title) + (ev.bishop_absent ? " — Bispo não participará" : "")
-        ) + "</div>";
+        titleClasses + '">' + esc(baseTitle) + bishopNote + "</div>";
       els.printList.appendChild(row);
     });
 
