@@ -7,6 +7,10 @@
   const allowed = new Set([
     "/",
     "/projetos.html",
+    "/diretorio.html",
+    "/diante-de-deus.html",
+    "/agenda-diocesana.html",
+    "/solicitar-data.html",
     "/sobre.html",
     "/idealizador.html"
   ]);
