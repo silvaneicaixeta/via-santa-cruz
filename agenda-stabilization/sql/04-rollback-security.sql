@@ -1,7 +1,7 @@
 -- Emergency containment AFTER approval, not an automatic down migration.
 -- First disable the approved scheduler and stop in-flight runs. Do not drop history.
--- Restoring the old synchronizer requires a deliberate decision: its delete/insert
--- behavior is unsafe. Prefer restoring a known-good isolated deployment instead.
+-- Install rollback/vsc-agenda-sync/index.ts for containment. Do not reinstate
+-- the unsafe old synchronizer as an automatic rollback.
 begin;
 revoke all on function public.vsc_agenda_link_events(text) from public,anon,authenticated;
 grant execute on function public.vsc_agenda_link_events(text) to service_role;

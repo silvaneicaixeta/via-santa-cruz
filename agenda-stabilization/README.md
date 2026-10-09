@@ -155,10 +155,11 @@ Antes de qualquer implantação futura, ensaiar estes passos em homologação:
 
 1. Desativar o executor, bloquear novas execuções e esperar/encerrar o lease.
 2. Restaurar a versão anterior do painel e do leitor arquivada em baseline.
-3. Restaurar o sincronizador anterior somente em modo contido e com
-   verify_jwt=true; seu delete/insert e autorização insuficiente continuam
-   sendo riscos conhecidos. Preferir manter sincronização suspensa enquanto
-   se corrige a versão nova.
+3. Instalar `rollback/vsc-agenda-sync/index.ts`, que retorna 503 sem acessar
+   banco ou calendários. A consulta da Agenda permanece disponível, e novas
+   sincronizações ficam suspensas enquanto se corrige a versão nova. Não
+   reinstalar automaticamente o sincronizador v14: ele mantém os riscos
+   de autorização e delete/insert anteriores.
 4. Manter o linker sem elevação e sem grants a usuários (SQL 04). Não restaurar
    os ACLs vulneráveis. Não remover as tabelas de histórico nem occurrence_key:
    são aditivas e não impedem o leitor antigo.
