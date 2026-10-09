@@ -1,0 +1,34 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> agenda-stabilization@1.0.0 test
+> node --test --test-concurrency=1 tests/*.test.mjs
+
+✔ Site16 regression: desktop/mobile, search, filters, admin details, manual sync, PDF margin boxes (4479.904803ms)
+✔ Source configuration changes and large snapshot shrinkage abort before any event write (2770.942781ms)
+✔ Unmapped pre-migration institutional links are retained for review rather than silently deleted (1900.361338ms)
+✔ 429 Retry-After seconds and HTTP date are respected; exponential fallback bounded (9.957025ms)
+✔ Long Retry-After defers without retrying early; repeated 429 preserves existing rows (2183.329955ms)
+✔ Daily, weekly, monthly, yearly recurrence; EXDATE, RDATE, COUNT, UNTIL (52.436786ms)
+✔ Moved/cancelled recurrence exceptions replace original occurrence; original identity retained (2.833741ms)
+✔ RANGE=THISANDFUTURE shifts subsequent instances correctly (1.5013ms)
+✔ Date-only, floating Brazil time, IANA DST and leap day remain correct (14.395495ms)
+✔ Bishop absence remains distinct from actual cancellation; invalid/unknown zones fail closed (2.617946ms)
+✔ Prepared workflow is outside active workflow directory, schedule disabled, concurrency and server secrets only (18.377903ms)
+✔ 24 simulated hourly service invocations succeed and maintain isolated event links and history (3087.033575ms)
+✔ Authorization: absent/invalid/common/service-role JWT denied; active admin and dedicated service allowed (3045.968726ms)
+✔ Linker and all sync RPCs denied to PUBLIC/anon/authenticated; no SECURITY DEFINER; safe search_path (2438.07853ms)
+✔ Atomic upsert preserves stable IDs, valid links, old history and resolves Sagrado Coração (3889.497827ms)
+✔ Write failure after event writes rolls back ALL rows, links, source timestamp; failure history survives (2070.039661ms)
+✔ Empty, truncated, invalid 200, missing SUMMARY, invalid dates and empty window preserve old data (1804.515473ms)
+✔ Concurrent manual and automatic invocation: exactly one runs and other returns 409 (2432.381744ms)
+✔ Expired lease fencing rejects old writer and admits a new service run (2129.427833ms)
+✔ RPC rejects null snapshots and duplicates before modifying existing events (1774.657584ms)
+✔ Moved recurrence retains institutional link using original occurrence identity (2981.973759ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 39387.409243

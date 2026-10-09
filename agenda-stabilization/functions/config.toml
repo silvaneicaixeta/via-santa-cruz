@@ -1,0 +1,3 @@
+# Prepared only; do not deploy to production.
+[functions.vsc-agenda-sync]
+verify_jwt = false

@@ -1,0 +1,12 @@
+node_modules/
+test-results/
+.local-db/
+.local-browser/
+.env*
+baseline/production.json
+baseline/data-summary.json
+baseline/http-read-only.json
+baseline/real-calendar-compatibility.json
+baseline/dry-run-comparison.json
+baseline/dashboard-change.diff
+baseline/published-vs-main.diff

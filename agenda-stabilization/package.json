@@ -1,0 +1,27 @@
+{
+  "name": "agenda-stabilization",
+  "version": "1.0.0",
+  "description": "Prepared isolated stabilization of Agenda Diocesana; no deployment.",
+  "scripts": {
+    "prepare:local": "node scripts/prepare-local.mjs",
+    "test": "node --test --test-concurrency=1 tests/*.test.mjs",
+    "test:backend": "node --test --test-concurrency=1 tests/security-atomic.test.mjs tests/import.test.mjs tests/guards.test.mjs tests/schedule.test.mjs",
+    "test:browser": "node --test tests/browser.test.mjs",
+    "check": "node --check functions/vsc-agenda-sync/core.mjs && node --check baseline/site16/app.js && node --check baseline/site16/admin.js && node_modules/@deno/linux-x64-glibc/deno check --no-config --node-modules-dir=manual functions/vsc-agenda-sync/index.ts .local-browser/vsc-agenda-check.ts .local-browser/vsc-agenda-admin-dashboard-check.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@supabase/supabase-js": "2.117.3",
+    "ical.js": "2.2.1"
+  },
+  "devDependencies": {
+    "@deno/linux-x64-glibc": "2.6.6",
+    "@playwright/test": "1.64.0",
+    "@sparticuz/chromium": "143.0.4",
+    "pglite-pg17": "npm:@electric-sql/pglite@0.3.14"
+  },
+  "private": true
+}

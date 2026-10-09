@@ -1,0 +1,45 @@
+# PREPARED ONLY. Not installed in .github/workflows and no production secrets exist here.
+# After isolated tests AND separate approval, copy to .github/workflows/agenda-sync.yml.
+name: Agenda synchronization
+on:
+  workflow_dispatch:
+  # Activate ONLY after approval:
+  # schedule:
+  #   - cron: '17 * * * *'
+permissions: {}
+concurrency:
+  group: vsc-agenda-sync
+  cancel-in-progress: false
+jobs:
+  synchronize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    environment: agenda-homologacao
+    steps:
+      - name: Synchronize approved isolated environment
+        env:
+          AGENDA_BASE_URL: ${{ secrets.AGENDA_BASE_URL }}
+          AGENDA_PUBLISHABLE_KEY: ${{ secrets.AGENDA_PUBLISHABLE_KEY }}
+          VSC_AGENDA_SYNC_TOKEN: ${{ secrets.VSC_AGENDA_SYNC_TOKEN }}
+        shell: python
+        run: |
+          import json, os, sys, urllib.request, urllib.error
+          base = os.environ["AGENDA_BASE_URL"].rstrip("/")
+          if not base.startswith("https://") or len(os.environ["VSC_AGENDA_SYNC_TOKEN"]) < 32:
+              sys.exit("Invalid server configuration")
+          request = urllib.request.Request(base + "/functions/v1/vsc-agenda-sync", data=b"{}",
+              headers={"Content-Type": "application/json",
+                       "apikey": os.environ["AGENDA_PUBLISHABLE_KEY"],
+                       "x-vsc-sync-token": os.environ["VSC_AGENDA_SYNC_TOKEN"]}, method="POST")
+          # No POST retry: response loss may follow a committed transaction.
+          # No header/body dump, redirect, or exception repr with credentials.
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, *args): return None
+          try:
+              with urllib.request.build_opener(NoRedirect).open(request, timeout=120) as response:
+                  result = json.load(response)
+          except Exception:
+              sys.exit("Synchronization request failed; inspect run history")
+          print(json.dumps({k: result.get(k) for k in ("run_id","origin","status","attempted_at","synced_at")}))
+          if result.get("status") != "success":
+              sys.exit("One or more sources failed; inspect run history")

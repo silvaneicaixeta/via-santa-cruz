@@ -1,0 +1,29 @@
+[
+  {
+    "page": 1,
+    "pages": 3,
+    "header_present": true,
+    "footer_present": true,
+    "number_present": true,
+    "body_max_bottom": 780.62,
+    "footer_min_top": 813.65
+  },
+  {
+    "page": 2,
+    "pages": 3,
+    "header_present": true,
+    "footer_present": true,
+    "number_present": true,
+    "body_max_bottom": 776.87,
+    "footer_min_top": 813.65
+  },
+  {
+    "page": 3,
+    "pages": 3,
+    "header_present": true,
+    "footer_present": true,
+    "number_present": true,
+    "body_max_bottom": 251.87,
+    "footer_min_top": 813.65
+  }
+]

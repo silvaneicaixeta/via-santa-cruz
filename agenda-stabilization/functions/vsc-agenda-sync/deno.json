@@ -1,0 +1,6 @@
+{
+  "imports": {
+    "ical.js": "npm:ical.js@2.2.1",
+    "@supabase/supabase-js": "npm:@supabase/supabase-js@2.117.3"
+  }
+}
