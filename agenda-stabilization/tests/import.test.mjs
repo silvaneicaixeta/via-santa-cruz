@@ -32,6 +32,24 @@ test("Long Retry-After defers without retrying early; repeated 429 preserves exi
  }finally{await db.close();}
 });
 
+test("One rate-limited source cannot consume the budget reserved for the other seven sources",async()=>{
+ const db=await database();try {
+ let clock=now(),badCalls=0;
+ for(const key of ["a","b","c","d","e","f","g"])
+   await db.pg.query("insert into public.vsc_agenda_sources(source_key,label,calendar_id,source_group,category) values($1,$1,$2,'main','test')",[key,key==="a"?"rate-limit.invalid":"fixture.invalid"]);
+ const d=deps();d.now=()=>clock;d.sleep=async ms=>{clock+=ms;};
+ const valid=d.fetcher;d.fetcher=async(url,options)=>{
+   if(url.includes("rate-limit.invalid")){badCalls++;return new Response("",{status:429,headers:{"Retry-After":"30"}});}
+   return valid(url,options);
+ };
+ const response=await createHandler(db.client,secret,d)(request("automatic"));
+ const payload=await response.json();assert.equal(response.status,207);
+ assert.equal(payload.status,"partial");assert.equal(badCalls,1);
+ assert.equal(payload.results.filter(r=>r.ok).length,7);
+ assert.equal(payload.results.find(r=>r.source==="a").error,"rate_limited_deferred");
+ }finally{await db.close();}
+});
+
 test("Daily, weekly, monthly, yearly recurrence; EXDATE, RDATE, COUNT, UNTIL",()=>{
  const daily=parse(ics([event(["RRULE:FREQ=DAILY;COUNT=4","EXDATE:20261010T130000Z","RDATE:20261020T130000Z"])]));
  assert.deepEqual(daily.map(x=>x.starts_at.slice(0,10)),["2026-10-09","2026-10-11","2026-10-12","2026-10-20"]);

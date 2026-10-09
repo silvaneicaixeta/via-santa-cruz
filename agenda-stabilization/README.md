@@ -81,7 +81,8 @@ anteriores e 730 dias futuros foi mantida; registros fora dela são preservados.
 
 Retry-After aceita segundos ou data HTTP e nunca é abreviado. Há até três
 tentativas por fonte, backoff de 1 e 2 segundos com jitter, timeout HTTP de
-6 segundos e orçamento global de 110 segundos. Se a espera exigida ultrapassar
+10 segundos e orçamento global de 110 segundos, dividido entre as fontes
+restantes para evitar que uma fonte lenta impeça as demais. Se a espera exigida ultrapassar
 o orçamento, a fonte fica preservada e é registrada para tentativa futura.
 Um calendário muito antigo/denso acima dos limites de expansão é rejeitado
 inteiro; não há importação parcial silenciosa.
@@ -98,8 +99,12 @@ downloads básicos por dia, sem contar tentativas e acionamentos manuais.
 As fontes são processadas em sequência, com 800 ms entre elas. GitHub Actions
 pode atrasar ou perder execuções: não é um relógio com garantia de entrega.
 O último sucesso por fonte e as falhas do executor precisam ser monitorados.
+Em repositórios públicos, agendamentos podem ser desativados após 60 dias sem
+atividade; a homologação deve validar também detecção de ausência de execução.
 
-Usar ambiente separado `agenda-homologacao`, segredos próprios, permissões
+Instalar primeiro em repositório isolado de homologação, na branch padrão
+exigida pelo GitHub para disparos agendados, ou em infraestrutura de teste
+equivalente. Usar ambiente separado `agenda-homologacao`, segredos próprios, permissões
 mínimas e concurrency do executor, além do lease do banco. A proposta não contém
 cron ativo. Primeiro executar manualmente em homologação; ativar por tempo
 controlado ali e medir atraso, limites e duração antes de pedir aprovação de

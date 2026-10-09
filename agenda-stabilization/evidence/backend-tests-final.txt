@@ -1,0 +1,34 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> agenda-stabilization@1.0.0 test:backend
+> node --test --test-concurrency=1 tests/security-atomic.test.mjs tests/import.test.mjs tests/guards.test.mjs tests/schedule.test.mjs
+
+✔ Source configuration changes and large snapshot shrinkage abort before any event write (2683.57171ms)
+✔ Unmapped pre-migration institutional links are retained for review rather than silently deleted (1118.101298ms)
+✔ 429 Retry-After seconds and HTTP date are respected; exponential fallback bounded (8.2136ms)
+✔ Long Retry-After defers without retrying early; repeated 429 preserves existing rows (1517.922142ms)
+✔ One rate-limited source cannot consume the budget reserved for the other seven sources (1278.949187ms)
+✔ Daily, weekly, monthly, yearly recurrence; EXDATE, RDATE, COUNT, UNTIL (9.349632ms)
+✔ Moved/cancelled recurrence exceptions replace original occurrence; original identity retained (2.198583ms)
+✔ RANGE=THISANDFUTURE shifts subsequent instances correctly (3.170833ms)
+✔ Date-only, floating Brazil time, IANA DST and leap day remain correct (9.52263ms)
+✔ Bishop absence remains distinct from actual cancellation; invalid/unknown zones fail closed (2.250866ms)
+✔ Prepared workflow is outside active workflow directory, schedule disabled, concurrency and server secrets only (7.649007ms)
+✔ 24 simulated hourly service invocations succeed and maintain isolated event links and history (2434.071389ms)
+✔ Authorization: absent/invalid/common/service-role JWT denied; active admin and dedicated service allowed (1603.759447ms)
+✔ Linker and all sync RPCs denied to PUBLIC/anon/authenticated; no SECURITY DEFINER; safe search_path (1003.921158ms)
+✔ Atomic upsert preserves stable IDs, valid links, old history and resolves Sagrado Coração (1289.993651ms)
+✔ Write failure after event writes rolls back ALL rows, links, source timestamp; failure history survives (2174.734421ms)
+✔ Empty, truncated, invalid 200, missing SUMMARY, invalid dates and empty window preserve old data (1201.671158ms)
+✔ Concurrent manual and automatic invocation: exactly one runs and other returns 409 (2069.352549ms)
+✔ Expired lease fencing rejects old writer and admits a new service run (3378.791132ms)
+✔ RPC rejects null snapshots and duplicates before modifying existing events (2320.809029ms)
+✔ Moved recurrence retains institutional link using original occurrence identity (1843.94758ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 26752.623929

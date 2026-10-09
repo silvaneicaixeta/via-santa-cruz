@@ -35,15 +35,15 @@ export function retryAfter(value, now) {
 }
 export async function downloadCalendar(source, {
   fetcher=fetch, sleep=ms=>new Promise(r=>setTimeout(r,ms)), now=Date.now,
-  deadline=now()+110000, signal, random=Math.random
+  deadline=now()+110000, signal, random=Math.random, timeoutMs=10000
 }={}) {
   const url="https://calendar.google.com/calendar/ical/"+encodeURIComponent(source.calendar_id)+"/public/basic.ics";
   for(let attempt=0;attempt<3;attempt++) {
-    if(now()+6000 >= deadline) reject("deadline_exceeded",504);
+    if(now()+timeoutMs >= deadline) reject("deadline_exceeded",504);
     let response;
     try {
       response=await fetcher(url,{headers:{"User-Agent":"ViaSantaCruz-AgendaSync/2.0","Accept":"text/calendar"},
-        signal: signal ? AbortSignal.any([signal,AbortSignal.timeout(6000)]) : AbortSignal.timeout(6000), redirect:"error"});
+        signal: signal ? AbortSignal.any([signal,AbortSignal.timeout(timeoutMs)]) : AbortSignal.timeout(timeoutMs), redirect:"error"});
     } catch { if (signal?.aborted) reject("deadline_exceeded",504); }
     const http=response?.status || null;
     if(response?.ok) {
@@ -64,7 +64,7 @@ export async function downloadCalendar(source, {
     if(attempt===2) reject(http===429 ? "rate_limited" : "download_failed",502,http);
     const wait=Math.max(retryAfter(response?.headers.get("Retry-After"),now()) || 0, 1000*2**attempt+Math.floor(random()*250));
     // Never truncate Retry-After and retry early: defer the source if it exceeds this run's budget.
-    if(now()+wait+6000 >= deadline) reject(http===429 ? "rate_limited_deferred":"retry_deferred",503,http);
+    if(now()+wait+timeoutMs >= deadline) reject(http===429 ? "rate_limited_deferred":"retry_deferred",503,http);
     await response?.body?.cancel(); await sleep(wait);
   }
 }
@@ -193,12 +193,16 @@ export async function synchronize(db,identity,requestedSource="",deps={}) {
     const sources=await query.order("source_key");
     if(sources.error)reject("source_read_failed");
     if(!sources.data?.length)reject("source_not_found",404);
-    for(const source of sources.data) {
+    for(const [index,source] of sources.data.entries()) {
       const sourceStart=now();
+      // Reserve each remaining source a fair share, including the inter-source pause.
+      // An early rate-limited calendar cannot consume the whole run on every hour.
+      const remaining=sources.data.length-index;
+      const sourceDeadline=sourceStart+Math.max(0,(deadline-sourceStart-800*remaining)/remaining);
       let receivedHttp=null;
       await rpc(db,"vsc_agenda_sync_source_begin",{p_run:run,p_source:source.source_key});
       try {
-        const loaded=await downloadCalendar(source,{...deps,now,deadline});
+        const loaded=await downloadCalendar(source,{...deps,now,deadline:sourceDeadline});
         receivedHttp=loaded.http;
         const events=parseCalendar(loaded.text,source,min,max);
         const count=await rpc(db,"vsc_agenda_sync_replace",{p_run:run,p_source:source.source_key,
