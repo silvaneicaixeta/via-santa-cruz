@@ -1,4 +1,4 @@
-(() => {
+(async () => {
   const SUPABASE_URL = "https://hkujbdfqhbkejpbsfode.supabase.co";
   const SUPABASE_KEY = "sb_publishable_KIsDfvNnPTlnFUAvFN74YA_ufMJcAGH";
   const API = SUPABASE_URL + "/functions/v1/vsc-agenda";
@@ -837,13 +837,14 @@
         .filter((s) => s.available && s.last_synced_at)
         .map((s) => new Date(s.last_synced_at))
         .filter((d) => !Number.isNaN(d.getTime()));
-      const generated = new Date(agendaData.generated_at || liturgyData.generated_at);
-      const ref = dates.length ? new Date(Math.min(...dates.map((d) => d.getTime()))) : generated;
-
-      if (!Number.isNaN(ref.getTime())) {
-        lastSyncReference = ref;
-        els.updated.textContent = "Dados sincronizados até " + fmtUpdated.format(ref) + ". Alterações posteriores podem ainda não aparecer aqui.";
-        if (els.syncFooter) els.syncFooter.textContent = "Sincronização: " + fmtUpdated.format(ref) + " · programação sujeita a alterações.";
+      // generated_at informa a geração da resposta, não a sincronização da fonte.
+      lastSyncReference = dates.length ? new Date(Math.min(...dates.map((d) => d.getTime()))) : null;
+      if (lastSyncReference) {
+        els.updated.textContent = "Dados sincronizados até " + fmtUpdated.format(lastSyncReference) + ". Alterações posteriores podem ainda não aparecer aqui.";
+        if (els.syncFooter) els.syncFooter.textContent = "Sincronização: " + fmtUpdated.format(lastSyncReference) + " · programação sujeita a alterações.";
+      } else {
+        els.updated.textContent = "Sem registro de sincronização bem-sucedida. A geração desta consulta não comprova atualização das fontes.";
+        if (els.syncFooter) els.syncFooter.textContent = "Sincronização: sem registro de sucesso · programação sujeita a alterações.";
       }
     } catch (error) {
       if (error?.message === "unauthorized") {
