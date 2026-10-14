@@ -323,12 +323,28 @@
   </div>
 
   <footer class="agenda-app-footer">
-    <span>Agenda Diocesana</span>
+    <span class="agenda-footer-about">
+      <button id="agenda-about-open" class="agenda-about-link" type="button">Sobre · v1.0</button>
+    </span>
     <a class="agenda-vsc-signature" href="https://viasantacruz.com.br" aria-label="Via Santa Cruz">
       <span class="agenda-vsc-cross" aria-hidden="true">✦</span>
       <span>Um projeto <strong>Via Santa Cruz</strong> · Projetos que nascem para servir.</span>
     </a>
   </footer>
+
+  <div id="agenda-about-modal" class="agenda-about-modal" hidden>
+    <div class="agenda-about-backdrop" data-close-about></div>
+    <section class="agenda-about-card" role="dialog" aria-modal="true" aria-labelledby="agenda-about-title">
+      <button class="agenda-about-close" type="button" aria-label="Fechar" data-close-about>×</button>
+      <p class="section-kicker">Via Santa Cruz</p>
+      <h2 id="agenda-about-title">Agenda Diocesana</h2>
+      <p>Consulta institucional dos compromissos, celebrações e datas da Diocese de Janaúba.</p>
+      <dl>
+        <div><dt>Versão</dt><dd>1.0</dd></div>
+        <div><dt>Sincronização</dt><dd>Google Calendar + Via Santa Cruz</dd></div>
+      </dl>
+    </section>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./app.js"></script>
