@@ -1706,3 +1706,65 @@ body{background:#f8f4ea}
 @media(max-width:680px){
   .agenda-sync-status{justify-content:flex-start}
 }
+
+
+/* Agenda — leitura visual de datas e informações institucionais */
+.agenda-date{
+  align-self:stretch;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center!important;
+  padding:.42rem .55rem!important;
+  border-right:1px solid rgba(159,119,47,.24);
+  border-radius:10px 0 0 10px;
+  background:linear-gradient(180deg,rgba(18,60,46,.055),rgba(200,161,90,.055));
+}
+.agenda-weekday-short{
+  margin-top:.06rem;
+  color:var(--green);
+  font-size:.55rem;
+  font-weight:900;
+  letter-spacing:.08em;
+  line-height:1;
+}
+.agenda-month-short{margin-top:.08rem}
+.agenda-about-link{
+  border:0;
+  padding:0;
+  background:transparent;
+  color:#7b847f;
+  font:inherit;
+  cursor:pointer;
+  text-decoration:none;
+}
+.agenda-about-link:hover{color:var(--green)}
+.agenda-about-modal{position:fixed;inset:0;z-index:150}
+.agenda-about-backdrop{position:absolute;inset:0;background:rgba(13,46,35,.48)}
+.agenda-about-card{
+  position:absolute;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(460px,calc(100% - 32px));
+  padding:1.5rem;
+  border:1px solid rgba(18,60,46,.12);
+  border-radius:18px;
+  background:#fffdf8;
+  box-shadow:0 24px 80px rgba(13,46,35,.2);
+}
+.agenda-about-card h2{
+  margin:.2rem 0 .65rem;
+  font-family:"Playfair Display",Georgia,serif;
+  color:var(--green);
+  font-size:2rem;
+}
+.agenda-about-card p{color:#65706a;line-height:1.55}
+.agenda-about-card dl{display:grid;gap:.55rem;margin:1rem 0 0}
+.agenda-about-card dl div{display:flex;justify-content:space-between;gap:1rem;border-top:1px solid rgba(18,60,46,.08);padding-top:.55rem}
+.agenda-about-card dt{font-weight:900;color:var(--green)}
+.agenda-about-card dd{margin:0;color:#65706a;text-align:right}
+.agenda-about-close{position:absolute;right:.7rem;top:.55rem;border:0;background:transparent;color:var(--green);font-size:1.8rem;cursor:pointer}
+.about-open{overflow:hidden}
+@media print{
+  .agenda-about-modal{display:none!important}
+}
