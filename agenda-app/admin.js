@@ -355,6 +355,7 @@
   }
 
   els.open.addEventListener("click", async () => {
+    els.open.hidden = true;
     els.main.hidden = true;
     els.admin.hidden = false;
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -364,6 +365,7 @@
   els.close.addEventListener("click", () => {
     els.admin.hidden = true;
     els.main.hidden = false;
+    els.open.hidden = false;
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 })();
