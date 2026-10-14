@@ -65,7 +65,9 @@
     printList: document.getElementById("agenda-print-list"),
     printSummary: document.getElementById("agenda-print-summary"),
     syncFooter: document.getElementById("agenda-sync-footer"),
-    syncNow: document.getElementById("agenda-sync-now")
+    syncNow: document.getElementById("agenda-sync-now"),
+    aboutOpen: document.getElementById("agenda-about-open"),
+    aboutModal: document.getElementById("agenda-about-modal")
   };
 
   async function getSession() {
@@ -463,7 +465,8 @@
       ? '<p class="agenda-bishop-note">Bispo não participará</p>'
       : "";
     card.innerHTML =
-      '<div class="agenda-date"><strong class="agenda-day">' + esc(fmtDay.format(date)) + '</strong><span class="agenda-month-short">' +
+      '<div class="agenda-date"><strong class="agenda-day">' + esc(fmtDay.format(date)) + '</strong><span class="agenda-weekday-short">' +
+      esc(fmtWeekShort.format(date).replace(".", "").toUpperCase()) + '</span><span class="agenda-month-short">' +
       esc(fmtMonthShort.format(date).replace(".", "").toUpperCase()) + '</span></div>' +
       '<div class="agenda-event-copy"><div class="agenda-badges">' + badges.join("") + '</div><h3>' + esc(ev.title) + '</h3>' +
       bishopNote +
@@ -858,6 +861,19 @@
       }
       els.status.textContent = "Não foi possível carregar a agenda agora. Tente novamente em alguns instantes.";
     }
+  }
+
+  if (els.aboutOpen && els.aboutModal) {
+    els.aboutOpen.addEventListener("click", () => {
+      els.aboutModal.hidden = false;
+      document.body.classList.add("about-open");
+    });
+    document.querySelectorAll("[data-close-about]").forEach((node) => {
+      node.addEventListener("click", () => {
+        els.aboutModal.hidden = true;
+        document.body.classList.remove("about-open");
+      });
+    });
   }
 
   els.search.addEventListener("input", apply);
