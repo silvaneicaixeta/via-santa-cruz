@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://viasantacruz.com.br/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://viasantacruz.com.br/materiais.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://viasantacruz.com.br/projetos.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://viasantacruz.com.br/diretorio.html</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
   <url><loc>https://viasantacruz.com.br/diante-de-deus.html</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
