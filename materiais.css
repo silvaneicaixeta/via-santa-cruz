@@ -18,3 +18,9 @@
 .material-card p{margin:0}
 .material-pending{padding-top:.8rem;border-top:1px solid rgba(159,119,47,.18);color:#637068;font-size:.86rem;font-weight:700}
 @media(max-width:680px){.materials-hero{padding:70px 0 56px}.materials-intro{padding:40px 0}.materials-intro-inner{font-size:1rem}.materials-group{padding:50px 0}.materials-grid{grid-template-columns:1fr}.material-card{padding:1.35rem}}
+
+/* Ações preparadas; somente ficam visíveis após aprovação e upload dos PDFs. */
+.material-actions{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:auto}
+.material-actions[hidden]{display:none!important}
+.material-button{font-size:.9rem;min-width:130px;flex:1;padding:.65rem .9rem}
+@media(max-width:680px){.material-actions{display:grid;grid-template-columns:1fr 1fr}.material-button{width:100%;min-width:0}}
