@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/materiais.css">
+  <link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/materiais.css?v=20261017-2">
 </head>
 <body>
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -33,7 +33,7 @@
     <section class="materials-intro section"><div class="container materials-intro-inner">
       <p>Reunimos aqui alguns materiais preparados ou selecionados ao longo do caminho pastoral, que podem contribuir para a preparação das celebrações, a formação cristã e o cultivo da espiritualidade.</p>
       <p>São recursos simples para consulta e download, com o desejo de que possam servir às comunidades e a todos aqueles que deles necessitarem.</p>
-      <p class="materials-note">Use Abrir PDF para consultar ou Baixar para salvar uma cópia. No iPhone, se o PDF abrir no navegador, toque em Compartilhar e depois em Salvar em Arquivos.</p>
+      <p class="materials-note">Use Abrir PDF para consultar ou Baixar para salvar uma cópia.</p>
     </div></section>
     <section class="materials-group section" aria-labelledby="materiais-grupo-1"><div class="container">
       <div class="materials-heading"><p class="section-kicker">Materiais</p><h2 id="materiais-grupo-1">Liturgia e Celebrações</h2><p>Roteiros e orientações para preparar e celebrar com zelo.</p></div>
@@ -125,5 +125,24 @@
     <nav aria-label="Navegação do rodapé"><a href="/">Início</a><a href="/projetos.html">Projetos</a><a href="/materiais.html">Materiais</a><a href="/sobre.html">Sobre</a></nav>
     <a class="domain" href="https://viasantacruz.com.br">viasantacruz.com.br</a>
   </div></footer>
+  <dialog class="material-save-dialog" id="material-save-dialog" aria-labelledby="material-save-title">
+    <div class="material-save-header">
+      <h2 id="material-save-title">Salvar PDF</h2>
+      <button class="material-save-close" type="button" id="material-save-close" aria-label="Fechar">×</button>
+    </div>
+    <p class="material-save-name" id="material-save-name"></p>
+    <p id="material-save-status" role="status" aria-live="polite"></p>
+    <button class="button button-primary" type="button" id="material-save-share" hidden>Salvar ou compartilhar</button>
+    <div id="material-save-fallback" hidden>
+      <p>Abra este endereço no Safari para usar as opções de salvar do navegador.</p>
+      <label for="material-save-url">Endereço do PDF</label>
+      <input id="material-save-url" type="url" readonly>
+      <div class="material-save-fallback-actions">
+        <button class="button button-secondary" type="button" id="material-save-copy">Copiar endereço</button>
+        <a class="button button-secondary" id="material-save-open" target="_blank" rel="noopener">Abrir PDF</a>
+      </div>
+    </div>
+  </dialog>
+  <script src="/materiais.js?v=20261017-2" defer></script>
   <script src="/script.js"></script><script src="/analytics.js"></script>
 </body></html>

@@ -24,3 +24,17 @@
 .material-actions[hidden]{display:none!important}
 .material-button{font-size:.9rem;min-width:130px;flex:1;padding:.65rem .9rem}
 @media(max-width:680px){.material-actions{display:grid;grid-template-columns:1fr 1fr}.material-button{width:100%;min-width:0}}
+
+/* Salvamento pelo próprio catálogo em dispositivos iOS. */
+.material-save-dialog{width:min(520px,calc(100% - 32px));max-height:calc(100dvh - 48px);overflow:auto;margin:auto;padding:1.5rem;border:1px solid var(--line);border-radius:20px;background:var(--ivory);color:var(--text);box-shadow:var(--shadow);font-family:inherit}
+.material-save-dialog::backdrop{background:rgba(13,46,35,.65)}
+.material-save-dialog [hidden]{display:none!important}
+.material-save-header{display:flex;align-items:flex-start;gap:1rem;justify-content:space-between}
+.material-save-header h2{margin:0;color:var(--green);font-size:1.65rem}
+.material-save-close{flex:none;border:0;border-radius:50%;background:transparent;color:var(--green);font-size:1.8rem;line-height:1;min-width:44px;min-height:44px;cursor:pointer}
+.material-save-name{font-weight:700;overflow-wrap:anywhere}
+.material-save-dialog>.button{width:100%}
+.material-save-dialog input{display:block;width:100%;margin:.5rem 0 1rem;padding:.75rem;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:16px;box-sizing:border-box}
+.material-save-fallback-actions{display:flex;flex-wrap:wrap;gap:.7rem}
+.material-save-fallback-actions .button{flex:1}
+.material-save-dialog button:focus-visible,.material-save-dialog a:focus-visible,.material-save-dialog input:focus-visible{outline:3px solid var(--gold-dark);outline-offset:3px}
