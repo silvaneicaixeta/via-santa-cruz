@@ -1,29 +1,202 @@
-/* Materiais e Subsídios — candidata isolada (mantém tokens e estrutura do site principal) */
-.materials-hero{padding:96px 0 70px;background:radial-gradient(circle at 78% 20%,rgba(200,161,90,.16),transparent 26%),linear-gradient(180deg,#fbf8f1,#f5efe3)}
-.materials-hero .materials-subtitle{font-family:"Playfair Display",Georgia,serif;color:var(--gold-dark);font-size:clamp(1.25rem,2.3vw,1.75rem);margin:1.1rem 0 0}
-.materials-intro{background:#fffdf8;padding:56px 0}
-.materials-intro-inner{max-width:830px;font-size:1.12rem}
-.materials-intro-inner p:first-child{margin-top:0}
-.materials-intro-inner p:last-child{margin-bottom:0}
-.materials-note{padding:1rem 1.2rem;border-left:3px solid var(--gold);background:var(--ivory);font-size:.91rem;color:#526058}
-.materials-group{padding:65px 0 75px;border-top:1px solid rgba(159,119,47,.15)}
-.materials-group:nth-of-type(even){background:#fffdf8}
-.materials-heading{max-width:740px;margin-bottom:1.8rem}
-.materials-heading h2{font-size:clamp(2rem,3.5vw,3rem);margin:0}
-.materials-heading>p:last-child{margin:.85rem 0 0}
-.materials-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.15rem}
-.material-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:1.6rem;display:flex;flex-direction:column;justify-content:space-between;gap:1.2rem;min-width:0}
-.material-format{font-size:.76rem;letter-spacing:.1em;color:var(--gold-dark);text-transform:uppercase;font-weight:900}
-.material-card h3{font-size:clamp(1.4rem,2vw,1.8rem);line-height:1.17;margin:.65rem 0}
-.material-card p{margin:0}
-.material-pending{padding-top:.8rem;border-top:1px solid rgba(159,119,47,.18);color:#637068;font-size:.86rem;font-weight:700}
-@media(max-width:680px){.materials-hero{padding:70px 0 56px}.materials-intro{padding:40px 0}.materials-intro-inner{font-size:1rem}.materials-group{padding:50px 0}.materials-grid{grid-template-columns:1fr}.material-card{padding:1.35rem}}
-
-/* Ações preparadas; somente ficam visíveis após aprovação e upload dos PDFs. */
-.material-actions{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:auto}
+/* Via Santa Cruz — Catálogo compacto de Materiais e Subsídios.
+ * Escopo restrito à página; os componentes do diálogo iOS são preservados abaixo. */
+.materials-hero{
+  padding:62px 0 42px;
+  background:radial-gradient(circle at 82% 14%,rgba(200,161,90,.14),transparent 28%),linear-gradient(180deg,#fbf8f1,#f5efe3);
+}
+.materials-hero .page-hero-inner{max-width:880px}
+.materials-hero .section-kicker{margin:0 0 .65rem}
+.materials-hero h1{
+  font-size:clamp(2.5rem,5vw,4.1rem);
+  line-height:1.08;
+  letter-spacing:-.025em;
+}
+.materials-hero .materials-subtitle{
+  margin:.55rem 0 0;
+  font-family:"Playfair Display",Georgia,serif;
+  color:var(--gold-dark);
+  font-size:clamp(1.18rem,2.2vw,1.5rem);
+}
+.materials-hero .materials-hero-lead{
+  max-width:690px;
+  font-family:"Lato",Arial,sans-serif;
+  color:#48584e;
+  font-size:1rem;
+  line-height:1.55;
+  margin:.75rem 0 0;
+}
+.materials-directory{background:#fffdf8;border-bottom:1px solid rgba(159,119,47,.14)}
+.materials-directory>.container{padding-block:22px 18px}
+.materials-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem}
+.materials-nav a{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:.7rem;
+  border:1px solid rgba(159,119,47,.27);
+  border-radius:12px;
+  padding:.85rem .95rem;
+  background:#fff;
+  color:var(--green);
+  font-size:.92rem;
+  font-weight:700;
+  line-height:1.35;
+  text-decoration:none;
+  transition:background .16s,border-color .16s;
+}
+.materials-nav a:hover{background:#f7f0e3;border-color:var(--gold-dark)}
+.materials-nav a:focus-visible,.material-actions a:focus-visible{
+  outline:3px solid var(--gold-dark);
+  outline-offset:3px;
+}
+.materials-nav a span{font-size:1.3rem;line-height:1;color:var(--gold-dark)}
+.materials-directory .materials-note{
+  margin:1rem 0 0;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:#506058;
+  font-size:.88rem;
+  line-height:1.5;
+}
+.materials-group{
+  padding:38px 0 44px;
+  scroll-margin-top:105px;
+  border-bottom:1px solid rgba(159,119,47,.12);
+  background:var(--ivory);
+}
+.materials-group:nth-of-type(even){background:#fffcf7}
+.materials-heading{
+  display:flex;
+  gap:1rem;
+  justify-content:space-between;
+  align-items:end;
+  margin:0 0 17px;
+}
+.materials-heading h2{
+  font-family:"Playfair Display",Georgia,serif;
+  font-size:clamp(1.65rem,2.6vw,2.25rem);
+  line-height:1.15;
+  margin:0;
+}
+.materials-heading p{margin:.45rem 0 0;font-size:.94rem;color:#53635a}
+.materials-count{
+  white-space:nowrap;
+  font-size:.76rem;
+  font-weight:900;
+  letter-spacing:.04em;
+  color:var(--gold-dark);
+  padding:5px 10px;
+  border-radius:999px;
+  background:rgba(200,161,90,.13);
+}
+.materials-list{display:grid;gap:10px}
+.material-card{
+  min-width:0;
+  display:grid;
+  grid-template-areas:"icon content actions";
+  grid-template-columns:44px minmax(0,1fr) auto;
+  align-items:center;
+  column-gap:17px;
+  row-gap:10px;
+  padding:17px 19px;
+  border:1px solid rgba(159,119,47,.2);
+  border-radius:14px;
+  background:#fff;
+  box-shadow:0 3px 14px rgba(18,60,46,.025);
+}
+.material-icon{
+  grid-area:icon;
+  width:44px;
+  height:48px;
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  background:#f6f0e5;
+  color:var(--gold-dark);
+}
+.material-icon svg{width:22px;height:22px}
+.material-content{grid-area:content;min-width:0}
+.material-content h3{
+  font-family:"Lato",Arial,sans-serif;
+  font-weight:900;
+  font-size:1.04rem;
+  line-height:1.32;
+  margin:0;
+  color:var(--ink);
+}
+.material-content p{margin:.3rem 0 .4rem;color:#526159;font-size:.86rem;line-height:1.45}
+.material-format{
+  display:block;
+  color:#84662f;
+  font-size:.72rem;
+  font-weight:900;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+}
+.material-actions{
+  grid-area:actions;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:.55rem;
+  margin:0;
+}
 .material-actions[hidden]{display:none!important}
-.material-button{font-size:.9rem;min-width:130px;flex:1;padding:.65rem .9rem}
-@media(max-width:680px){.material-actions{display:grid;grid-template-columns:1fr 1fr}.material-button{width:100%;min-width:0}}
+.material-actions .material-button{
+  min-width:110px;
+  min-height:42px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:.62rem .85rem;
+  border-radius:9px;
+  box-shadow:none;
+  font-size:.84rem;
+  line-height:1.2;
+  font-weight:900;
+  white-space:nowrap;
+  text-align:center;
+  text-decoration:none;
+}
+.material-actions .button-secondary{background:#fffdf8}
+@media(max-width:990px){
+  .material-card{
+    grid-template-areas:"icon content" ". actions";
+    grid-template-columns:44px minmax(0,1fr);
+    align-items:start;
+  }
+  .material-actions{justify-content:flex-start}
+}
+@media(max-width:680px){
+  .materials-hero{padding:44px 0 30px}
+  .materials-hero h1{font-size:clamp(2.3rem,9vw,3.1rem)}
+  .materials-hero .materials-subtitle{margin-top:.55rem}
+  .materials-hero .materials-hero-lead{font-size:.91rem}
+  .materials-directory>.container{padding-block:16px 15px}
+  .materials-nav{grid-template-columns:1fr;gap:7px}
+  .materials-nav a{padding:.7rem .85rem;min-height:44px;font-size:.89rem}
+  .materials-directory .materials-note{font-size:.82rem}
+  .materials-group{padding:29px 0 34px;scroll-margin-top:78px}
+  .materials-heading{gap:.5rem;align-items:start}
+  .materials-heading h2{font-size:1.56rem}
+  .materials-heading p{font-size:.86rem}
+  .materials-count{font-size:.67rem;padding:4px 8px}
+  .material-card{padding:15px;gap:8px 12px;grid-template-columns:38px minmax(0,1fr)}
+  .material-icon{width:38px;height:42px}
+  .material-content h3{font-size:.98rem}
+  .material-content p{font-size:.84rem}
+  .material-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%}
+  .material-actions .material-button{width:100%;min-width:0;min-height:44px;padding:.68rem .4rem;font-size:.83rem}
+}
+@media(max-width:360px){
+  .materials-heading{display:block}
+  .materials-count{display:inline-block;margin-top:.7rem}
+  .material-actions{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  .materials-nav a{transition:none}
+}
 
 /* Salvamento pelo próprio catálogo em dispositivos iOS. */
 .material-save-dialog{width:min(520px,calc(100% - 32px));max-height:calc(100dvh - 48px);overflow:auto;margin:auto;padding:1.5rem;border:1px solid var(--line);border-radius:20px;background:var(--ivory);color:var(--text);box-shadow:var(--shadow);font-family:inherit}
