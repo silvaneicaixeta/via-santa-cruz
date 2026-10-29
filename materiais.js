@@ -121,5 +121,5 @@
   });
 
   const note = document.querySelector('.materials-note');
-  if (note) note.textContent = 'Use Abrir PDF para consultar ou Salvar PDF para escolher onde guardar uma cópia.';
+  if (note) note.textContent = 'Use Visualizar para consultar ou Salvar PDF para escolher onde guardar uma cópia.';
 })();
